@@ -272,7 +272,7 @@ export const SearchFilterBar = () => {
 
     params.set("page", "1");
 
-    window.location.href = `${pathname}?${params.toString()}`;
+    window.location.href = `/nha-dat?${params.toString()}`;
   };
 
   const activeFilterCount = [filterDirection !== "Tất cả", filterProvince !== "Tất cả", !!filterStatus].filter(Boolean).length;

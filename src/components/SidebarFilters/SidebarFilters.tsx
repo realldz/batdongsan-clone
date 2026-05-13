@@ -82,7 +82,7 @@ export const SidebarFilters = () => {
             );
           })}
           <li className="text-gray-500 cursor-pointer pt-1 hover:text-primary transition-colors flex gap-1 items-center">
-            Mở rộng 
+            Mở rộng
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </li>
         </ul>
@@ -110,7 +110,7 @@ export const SidebarFilters = () => {
             );
           })}
           <li className="text-gray-500 cursor-pointer pt-1 hover:text-primary transition-colors flex gap-1 items-center">
-            Mở rộng 
+            Mở rộng
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </li>
         </ul>

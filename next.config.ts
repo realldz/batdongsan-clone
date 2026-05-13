@@ -5,21 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "picsum.photos",
+        hostname: "**",
       },
       {
         protocol: "http",
-        hostname: "localhost",
-        port: "8000",
-      },
-      {
-        protocol: "https",
-        hostname: "drive.realldz.id.vn",
-        port: "",
+        hostname: "**",
       },
     ],
   },
