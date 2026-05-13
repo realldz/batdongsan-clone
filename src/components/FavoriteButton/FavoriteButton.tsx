@@ -38,10 +38,7 @@ export function FavoriteButton({
     setMessage("");
 
     try {
-      const success = await toggleFavorite(propertyId);
-      if (!success) {
-        setMessage("Cần đăng nhập");
-      }
+      await toggleFavorite(propertyId);
     } catch {
       setMessage("Cần đăng nhập");
     } finally {

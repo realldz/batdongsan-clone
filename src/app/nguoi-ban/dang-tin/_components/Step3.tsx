@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Info, Crown, Ticket, ChevronRight, Calendar, ChevronDown } from "lucide-react";
 
-type PackageId = "diamond" | "gold" | "silver" | "standard";
-type DurationDays = 10 | 15 | 30;
+export type PackageId = "diamond" | "gold" | "silver" | "standard";
+export type DurationDays = 10 | 15 | 30;
 
-export function Step3({ onBack, onNext, isSubmitting = false, submitMessage = "" }: { onBack: () => void; onNext: () => void | Promise<void>; isSubmitting?: boolean; submitMessage?: string }) {
+export const PACKAGE_PRICES: Record<PackageId, number> = {
+  diamond: 270700,
+  gold: 106400,
+  silver: 48400,
+  standard: 2900,
+};
+
+export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = "" }: { onBack: () => void; onSubmit: (packageId: PackageId, durationDays: DurationDays) => void | Promise<void>; isSubmitting?: boolean; submitMessage?: string }) {
   const [selectedPackage, setSelectedPackage] = useState<PackageId>("standard");
   const [selectedDuration, setSelectedDuration] = useState<DurationDays>(15);
+  const total = useMemo(() => PACKAGE_PRICES[selectedPackage] * selectedDuration, [selectedPackage, selectedDuration]);
 
   const packages: {
     id: PackageId;
@@ -223,14 +231,13 @@ export function Step3({ onBack, onNext, isSubmitting = false, submitMessage = ""
 
             <div className="flex items-center gap-6 shrink-0">
               <div className="text-right">
-                <div className="text-[12px] text-gray-500 line-through">39.000 đ</div>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-[14px] text-gray-700">Tổng tiền</span>
-                  <span className="text-[20px] font-bold text-[#2c2c2c]">0 đ</span>
+                  <span className="text-[20px] font-bold text-[#2c2c2c]">{total.toLocaleString("vi-VN")} đ</span>
                 </div>
               </div>
               <button
-                onClick={onNext}
+                onClick={() => onSubmit(selectedPackage, selectedDuration)}
                 disabled={isSubmitting}
                 className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
               >

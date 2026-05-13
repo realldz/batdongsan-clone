@@ -2,11 +2,13 @@
 
 import { AdminHeader } from "../_components/AdminHeader";
 import { AdminTableShell, EmptyState, StatusBadge } from "../_components/AdminUi";
+import { AdminPagination } from "../_components/AdminPagination";
+import { PropertyPreviewModal } from "../_components/PropertyPreviewModal";
 import { type AdminListing, type AdminListingStatus } from "../_data/mock";
 import { mapAdminStatusToPropertyStatus, propertyToAdminListing, unwrapPaginated } from "@/lib/api-adapters";
 import { deleteProperty, searchProperties, updatePropertyStatus, type Property } from "@/services/properties";
-import { Download, EyeOff, Pencil, Search, Trash2, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { Download, EyeOff, Pencil, Search, Trash2, X, Eye } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const statusOptions = ["Tất cả", "Đang hiển thị", "Chờ duyệt", "Đã duyệt", "Từ chối", "Đã ẩn", "Hết hạn"] as const;
 const typeOptions = ["Tất cả", "Bán", "Cho thuê"] as const;
@@ -63,6 +65,7 @@ export default function AdminListingsPage() {
   const [draftPackage, setDraftPackage] = useState<(typeof packageOptions)[number]>("Tin thường");
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -100,16 +103,6 @@ export default function AdminListingsPage() {
     loadListings();
     return () => { ignore = true; };
   }, [currentPage, search, statusFilter, typeFilter]);
-
-  const filteredListings = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
-    return listings.filter((listing) => {
-      const matchesSearch = keyword.length === 0 || listing.title.toLowerCase().includes(keyword) || listing.code.toLowerCase().includes(keyword) || listing.owner.toLowerCase().includes(keyword);
-      const matchesStatus = statusFilter === "Tất cả" || listing.status === statusFilter;
-      const matchesType = typeFilter === "Tất cả" || listing.type === typeFilter;
-      return matchesSearch && matchesStatus && matchesType;
-    });
-  }, [listings, search, statusFilter, typeFilter]);
 
   const openEdit = (listing: AdminListing) => {
     setEditingListing(listing);
@@ -164,8 +157,6 @@ export default function AdminListingsPage() {
     setCurrentPage(1);
   };
 
-  const totalPagesArray = Array.from({ length: Math.min(totalPages, 10) }, (_, i) => i + 1);
-
   return (
     <>
       <AdminHeader title="Quản lý tin đăng" description={`Tìm kiếm, lọc, sửa nhanh, ẩn/xóa tin và xuất báo cáo (API, ${total} tin).`} />
@@ -182,7 +173,7 @@ export default function AdminListingsPage() {
             <select value={typeFilter} onChange={(event) => handleTypeFilterChange(event.target.value as (typeof typeOptions)[number])} className="h-11 rounded-lg border border-gray-200 bg-white px-3 text-sm font-bold text-gray-700 outline-none focus:border-[#e03c31]">
               {typeOptions.map((type) => <option key={type}>{type}</option>)}
             </select>
-            <button onClick={() => downloadCsv(filteredListings)} className="h-11 rounded-lg bg-gray-900 px-4 text-white text-sm font-bold hover:bg-black transition-colors flex items-center gap-2">
+            <button onClick={() => downloadCsv(listings)} className="h-11 rounded-lg bg-gray-900 px-4 text-white text-sm font-bold hover:bg-black transition-colors flex items-center gap-2">
               <Download className="w-4 h-4" /> Xuất CSV
             </button>
           </div>
@@ -191,7 +182,7 @@ export default function AdminListingsPage() {
         <AdminTableShell title="Danh sách tin đăng" description={`${total} tin - trang ${currentPage}/${totalPages}`}>
           {loading ? (
             <div className="p-10 text-center text-gray-500">Đang tải...</div>
-          ) : filteredListings.length === 0 ? (
+          ) : listings.length === 0 ? (
             <EmptyState title="Không có tin đăng" description="Thử đổi từ khóa hoặc bộ lọc khác." />
           ) : (
             <>
@@ -208,7 +199,7 @@ export default function AdminListingsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filteredListings.map((listing) => (
+                  {listings.map((listing) => (
                     <tr key={listing.id} className="hover:bg-gray-50 align-top">
                       <td className="px-5 py-4 max-w-[360px]">
                         <div className="font-extrabold text-gray-900 line-clamp-2">{listing.title}</div>
@@ -225,6 +216,7 @@ export default function AdminListingsPage() {
                       <td className="px-5 py-4"><StatusBadge tone={getListingStatusTone(listing.status)}>{listing.status}</StatusBadge></td>
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-2">
+                          <button onClick={() => setPreviewId(listing.id)} className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-extrabold text-gray-700 hover:bg-white hover:border-gray-300 flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> Xem</button>
                           <button onClick={() => openEdit(listing)} className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-extrabold text-gray-700 hover:bg-white hover:border-gray-300 flex items-center gap-1.5"><Pencil className="w-3.5 h-3.5" /> Sửa</button>
                           <button onClick={() => hideListing(listing.id)} className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-extrabold text-gray-700 hover:bg-white hover:border-gray-300 flex items-center gap-1.5"><EyeOff className="w-3.5 h-3.5" /> Ẩn</button>
                           <button onClick={() => deleteListingAction(listing.id)} className="rounded-lg border border-rose-200 px-3 py-2 text-xs font-extrabold text-rose-600 hover:bg-rose-50 flex items-center gap-1.5"><Trash2 className="w-3.5 h-3.5" /> Xóa</button>
@@ -235,43 +227,7 @@ export default function AdminListingsPage() {
                 </tbody>
               </table>
 
-              {/* Pagination */}
-              {totalPages > 1 ? (
-                <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4">
-                  <div className="text-sm font-medium text-gray-500">
-                    Trang {currentPage} / {totalPages}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      disabled={currentPage === 1}
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      Trước
-                    </button>
-                    {totalPagesArray.map((page) => (
-                      <button
-                        key={page}
-                        type="button"
-                        onClick={() => setCurrentPage(page)}
-                        className={`h-8 w-8 rounded-lg text-sm font-extrabold transition-colors ${currentPage === page ? "bg-[#e03c31] text-white" : "text-gray-700 hover:bg-gray-100"}`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                    {totalPages > 10 ? <span className="text-sm text-gray-400">...</span> : null}
-                    <button
-                      type="button"
-                      disabled={currentPage === totalPages}
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      Sau
-                    </button>
-                  </div>
-                </div>
-              ) : null}
+              <AdminPagination page={currentPage} totalPages={totalPages} onChange={setCurrentPage} />
             </>
           )}
         </AdminTableShell>
@@ -309,6 +265,8 @@ export default function AdminListingsPage() {
           </div>
         </div>
       ) : null}
+
+      {previewId ? <PropertyPreviewModal propertyId={previewId} onClose={() => setPreviewId(null)} /> : null}
     </>
   );
 }

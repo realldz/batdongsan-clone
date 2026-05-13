@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
-import { searchProperties, type Property, type PropertyStatus } from "@/services/properties";
+import { getMyProperties, type Property, type PropertyStatus } from "@/services/properties";
 import { payWallet } from "@/services/wallet";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -149,9 +149,9 @@ export default function ListingsPage() {
     async function loadListings() {
       setLoading(true);
       try {
-        const params: Record<string, unknown> = { page: currentPage, perPage: PAGE_SIZE };
+        const params: { page: number; perPage: number; title?: string } = { page: currentPage, perPage: PAGE_SIZE };
         if (search.trim()) params.title = search.trim();
-        const response = await searchProperties(params);
+        const response = await getMyProperties(params);
         const result = unwrapPaginated<Property>(response);
 
         if (!ignore) {
@@ -803,7 +803,7 @@ function ListingCard({ listing, onRenew }: { listing: Listing; onRenew: () => vo
                 Xem chi tiết
               </Link>
               <Link
-                href={`/nguoi-ban/dang-tin?edit=${listing.code}`}
+                href={`/nguoi-ban/dang-tin?edit=${listing.id}`}
                 className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
               >
                 Chỉnh sửa

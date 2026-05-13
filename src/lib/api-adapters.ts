@@ -39,6 +39,7 @@ export interface PropertyDetailView {
   price: string;
   pricePerSqm: string;
   area: string;
+  type: string;
   address: string;
   location: string;
   direction: string;
@@ -255,6 +256,7 @@ export function propertyToDetailView(property: Property): PropertyDetailView {
     price: formatCurrency(property.price, property.type),
     pricePerSqm: formatPricePerSqm(property.price, property.area),
     area: formatArea(property.area),
+    type: property.type,
     address: formatFullAddress(property),
     location: formatLocation(property),
     direction: property.direction ?? "Đang cập nhật",
@@ -336,6 +338,7 @@ export function mapAdminRoleToApiRole(role: AdminUserRole): number {
 
 function mapUserStatus(user: ApiUser): AdminUserStatus {
   if (user.deletedAt) return "Tạm khóa";
+  if (user.isBlocked) return "Tạm khóa";
   if (user.status === "pending" || user.status === "Chờ xác minh") return "Chờ xác minh";
   if (user.status === "locked" || user.status === "Tạm khóa") return "Tạm khóa";
   return "Đang hoạt động";
@@ -427,7 +430,9 @@ export function apiUserToAdminUser(user: ApiUser): AdminUser {
     phone: user.phone ?? "--",
     email: user.email ?? "--",
     role: mapUserRole(user.role),
+    roleNumber: typeof user.role === "number" ? user.role : 1,
     status: mapUserStatus(user),
+    isBlocked: !!user.isBlocked || !!user.deletedAt,
     listings: typeof user.listings === "number" ? user.listings : 0,
     revenue: String(revenue),
     joinedAt: formatDate(user.createdAt),

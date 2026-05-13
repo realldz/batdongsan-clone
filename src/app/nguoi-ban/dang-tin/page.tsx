@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Eye, Tag, Key, ChevronUp, Search, X, MapPin, Check, ChevronDown, Flag, Cloud, Sparkles, Plus, Minus, Edit2 } from "lucide-react";
 import Link from "next/link";
-import { createProperty, updateProperty } from "@/services/properties";
+import { useRouter, useSearchParams } from "next/navigation";
+import { createProperty, getPropertyById, updateProperty, type Property } from "@/services/properties";
 import { uploadPropertyImage } from "@/services/upload";
+import { payWallet } from "@/services/wallet";
+import { useAuth } from "@/lib/auth-store";
+import { useRefreshWallet } from "@/lib/use-wallet-balance";
+import { toast } from "sonner";
 import { Step2 } from "./_components/Step2";
-import { Step3 } from "./_components/Step3";
+import { Step3, PACKAGE_PRICES, type PackageId, type DurationDays } from "./_components/Step3";
 
 const propertyTypeOptions = ["Căn hộ chung cư", "Nhà riêng", "Nhà mặt phố", "Biệt thự", "Nhà trọ, phòng trọ", "Văn phòng", "Cửa hàng, ki-ốt", "Đất nền", "Kho, nhà xưởng"];
 const priceUnitOptions = ["VND", "Triệu/tháng", "Tỷ", "Triệu/m²", "Thỏa thuận"];
@@ -50,6 +55,22 @@ function getUploadUrl(response: Record<string, unknown>): string | null {
 }
 
 export default function CreateListingPage() {
+  return (
+    <Suspense>
+      <CreateListingPageInner />
+    </Suspense>
+  );
+}
+
+function CreateListingPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = Boolean(editId);
+  const { user } = useAuth();
+  const refreshWallet = useRefreshWallet();
+  const [editProperty, setEditProperty] = useState<Property | null>(null);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [demand, setDemand] = useState<"sale" | "rent" | null>("rent");
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -68,15 +89,37 @@ export default function CreateListingPage() {
   const [electricityPrice, setElectricityPrice] = useState("Theo nhà cung cấp");
   const [waterPrice, setWaterPrice] = useState("Theo nhà cung cấp");
   const [internetPrice, setInternetPrice] = useState("Thoả thuận");
-  const [contactName, setContactName] = useState("Long Ngô Tiến");
-  const [contactEmail, setContactEmail] = useState("ngotienlong@gmail.com");
-  const [contactPhone, setContactPhone] = useState("0967981332");
-  const [title, setTitle] = useState("Cho thuê căn hộ HH2 Linh Đàm, 9 triệu VND, 75 m2, đầy đủ nội thất");
-  const [description, setDescription] = useState("Căn hộ chung cư tại HH2 Linh Đàm, Phường Hoàng Liệt, Hà Nội với diện tích 75 m2, được thiết kế hiện đại và đầy đủ tiện nghi.");
+  const [contactName, setContactName] = useState(user?.fullName ?? "");
+  const [contactEmail, setContactEmail] = useState(user?.email ?? "");
+  const [contactPhone, setContactPhone] = useState(user?.phone ?? "");
+  const [title, setTitle] = useState(isEditMode ? "" : "Cho thuê căn hộ HH2 Linh Đàm, 9 triệu VND, 75 m2, đầy đủ nội thất");
+  const [description, setDescription] = useState(isEditMode ? "" : "Căn hộ chung cư tại HH2 Linh Đàm, Phường Hoàng Liệt, Hà Nội với diện tích 75 m2, được thiết kế hiện đại và đầy đủ tiện nghi.");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+
+  useEffect(() => {
+    if (isEditMode && editId) {
+      getPropertyById(editId).then((property) => {
+        if (!property) return;
+        setEditProperty(property);
+        setDemand(property.type);
+        setTitle(property.title);
+        setDescription(property.description);
+        setArea(String(property.area));
+        setPrice(String(property.price));
+        setHouseDirection(property.direction ?? "Không xác định");
+        if (property.images) setImageUrls(property.images);
+        if (property.address) {
+          setIsAddressConfirmed(true);
+        }
+      }).catch(() => {
+        toast.error("Không thể tải thông tin tin đăng");
+        router.replace("/nguoi-ban/tin-dang");
+      });
+    }
+  }, [isEditMode, editId, router]);
 
   // Section Expansion States
   const [expanded, setExpanded] = useState({
@@ -113,7 +156,15 @@ export default function CreateListingPage() {
     });
   };
 
-  const handleCreateProperty = async () => {
+  useEffect(() => {
+    if (user) {
+      setContactName(user.fullName ?? "");
+      setContactEmail(user.email ?? "");
+      setContactPhone(user.phone ?? "");
+    }
+  }, [user]);
+
+  const handleSubmitListing = async (packageId: PackageId, durationDays: DurationDays) => {
     const parsedArea = Number(area.replace(/[^\d.]/g, ""));
     const parsedPrice = Number(price.replace(/[^\d]/g, ""));
 
@@ -126,7 +177,15 @@ export default function CreateListingPage() {
     setSubmitMessage("");
 
     try {
-      const property = await createProperty({
+      const total = PACKAGE_PRICES[packageId] * durationDays;
+      const label = demand === "rent" ? "Cho thuê" : "Bán";
+
+      await payWallet({
+        amount: total,
+        description: `Đăng tin ${label} - ${title.trim().slice(0, 50)}`,
+      });
+
+      const propertyPayload = {
         title: title.trim(),
         description: description.trim(),
         type: demand,
@@ -136,25 +195,33 @@ export default function CreateListingPage() {
         district: selectedAddress.district,
         province: selectedAddress.province,
         coordinates: { lat: selectedAddress.lat, lng: selectedAddress.lng },
-        images: imageUrls,
         direction: houseDirection,
         legalInfo: "Đang cập nhật",
-      });
+      };
+
+      const property = isEditMode && editProperty
+        ? await updateProperty(editProperty.id, propertyPayload)
+        : await createProperty(propertyPayload);
 
       const uploadedUrls = imageFiles.length > 0
         ? (await Promise.all(imageFiles.map((file) => uploadPropertyImage(property.id, file))))
           .map((response) => getUploadUrl(response))
           .filter((url): url is string => Boolean(url))
         : [];
+
       const finalImages = [...imageUrls, ...uploadedUrls];
 
-      if (uploadedUrls.length > 0) {
+      if (finalImages.length > 0) {
         await updateProperty(property.id, { images: finalImages });
       }
 
-      setSubmitMessage(`Đã gửi tin ${property.id} tới API${finalImages.length > 0 ? " kèm ảnh" : ""}, vui lòng chờ duyệt.`);
-    } catch {
-      setSubmitMessage("Chưa thể gửi tin tới API, vui lòng thử lại sau.");
+      refreshWallet();
+      toast.success(isEditMode ? "Cập nhật tin đăng thành công!" : "Đăng tin thành công!");
+      router.push("/nguoi-ban/tin-dang");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Lỗi không xác định";
+      setSubmitMessage(message);
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -167,7 +234,7 @@ export default function CreateListingPage() {
         <div className="px-6 py-4 flex items-center justify-between max-w-[1400px] w-full mx-auto">
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-3">
-              <h1 className="text-xl font-bold text-[#2c2c2c]">Tạo tin đăng</h1>
+              <h1 className="text-xl font-bold text-[#2c2c2c]">{isEditMode ? "Chỉnh sửa tin đăng" : "Tạo tin đăng"}</h1>
               {isAddressConfirmed && (
                 <div className="flex items-center gap-1.5 text-gray-500 text-[13px] ml-2">
                   <Cloud size={16} /> Đã lưu nháp
@@ -848,7 +915,7 @@ export default function CreateListingPage() {
       </div>
 
       <div className={currentStep === 3 ? "block" : "hidden"}>
-        <Step3 onBack={() => setCurrentStep(2)} onNext={handleCreateProperty} isSubmitting={isSubmitting} submitMessage={submitMessage} />
+        <Step3 onBack={() => setCurrentStep(2)} onSubmit={handleSubmitListing} isSubmitting={isSubmitting} submitMessage={submitMessage} />
       </div>
 
       {/* Floating Action Button (Chat) */}

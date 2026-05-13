@@ -13,6 +13,7 @@ export interface ApiUser {
   updatedAt?: string;
   deletedAt?: string | null;
   status?: string;
+  isBlocked?: boolean;
   listings?: number;
   revenue?: number | string;
 }
@@ -104,4 +105,8 @@ export async function softDeleteUser(id: string) {
 
 export async function restoreUser(id: string) {
   return api.post<ApiUser>(`/users/${id}/restore`);
+}
+
+export async function promoteToMerchant(userId: string) {
+  return api.post<ApiUser>(`/merchants/${userId}/promote`);
 }

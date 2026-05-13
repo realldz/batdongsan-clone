@@ -28,12 +28,22 @@ export const AuthorSidebar = ({
   const wallet = useWalletBalance();
   const isHost = isAuthenticated && hostId && user?.id === hostId;
 
+  const getStoredUser = () => {
+    try {
+      const raw = localStorage.getItem("user");
+      if (raw) return JSON.parse(raw) as { phone?: string | null; email?: string | null };
+    } catch { /* ignore parse errors */ }
+    return null;
+  };
+
   const submitLead = async (userName: string, userPhone: string) => {
     setLoading(true);
     try {
+      const stored = getStoredUser();
       await createLead({
         name: userName,
-        phone: userPhone || "",
+        email: stored?.email ?? "",
+        phone: stored?.phone ?? userPhone ?? "",
         propertyId,
         source: "property_detail",
         message: "",
@@ -103,7 +113,7 @@ export const AuthorSidebar = ({
         <LoginModal onSuccess={handleLoginSuccess} onClose={() => setShowLogin(false)} />
       ) : null}
 
-      {isHost && (
+      {/* {isHost && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <div className="text-xs font-medium text-gray-500 mb-1">Số dư của bạn</div>
           <div className="flex items-center justify-between">
@@ -111,7 +121,7 @@ export const AuthorSidebar = ({
             <span className="text-xs text-gray-400">src: {wallet.source}</span>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

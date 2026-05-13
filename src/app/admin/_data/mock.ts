@@ -25,15 +25,31 @@ export type AdminListing = {
 
 export type AdminUser = {
   id: string;
+  role: AdminUserRole;
+  roleNumber: number;
+  status: string;
+  isBlocked: boolean;
   name: string;
   phone: string;
   email: string;
-  role: AdminUserRole;
-  status: AdminUserStatus;
   listings: number;
   revenue: string;
   joinedAt: string;
   note: string;
+
+  // Extended from API
+  fullName?: string;
+  avatar?: string | null;
+  adminScopes?: string[];
+  blockedAt?: string | null;
+  blockedReason?: string | null;
+  boostQuotaUsed?: number;
+  boostQuotaResetAt?: string | null;
+  listingFavoriteCount?: number;
+  vipTier?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
 };
 
 export type AdminAgent = {
@@ -221,11 +237,11 @@ export const adminListings: AdminListing[] = [
 ];
 
 export const adminUsers: AdminUser[] = [
-  { id: "user-1", name: "Nguyễn Minh Anh", phone: "0901 234 567", email: "minhanh@example.com", role: "Môi giới", status: "Đang hoạt động", listings: 18, revenue: "12.450.000 đ", joinedAt: "12/01/2026", note: "Tài khoản uy tín" },
-  { id: "user-2", name: "Sunrise Realty", phone: "028 3888 9999", email: "contact@sunrise.vn", role: "Doanh nghiệp", status: "Đang hoạt động", listings: 42, revenue: "38.900.000 đ", joinedAt: "03/11/2025", note: "Gói doanh nghiệp" },
-  { id: "user-3", name: "Trần Quốc Huy", phone: "0912 888 456", email: "quochuy@example.com", role: "Người bán", status: "Chờ xác minh", listings: 2, revenue: "450.000 đ", joinedAt: "06/05/2026", note: "Cần xác minh giấy tờ" },
-  { id: "user-4", name: "Lê Hải Nam", phone: "0935 711 222", email: "hainam@example.com", role: "Môi giới", status: "Tạm khóa", listings: 9, revenue: "4.200.000 đ", joinedAt: "18/02/2026", note: "Nhiều báo cáo trùng tin" },
-  { id: "user-5", name: "BĐS An Phú", phone: "028 3666 1111", email: "admin@anphu.vn", role: "Doanh nghiệp", status: "Đang hoạt động", listings: 27, revenue: "21.100.000 đ", joinedAt: "21/09/2025", note: "Thanh toán đúng hạn" },
+  { id: "user-1", role: "Môi giới", roleNumber: 3, status: "Đang hoạt động", isBlocked: false, name: "Nguyễn Minh Anh", phone: "0901 234 567", email: "minhanh@example.com", listings: 18, revenue: "12.450.000 đ", joinedAt: "12/01/2026", note: "Tài khoản uy tín" },
+  { id: "user-2", role: "Doanh nghiệp", roleNumber: 3, status: "Đang hoạt động", isBlocked: false, name: "Sunrise Realty", phone: "028 3888 9999", email: "contact@sunrise.vn", listings: 42, revenue: "38.900.000 đ", joinedAt: "03/11/2025", note: "Gói doanh nghiệp" },
+  { id: "user-3", role: "Người bán", roleNumber: 1, status: "Chờ xác minh", isBlocked: false, name: "Trần Quốc Huy", phone: "0912 888 456", email: "quochuy@example.com", listings: 2, revenue: "450.000 đ", joinedAt: "06/05/2026", note: "Cần xác minh giấy tờ" },
+  { id: "user-4", role: "Môi giới", roleNumber: 3, status: "Tạm khóa", isBlocked: true, name: "Lê Hải Nam", phone: "0935 711 222", email: "hainam@example.com", listings: 9, revenue: "4.200.000 đ", joinedAt: "18/02/2026", note: "Nhiều báo cáo trùng tin" },
+  { id: "user-5", role: "Doanh nghiệp", roleNumber: 3, status: "Đang hoạt động", isBlocked: false, name: "BĐS An Phú", phone: "028 3666 1111", email: "admin@anphu.vn", listings: 27, revenue: "21.100.000 đ", joinedAt: "21/09/2025", note: "Thanh toán đúng hạn" },
 ];
 
 export const adminAgents: AdminAgent[] = [

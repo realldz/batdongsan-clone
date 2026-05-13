@@ -160,8 +160,9 @@ export default function WalletHistoryPage() {
                             {isIn ? <ArrowDownCircle className="h-5 w-5" /> : <ArrowUpCircle className="h-5 w-5" />}
                           </div>
                           <div>
-                            <div className="font-extrabold text-gray-900">{item.description ?? (isIn ? "Nạp tiền" : "Thanh toán")}</div>
+                            <div className="font-extrabold text-gray-900">{isIn ? "Nạp tiền" : "Thanh toán"}</div>
                             <div className="mt-1 text-xs font-medium text-gray-500">{formatDate(item.createdAt)} · {item.status ?? "--"}</div>
+                            {item.description ? <div className="mt-1 text-xs text-gray-400 line-clamp-1">{item.description}</div> : null}
                           </div>
                         </div>
                         <div className={`text-right font-extrabold ${isIn ? "text-emerald-600" : "text-[#e03c31]"}`}>

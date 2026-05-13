@@ -1,4 +1,5 @@
 import { SellerSidebar } from "../_components/SellerSidebar";
+import { SellerToaster } from "../_components/SellerToaster";
 import { WalletRefreshProvider } from "@/lib/use-wallet-balance";
 
 export const metadata = {
@@ -19,6 +20,7 @@ export default function SellerLayout({
           {children}
         </div>
       </div>
+      <SellerToaster />
     </WalletRefreshProvider>
   );
 }

@@ -96,21 +96,24 @@ export async function login(data: LoginRequest): Promise<AuthResponse> {
   return { accessToken: token, user };
 }
 
-export async function register(data: RegisterRequest): Promise<AuthResponse> {
+export async function register(data: RegisterRequest): Promise<AuthUser> {
   const res = await api.post<Record<string, unknown>>("/auth/register", data);
-  const token = extractToken(res);
 
-  if (!token) {
-    console.error("No token in register response:", res);
-    throw new Error("Phản hồi từ server không chứa token.");
+  let user = extractUser(res);
+  if (!user && res.id) {
+    user = {
+      id: String(res.id),
+      email: String(res.email),
+      fullName: String(res.fullName),
+      role: typeof res.role !== "undefined" ? String(res.role) : undefined,
+      phone: typeof res.phone === "string" ? res.phone : undefined,
+    };
   }
-
-  const user = extractUser(res) ?? userFromJwt(token);
 
   if (!user) {
     console.error("Cannot extract user from register response:", res);
     throw new Error("Không thể đọc thông tin người dùng từ phản hồi server.");
   }
 
-  return { accessToken: token, user };
+  return user;
 }

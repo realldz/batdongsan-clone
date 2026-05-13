@@ -107,6 +107,10 @@ export async function updateProperty(id: string, data: UpdatePropertyRequest) {
   return api.patch<Property>(`/properties/${id}`, data);
 }
 
+export async function getMyProperties(params?: { page?: number; perPage?: number; title?: string }) {
+  return api.get<Property[]>(`/properties/my${buildQuery(params ?? {})}`, { cache: "no-store" });
+}
+
 export async function deleteProperty(id: string) {
   return api.delete<{ message?: string }>(`/properties/${id}`);
 }

@@ -2,12 +2,14 @@
 
 import { AdminHeader } from "../_components/AdminHeader";
 import { EmptyState, StatusBadge } from "../_components/AdminUi";
+import { AdminPagination } from "../_components/AdminPagination";
+import { PropertyPreviewModal } from "../_components/PropertyPreviewModal";
 import { type AdminListing } from "../_data/mock";
 import { propertyToAdminListing, unwrapPaginated } from "@/lib/api-adapters";
 import { approveProperty, getPendingProperties, rejectProperty } from "@/services/admin";
 import type { Property } from "@/services/properties";
-import { CheckCircle2, MapPin, MessageSquareText, Search, X, XCircle } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { CheckCircle2, Eye, MapPin, MessageSquareText, Search, X, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type ReviewAction = "approve" | "reject";
 
@@ -23,6 +25,7 @@ export default function AdminReviewListingsPage() {
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -30,7 +33,9 @@ export default function AdminReviewListingsPage() {
     async function loadPendingListings() {
       setLoading(true);
       try {
-        const response = await getPendingProperties({ page: currentPage, perPage: PAGE_SIZE });
+        const params: Record<string, string | number> = { page: currentPage, perPage: PAGE_SIZE };
+        if (search.trim()) params.title = search.trim();
+        const response = await getPendingProperties(params as any);
         const result = unwrapPaginated<Property>(response, PAGE_SIZE);
         const pendingListings = result.data.map(propertyToAdminListing);
 
@@ -55,13 +60,7 @@ export default function AdminReviewListingsPage() {
     return () => {
       ignore = true;
     };
-  }, [currentPage]);
-
-  const filteredListings = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
-
-    return listings.filter((listing) => keyword.length === 0 || listing.title.toLowerCase().includes(keyword) || listing.code.toLowerCase().includes(keyword) || listing.owner.toLowerCase().includes(keyword));
-  }, [listings, search]);
+  }, [currentPage, search]);
 
   const openReview = (listing: AdminListing, action: ReviewAction) => {
     setReviewTarget({ listing, action });
@@ -87,6 +86,7 @@ export default function AdminReviewListingsPage() {
       setNote("");
     } finally {
       setIsSubmitting(false);
+      setTotal((current) => current - 1);
     }
   };
 
@@ -94,15 +94,15 @@ export default function AdminReviewListingsPage() {
     <>
       <AdminHeader title="Duyệt tin" description={`Xem hàng chờ, phê duyệt hoặc từ chối tin.`} />
       <main className="flex-1 overflow-y-auto p-5 lg:p-7 space-y-5 pb-12">
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
             <div className="text-sm font-bold text-gray-500 mb-2">Đang chờ</div>
-            <div className="text-3xl font-extrabold text-gray-900">{listings.filter((listing) => listing.status === "Chờ duyệt").length}</div>
+            <div className="text-3xl font-extrabold text-gray-900">{total}</div>
           </div>
-          <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
+          {/* <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-5">
             <div className="text-sm font-bold text-gray-500 mb-2">Đã từ chối</div>
             <div className="text-3xl font-extrabold text-gray-900">{listings.filter((listing) => listing.status === "Từ chối").length}</div>
-          </div>
+          </div> */}
           <div className="rounded-xl bg-[#fff6f6] border border-red-100 shadow-sm p-5">
             <div className="text-sm font-bold text-[#e03c31] mb-2">SLA duyệt tin</div>
             <div className="text-3xl font-extrabold text-gray-900">4 giờ</div>
@@ -112,17 +112,17 @@ export default function AdminReviewListingsPage() {
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
           <div className="relative max-w-[520px]">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm trong hàng chờ duyệt" className="w-full h-11 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm font-medium outline-none focus:border-[#e03c31] focus:bg-white" />
+            <input value={search} onChange={(event) => { setSearch(event.target.value); setCurrentPage(1); }} placeholder="Tìm trong hàng chờ duyệt" className="w-full h-11 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm font-medium outline-none focus:border-[#e03c31] focus:bg-white" />
           </div>
         </section>
 
-        {filteredListings.length === 0 && !loading ? (
+        {listings.length === 0 && !loading ? (
           <section className="bg-white rounded-xl border border-gray-200 shadow-sm"><EmptyState title="Không còn tin cần duyệt" description="Hàng chờ đang trống hoặc không khớp từ khóa." /></section>
         ) : null}
-        {filteredListings.length > 0 ? (
+        {listings.length > 0 ? (
           <>
             <section className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-              {filteredListings.map((listing) => (
+              {listings.map((listing) => (
                 <article key={listing.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:border-gray-300 transition-colors">
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div>
@@ -152,6 +152,7 @@ export default function AdminReviewListingsPage() {
                   </div>
 
                   <div className="flex flex-wrap justify-end gap-3">
+                    <button onClick={() => setPreviewId(listing.id)} className="h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-extrabold hover:bg-gray-50 flex items-center gap-2"><Eye className="w-4 h-4" /> Xem tin</button>
                     <button onClick={() => openReview(listing, "reject")} className="h-10 px-4 rounded-lg border border-rose-200 text-rose-600 text-sm font-extrabold hover:bg-rose-50 flex items-center gap-2"><XCircle className="w-4 h-4" /> Từ chối</button>
                     <button onClick={() => openReview(listing, "approve")} className="h-10 px-4 rounded-lg bg-[#e03c31] text-white text-sm font-extrabold hover:bg-[#c43329] flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Duyệt tin</button>
                   </div>
@@ -160,27 +161,7 @@ export default function AdminReviewListingsPage() {
             </section>
 
             {/* Pagination */}
-            {totalPages > 1 ? (
-              <div className="flex items-center justify-center gap-2">
-                <button
-                  type="button"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="h-10 px-4 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Trước
-                </button>
-                <span className="text-sm font-medium text-gray-500">Trang {currentPage}/{totalPages}</span>
-                <button
-                  type="button"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="h-10 px-4 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Sau
-                </button>
-              </div>
-            ) : null}
+            <AdminPagination page={currentPage} totalPages={totalPages} onChange={setCurrentPage} />
           </>
         ) : null}
       </main>
@@ -209,6 +190,8 @@ export default function AdminReviewListingsPage() {
           </div>
         </div>
       )}
+
+      {previewId ? <PropertyPreviewModal propertyId={previewId} onClose={() => setPreviewId(null)} /> : null}
     </>
   );
 }
