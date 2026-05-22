@@ -1,0 +1,69 @@
+"use client";
+
+import React, { useState, type MouseEvent } from "react";
+import { useFavorites } from "@/lib/favorites-store";
+import { Icon } from "@/components/atoms/Icon";
+
+export interface FavoriteButtonProps {
+  propertyId: string;
+  className?: string;
+  iconClassName?: string;
+  activeClassName?: string;
+  inactiveClassName?: string;
+  stopPropagation?: boolean;
+}
+
+export function FavoriteButton({
+  propertyId,
+  className = "border border-gray-300 text-gray-500 hover:text-primary hover:border-primary p-1.5 rounded transition-all bg-white flex items-center justify-center cursor-pointer",
+  iconClassName = "h-4 w-4",
+  activeClassName = "text-[#e03c31] border-[#e03c31]",
+  inactiveClassName = "",
+  stopPropagation = true,
+}: FavoriteButtonProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(propertyId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
+    if (stopPropagation) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setMessage("");
+
+    try {
+      await toggleFavorite(propertyId);
+    } catch {
+      setMessage("Cần đăng nhập");
+      setTimeout(() => setMessage(""), 2000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <span className="relative inline-flex">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={isSubmitting}
+        aria-label={favorited ? "Bỏ lưu tin" : "Lưu tin"}
+        title={message || (favorited ? "Đã lưu" : "Lưu tin")}
+        className={`${className} ${favorited ? activeClassName : inactiveClassName} disabled:cursor-not-allowed disabled:opacity-60`}
+      >
+        <Icon name="Heart" className={iconClassName} fill={favorited ? "currentColor" : "none"} />
+      </button>
+      {message && (
+        <span className="absolute right-0 top-[calc(100%+6px)] z-20 whitespace-nowrap rounded-lg bg-gray-900 px-2 py-1 text-[11px] font-bold text-white shadow-lg">
+          {message}
+        </span>
+      )}
+    </span>
+  );
+}
