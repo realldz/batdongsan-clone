@@ -11,14 +11,14 @@ export const Header = () => {
       <div className="max-w-[1240px] mx-auto px-4 lg:px-0 h-16 flex items-center justify-between">
         {/* Logo and Nav */}
         <div className="flex items-center gap-8 h-full">
-          <a href="/" className="flex items-center gap-1 group">
+          <Link href="/" className="flex items-center gap-1 group">
             <div className="bg-primary text-white p-1 rounded-sm flex items-center justify-center font-bold text-xl tracking-tight leading-none group-hover:bg-primary-hover transition-colors">
               BĐS
             </div>
             <span className="text-primary font-bold text-base tracking-tight leading-none group-hover:text-primary-hover transition-colors">
               .com.vn
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6 h-full">

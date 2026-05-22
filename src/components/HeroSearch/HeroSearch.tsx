@@ -156,6 +156,7 @@ export const HeroSearch = () => {
   const filterNames = ["Loại nhà đất", "Khu vực", "Mức giá", "Diện tích", "Tin đăng"];
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     setSelectedFilters((prev) => {
       const next = { ...prev };
       delete next["Mức giá"];

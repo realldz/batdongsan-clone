@@ -23,9 +23,13 @@ This repository is a Next.js application that serves as a real estate website cl
     - `nha-moi-gioi/`: Real estate brokers
     - `doanh-nghiep/`: Business directory
     - `tin-tuc/`: News and articles
-- `src/components/`: Contains modular React components used across pages.
-  - Features high-level layout components (`Header`, `Footer`).
-  - Contains domain-specific UI elements such as `PropertyCard`, `HeroSearch`, `SidebarFilters`, `LocationGrid`, and `ListingCard`.
+- `src/components/`: Contains modular React components organized using **Atomic Design** principles:
+  - `atoms/`: Basic UI primitives (`Icon`, `Button`, `Badge`, `Input`, `Select`, `Avatar`, `Logo`, `Skeleton`).
+  - `molecules/`: Compound components built from atoms (`Modal`, `Dropdown`, `Pagination`, `Breadcrumb`, `FormField`, `FavoriteButton`).
+  - `templates/`: Page-level layout compositions (`PublicPageLayout`, `TwoColumnLayout`).
+  - Core layouts and cards (`Header`, `Footer`, `PropertyCard`, `ListingCard`, `HeroSearch`, `SearchFilterBar`).
+- `src/hooks/`: Custom stateful React hooks (`useClickOutside`, `useBodyScrollLock`, `useDropdown`, `useEscapeKey`).
+- `src/types/` & `src/adapters/` & `src/config/`: Centralized interfaces, API mapping adapters, and static configuration options.
 - `public/`: Static assets.
 
 ### Technology Stack Notes

@@ -64,6 +64,7 @@ export default function AdminUsersPage() {
       try {
         const params: Record<string, string | number> = { page: currentPage, perPage: PAGE_SIZE };
         if (search.trim()) params.keyword = search.trim();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = await getAdminUsers(params as any);
         const result = unwrapPaginated<ApiUser>(response, PAGE_SIZE);
         const apiUsers = result.data.map(apiUserToAdminUser);

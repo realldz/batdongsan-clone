@@ -18,7 +18,7 @@ export const ZaloIcon = ({ size = 24, className, ...props }: CustomIconProps) =>
   </svg>
 );
 
-export const BdsLogo = ({ size = 32, className, ...props }: CustomIconProps) => (
+export const BdsLogo = ({ size = 32, className }: CustomIconProps) => (
   <div className={`flex items-center gap-1 group cursor-pointer ${className}`}>
     <div
       style={{ width: size, height: size }}

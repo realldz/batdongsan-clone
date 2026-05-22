@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import LinkExtension from "@tiptap/extension-link";
 import ImageExtension from "@tiptap/extension-image";
-import { Bold, Code, Heading2, Heading3, Image, Italic, Link, List, ListOrdered, Quote, Strikethrough } from "lucide-react";
+import { Bold, Code, Heading2, Heading3, Image as ImageIcon, Italic, Link, List, ListOrdered, Quote, Strikethrough } from "lucide-react";
 import { useCallback } from "react";
 
 interface RichTextEditorProps {
@@ -129,7 +129,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
           <Link className="w-3.5 h-3.5" />
         </ToolbarButton>
         <ToolbarButton onClick={setImage}>
-          <Image className="w-3.5 h-3.5" />
+          <ImageIcon className="w-3.5 h-3.5" />
         </ToolbarButton>
       </div>
       <div className="relative">

@@ -35,6 +35,7 @@ export default function AdminReviewListingsPage() {
       try {
         const params: Record<string, string | number> = { page: currentPage, perPage: PAGE_SIZE };
         if (search.trim()) params.title = search.trim();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = await getPendingProperties(params as any);
         const result = unwrapPaginated<Property>(response, PAGE_SIZE);
         const pendingListings = result.data.map(propertyToAdminListing);

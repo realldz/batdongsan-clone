@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-store";
 import { createLead } from "@/services/leads";
-import { useWalletBalance } from "@/lib/use-wallet-balance";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
 import type { PropertyDetailView } from "@/lib/api-adapters";
 
@@ -25,8 +24,6 @@ export const AuthorSidebar = ({
   const [showingPhone, setShowingPhone] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const wallet = useWalletBalance();
-  const isHost = isAuthenticated && hostId && user?.id === hostId;
 
   const getStoredUser = () => {
     try {
@@ -112,16 +109,6 @@ export const AuthorSidebar = ({
       {showLogin ? (
         <LoginModal onSuccess={handleLoginSuccess} onClose={() => setShowLogin(false)} />
       ) : null}
-
-      {/* {isHost && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
-          <div className="text-xs font-medium text-gray-500 mb-1">Số dư của bạn</div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-extrabold text-[#e03c31]">{wallet.total}</span>
-            <span className="text-xs text-gray-400">src: {wallet.source}</span>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };

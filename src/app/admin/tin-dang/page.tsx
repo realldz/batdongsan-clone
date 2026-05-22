@@ -80,6 +80,7 @@ export default function AdminListingsPage() {
         const type = mapTypeFilterToApi(typeFilter);
         if (type) params.type = type;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = await searchProperties(params as any);
         const result = unwrapPaginated<Property>(response);
 

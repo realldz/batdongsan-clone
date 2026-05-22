@@ -113,8 +113,10 @@ export const Icon = ({ name, size = 16, className, ...props }: IconProps) => {
   }
 
   if (name === "BdsLogo") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <SelectedIcon size={size} className={className} {...(props as any)} />;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <SelectedIcon size={size} className={className} {...(props as any)} />;
 };

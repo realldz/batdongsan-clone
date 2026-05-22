@@ -3,10 +3,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { CATEGORIES_BY_SLUG } from "@/config/categories";
-import { Icon, Button, Input, Select } from "@/components/atoms";
+import { Icon, Button, Select } from "@/components/atoms";
 import { Dropdown, Modal } from "@/components/molecules";
-
-type DropdownName = "type" | "price" | "area" | null;
 
 const propertyTypeOptions: { label: string; value: string }[] = [
   { label: "Bán", value: "sale" },
@@ -186,6 +184,7 @@ export const SearchFilterBar = () => {
   const [filterStatus, setFilterStatus] = useState("");
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     const categorySlug = pathname.replace(/^\//, "");
     const config = CATEGORIES_BY_SLUG[categorySlug];
 

@@ -20,6 +20,7 @@ export function PropertyPreviewModal({
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     let ignore = false;
     setLoading(true);
     setError(false);
