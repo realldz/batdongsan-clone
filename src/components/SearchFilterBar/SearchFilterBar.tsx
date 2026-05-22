@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { CATEGORIES_BY_SLUG } from "@/config/categories";
+import { Icon, Button, Input, Select } from "@/components/atoms";
+import { Dropdown, Modal } from "@/components/molecules";
 
-type Dropdown = "type" | "price" | "area" | null;
+type DropdownName = "type" | "price" | "area" | null;
 
 const propertyTypeOptions: { label: string; value: string }[] = [
   { label: "Bán", value: "sale" },
@@ -170,7 +172,6 @@ export const SearchFilterBar = () => {
   const pathname = usePathname();
 
   const [searchText, setSearchText] = useState("");
-  const [activeDropdown, setActiveDropdown] = useState<Dropdown>(null);
   const [propertyType, setPropertyType] = useState("Bán");
   const [priceLabel, setPriceLabel] = useState("Khoảng giá");
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
@@ -183,8 +184,6 @@ export const SearchFilterBar = () => {
   const [filterDirection, setFilterDirection] = useState("Tất cả");
   const [filterProvince, setFilterProvince] = useState("Tất cả");
   const [filterStatus, setFilterStatus] = useState("");
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const categorySlug = pathname.replace(/^\//, "");
@@ -229,27 +228,7 @@ export const SearchFilterBar = () => {
     setPriceLabel("Khoảng giá");
     setPriceMin(undefined);
     setPriceMax(undefined);
-    closeDropdown();
   };
-
-  const closeDropdown = () => setActiveDropdown(null);
-
-  const toggleDropdown = (name: Dropdown) => {
-    setActiveDropdown((prev) => (prev === name ? null : name));
-  };
-
-  useEffect(() => {
-    if (!activeDropdown) return;
-
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        closeDropdown();
-      }
-    };
-
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [activeDropdown]);
 
   const handleSearch = (e?: FormEvent) => {
     e?.preventDefault();
@@ -284,43 +263,42 @@ export const SearchFilterBar = () => {
           <form className="flex gap-2" onSubmit={handleSearch}>
             <div className="flex-1 flex items-center border border-gray-300 rounded overflow-hidden hover:border-gray-400 focus-within:border-primary transition-colors bg-white">
               <div className="pl-3 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <Icon name="Search" size={18} />
               </div>
               <input
                 type="text"
                 placeholder="Nhập tên bất động sản..."
-                className="w-full py-2 px-3 outline-none text-sm text-[#2c2c2c] placeholder-gray-500"
+                className="w-full py-2.5 px-3 outline-none text-sm text-[#2c2c2c] placeholder-gray-500"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
-            <button
+            <Button
               type="submit"
-              className="bg-primary hover:bg-primary-hover text-white font-medium px-6 py-2 rounded transition-colors text-sm flex-shrink-0"
+              size="md"
+              className="px-6 text-sm"
             >
               Tìm kiếm
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => handleSearch()}
-              className="bg-[#009ba1] hover:bg-[#008187] text-white font-medium px-4 py-2 rounded transition-colors text-sm flex-shrink-0 items-center gap-1.5 hidden md:flex"
+              variant="secondary"
+              size="md"
+              leftIcon={<Icon name="Map" size={16} />}
+              className="px-4 text-sm hidden md:flex"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
               Xem bản đồ
-            </button>
+            </Button>
           </form>
 
-          <div className="flex flex-wrap gap-2 mt-3 text-sm" ref={dropdownRef}>
+          <div className="flex flex-wrap gap-2 mt-3 text-sm">
             <button
               type="button"
               onClick={() => setFilterOpen(true)}
-              className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
+              className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c] cursor-pointer"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+              <Icon name="Filter" size={14} />
               Lọc
               {activeFilterCount > 0 ? (
                 <span className="bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
@@ -329,179 +307,164 @@ export const SearchFilterBar = () => {
               ) : null}
             </button>
 
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => toggleDropdown("type")}
-                className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
-              >
-                {propertyType}
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 text-gray-500 transition-transform ${activeDropdown === "type" ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </button>
-              {activeDropdown === "type" ? (
-                <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1">
-                  {propertyTypeOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => { handlePropertyTypeChange(option.label); }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${option.label === propertyType ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"}`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+            <Dropdown
+              trigger={
+                <button
+                  type="button"
+                  className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
+                >
+                  {propertyType}
+                  <Icon name="ChevronDown" size={12} className="text-gray-500" />
+                </button>
+              }
+              align="left"
+              panelClassName="w-40 py-1"
+            >
+              {propertyTypeOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    handlePropertyTypeChange(option.label);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer ${
+                    option.label === propertyType ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </Dropdown>
 
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => toggleDropdown("price")}
-                className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
-              >
-                {priceLabel}
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 text-gray-500 transition-transform ${activeDropdown === "price" ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </button>
-              {activeDropdown === "price" ? (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1 max-h-64 overflow-y-auto">
-                  {currentPriceRanges.map((range) => (
-                    <button
-                      key={range.label}
-                      type="button"
-                      onClick={() => {
-                        setPriceLabel(range.label);
-                        setPriceMin(range.min);
-                        setPriceMax(range.max);
-                        closeDropdown();
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${range.label === priceLabel ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"}`}
-                    >
-                      {range.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+            <Dropdown
+              trigger={
+                <button
+                  type="button"
+                  className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
+                >
+                  {priceLabel}
+                  <Icon name="ChevronDown" size={12} className="text-gray-500" />
+                </button>
+              }
+              align="left"
+              panelClassName="w-48 py-1 max-h-64 overflow-y-auto"
+            >
+              {currentPriceRanges.map((range) => (
+                <button
+                  key={range.label}
+                  type="button"
+                  onClick={() => {
+                    setPriceLabel(range.label);
+                    setPriceMin(range.min);
+                    setPriceMax(range.max);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer ${
+                    range.label === priceLabel ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"
+                  }`}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </Dropdown>
 
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => toggleDropdown("area")}
-                className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
-              >
-                {areaLabel}
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 text-gray-500 transition-transform ${activeDropdown === "area" ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </button>
-              {activeDropdown === "area" ? (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1 max-h-64 overflow-y-auto">
-                  {areaRanges.map((range) => (
-                    <button
-                      key={range.label}
-                      type="button"
-                      onClick={() => {
-                        setAreaLabel(range.label);
-                        setAreaMin(range.min);
-                        setAreaMax(range.max);
-                        closeDropdown();
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${range.label === areaLabel ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"}`}
-                    >
-                      {range.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+            <Dropdown
+              trigger={
+                <button
+                  type="button"
+                  className="border border-gray-300 rounded px-3 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-colors bg-white text-[#2c2c2c]"
+                >
+                  {areaLabel}
+                  <Icon name="ChevronDown" size={12} className="text-gray-500" />
+                </button>
+              }
+              align="left"
+              panelClassName="w-48 py-1 max-h-64 overflow-y-auto"
+            >
+              {areaRanges.map((range) => (
+                <button
+                  key={range.label}
+                  type="button"
+                  onClick={() => {
+                    setAreaLabel(range.label);
+                    setAreaMin(range.min);
+                    setAreaMax(range.max);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer ${
+                    range.label === areaLabel ? "bg-red-50 text-primary font-medium" : "text-[#2c2c2c]"
+                  }`}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </Dropdown>
           </div>
         </div>
       </div>
 
-      {filterOpen ? (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/40 px-4 py-6"
-          onClick={() => setFilterOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-[480px] rounded-2xl bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-[#2c2c2c]">Bộ lọc tìm kiếm</h2>
-              <button
-                type="button"
-                onClick={() => setFilterOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:text-gray-600 hover:border-gray-300"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6 6 18" /></svg>
-              </button>
-            </div>
+      <Modal
+        isOpen={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        size="md"
+        title="Bộ lọc tìm kiếm"
+      >
+        <div className="space-y-4 text-left">
+          <div>
+            <Select
+              label="Tỉnh/Thành phố"
+              options={provinceOptions}
+              value={filterProvince}
+              onChange={(e) => setFilterProvince(e.target.value)}
+              className="w-full"
+            />
+          </div>
 
-            <div className="px-6 py-4 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[#2c2c2c] mb-1.5">Tỉnh/Thành phố</label>
-                <select
-                  value={filterProvince}
-                  onChange={(e) => setFilterProvince(e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-[#2c2c2c] outline-none focus:border-primary"
-                >
-                  {provinceOptions.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
+          <div>
+            <Select
+              label="Hướng nhà"
+              options={directionOptions}
+              value={filterDirection}
+              onChange={(e) => setFilterDirection(e.target.value)}
+              className="w-full"
+            />
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[#2c2c2c] mb-1.5">Hướng nhà</label>
-                <select
-                  value={filterDirection}
-                  onChange={(e) => setFilterDirection(e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-[#2c2c2c] outline-none focus:border-primary"
-                >
-                  {directionOptions.map((d) => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#2c2c2c] mb-1.5">Trạng thái tin</label>
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-[#2c2c2c] outline-none focus:border-primary"
-                >
-                  {statusOptions.map((s) => (
-                    <option key={s.value} value={s.value}>{s.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 px-6 py-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => {
-                  setFilterDirection("Tất cả");
-                  setFilterProvince("Tất cả");
-                  setFilterStatus("");
-                  setFilterOpen(false);
-                }}
-                className="flex-1 rounded-xl border border-gray-300 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
-              >
-                Đặt lại
-              </button>
-              <button
-                type="button"
-                onClick={() => { setFilterOpen(false); handleSearch(); }}
-                className="flex-1 rounded-xl bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-hover"
-              >
-                Áp dụng
-              </button>
-            </div>
+          <div>
+            <Select
+              label="Trạng thái tin"
+              options={statusOptions}
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full"
+            />
           </div>
         </div>
-      ) : null}
+
+        <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setFilterDirection("Tất cả");
+              setFilterProvince("Tất cả");
+              setFilterStatus("");
+              setFilterOpen(false);
+            }}
+            className="flex-1 rounded-xl"
+          >
+            Đặt lại
+          </Button>
+          <Button
+            type="button"
+            onClick={() => {
+              setFilterOpen(false);
+              handleSearch();
+            }}
+            className="flex-1 rounded-xl font-semibold"
+          >
+            Áp dụng
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };
