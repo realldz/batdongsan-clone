@@ -2,15 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export interface AgentData {
-  id: string;
-  name: string;
-  logo: string;
-  address: string;
-  phone: string;
-  phone2?: string;
-  areas: string[];
-}
+import { type AgentData } from "@/types";
+
+export type { AgentData };
 
 export const AgentCard = ({ data }: { data: AgentData }) => {
   return (

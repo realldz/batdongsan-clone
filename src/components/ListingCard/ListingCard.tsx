@@ -8,24 +8,9 @@ import { createLead } from "@/services/leads";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
 import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton";
 
-export interface ListingData {
-  id: string;
-  vipTag: string;
-  images: string[];
-  title: string;
-  price: string;
-  area: string;
-  pricePerSqm: string;
-  beds: number;
-  baths: number;
-  location: string;
-  description: string;
-  authorName: string;
-  authorAvatar: string;
-  postedTime: string;
-  phone: string;
-  direction: string;
-}
+import { type ListingData } from "@/types";
+
+export type { ListingData };
 
 export const ListingCard = ({ data }: { data: ListingData }) => {
   const { isAuthenticated, user } = useAuth();

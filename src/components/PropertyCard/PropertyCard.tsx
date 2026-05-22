@@ -3,15 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton";
 
-export interface PropertyData {
-  id: string;
-  title: string;
-  price: string;
-  area: string;
-  location: string;
-  imageUrl: string;
-  postedTime: string;
-}
+import { type PropertyData } from "@/types";
+
+export type { PropertyData };
 
 export const PropertyCard = ({ property }: { property: PropertyData }) => {
   return (

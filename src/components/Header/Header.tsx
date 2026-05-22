@@ -2,45 +2,10 @@ import Link from "next/link";
 import React from "react";
 
 import { HeaderAuthActions } from "./HeaderAuthActions";
-import { CATEGORY_GROUPS } from "@/config/categories";
-
-const navLinks: { text: string; href: string; subItems?: { text: string; href: string }[] }[] = [
-  ...Object.entries(CATEGORY_GROUPS).map(([group, categories]) => ({
-    text: group,
-    href: "#",
-    subItems: categories.map((c) => ({ text: c.text, href: `/${c.slug}` })),
-  })),
-  {
-    text: "Dự án",
-    href: "#",
-    subItems: [
-      { text: "Căn hộ chung cư", href: "#" },
-      { text: "Cao ốc văn phòng", href: "#" },
-      { text: "Trung tâm thương mại", href: "#" },
-      { text: "Khu đô thị mới", href: "#" },
-      { text: "Khu phức hợp", href: "#" },
-      { text: "Nhà ở xã hội", href: "#" },
-      { text: "Khu nghỉ dưỡng, Sinh thái", href: "#" },
-      { text: "Biệt thự, liền kề", href: "#" },
-    ]
-  },
-  {
-    text: "Tin tức",
-    href: "/tin-tuc",
-  },
-  { text: "Wiki BĐS", href: "#" },
-  { text: "Phân tích đánh giá", href: "#" },
-  {
-    text: "Danh bạ",
-    href: "/nha-moi-gioi",
-    subItems: [
-      { text: "Nhà môi giới", href: "/nha-moi-gioi" },
-      { text: "Doanh nghiệp", href: "/doanh-nghiep" }
-    ]
-  },
-];
+import { getNavLinks } from "@/config/navigation";
 
 export const Header = () => {
+  const navLinks = getNavLinks();
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-[1240px] mx-auto px-4 lg:px-0 h-16 flex items-center justify-between">
