@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import { Eye, Tag, Key, ChevronUp, Search, X, MapPin, Check, ChevronDown, Flag, Cloud, Sparkles, Plus, Minus, Edit2 } from "lucide-react";
+import { Eye, Tag, Key, ChevronUp, Search, X, MapPin, Check, ChevronDown, Cloud, Sparkles, Plus, Minus, Edit2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createProperty, getPropertyById, updateProperty, type Property } from "@/services/properties";
