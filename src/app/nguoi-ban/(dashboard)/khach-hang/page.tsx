@@ -1,6 +1,7 @@
 "use client";
 
 import { SellerHeader } from "@/app/nguoi-ban/_components/SellerHeader";
+import { SellerPagination } from "@/app/nguoi-ban/_components/SellerPagination";
 import { StatusBadge } from "@/app/admin/_components/AdminUi";
 import { useAuth } from "@/lib/auth-store";
 import { apiLeadToView, unwrapArray, type LeadView } from "@/lib/api-adapters";
@@ -219,47 +220,14 @@ export default function KhachHangPage() {
                 </tbody>
               </table>
 
-              {totalPages > 1 ? (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-                  <span className="text-xs text-gray-500">
-                    {filtered.length} liên hệ — Trang {currentPage} / {totalPages}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage <= 1}
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold hover:bg-gray-50 disabled:opacity-30"
-                    >
-                      Trước
-                    </button>
-                    {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                      const start = Math.max(1, Math.min(currentPage - 3, totalPages - 6));
-                      const p = start + i;
-                      if (p > totalPages) return null;
-                      return (
-                        <button
-                          key={p}
-                          onClick={() => setPage(p)}
-                          className={`w-8 h-8 rounded-lg text-xs font-bold transition-colors ${
-                            p === currentPage
-                              ? "bg-primary text-white"
-                              : "border border-gray-200 hover:bg-gray-50 text-gray-600"
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      );
-                    })}
-                    <button
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage >= totalPages}
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold hover:bg-gray-50 disabled:opacity-30"
-                    >
-                      Sau
-                    </button>
-                  </div>
-                </div>
-              ) : null}
+              <SellerPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                totalItems={filtered.length}
+                itemsLabel="liên hệ"
+                pageSize={PER_PAGE}
+              />
             </>
           )}
         </div>

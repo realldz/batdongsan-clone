@@ -1,6 +1,7 @@
 "use client";
 
 import { SellerHeader } from "../../_components/SellerHeader";
+import { SellerPagination } from "../../_components/SellerPagination";
 import {
   ArrowRight,
   Calendar,
@@ -431,69 +432,14 @@ export default function ListingsPage() {
               )}
             </div>
 
-            {totalPages > 1 ? (
-              <div className="flex flex-col gap-3 border-t border-gray-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-sm font-medium text-gray-500">
-                  Trang {currentPage} / {totalPages}
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    className="rounded-full border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Trước
-                  </button>
-                  {(() => {
-                    const maxVisible = 7;
-                    const pages: (number | "ellipsis-start" | "ellipsis-end")[] = [];
-                    if (totalPages <= maxVisible + 2) {
-                      for (let i = 1; i <= totalPages; i++) pages.push(i);
-                    } else {
-                      pages.push(1);
-                      if (currentPage > 3) pages.push("ellipsis-start");
-                      const start = Math.max(2, currentPage - 1);
-                      const end = Math.min(totalPages - 1, currentPage + 1);
-                      for (let i = start; i <= end; i++) pages.push(i);
-                      if (currentPage < totalPages - 2) pages.push("ellipsis-end");
-                      pages.push(totalPages);
-                    }
-                    return pages.map((page) => {
-                      if (typeof page === "string") {
-                        return (
-                          <span key={page} className="flex h-9 w-9 items-center justify-center text-sm font-bold text-gray-400">
-                            ...
-                          </span>
-                        );
-                      }
-                      return (
-                        <button
-                          key={page}
-                          type="button"
-                          onClick={() => setCurrentPage(page)}
-                          className={`h-9 w-9 rounded-full border text-sm font-extrabold transition-colors ${
-                            currentPage === page
-                              ? "border-gray-900 bg-gray-900 text-white"
-                              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      );
-                    });
-                  })()}
-                  <button
-                    type="button"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    className="rounded-full border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Sau
-                  </button>
-                </div>
-              </div>
-            ) : null}
+            <SellerPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={total}
+              itemsLabel="tin"
+              pageSize={PAGE_SIZE}
+            />
           </section>
         </div>
       </main>
