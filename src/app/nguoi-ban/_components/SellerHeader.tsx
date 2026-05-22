@@ -1,10 +1,11 @@
 "use client";
 import { Bell, ChevronDown, LogOut, Wallet, Receipt, Gift, Crown, Briefcase, Settings, HelpCircle, User as UserIcon } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-store";
 import { useWalletBalance } from "@/lib/use-wallet-balance";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export function SellerHeader({ title }: { title: string }) {
   const { user, logout } = useAuth();
@@ -15,15 +16,7 @@ export function SellerHeader({ title }: { title: string }) {
   const displayName = user?.fullName ?? "Người dùng";
   const wallet = useWalletBalance();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setIsProfileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside(profileRef, () => setIsProfileOpen(false));
 
   return (
     <header className="flex items-center justify-between px-6 h-[72px] bg-white border-b border-gray-200 flex-shrink-0 z-50">
