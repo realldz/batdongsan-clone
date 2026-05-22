@@ -254,7 +254,7 @@ function CreateListingPageInner() {
         </div>
         {/* Progress bar area */}
         <div className="w-full flex bg-white">
-          <div className={`${currentStep === 1 ? 'w-[30%]' : currentStep === 2 ? 'w-[65%]' : 'w-full'} border-b-[3px] border-[#e03c31] relative transition-all duration-300`}>
+          <div className={`${currentStep === 1 ? 'w-[30%]' : currentStep === 2 ? 'w-[65%]' : 'w-full'} border-b-[3px] border-primary relative transition-all duration-300`}>
             <div className="absolute bottom-[8px] left-6 text-[13px] font-medium text-[#2c2c2c] whitespace-nowrap">
               {currentStep === 1 ? 'Bước 1. Thông tin BĐS' : currentStep === 2 ? 'Bước 2. Hình ảnh & video' : 'Bước 3. Cấu hình & thanh toán'}
             </div>
@@ -269,7 +269,7 @@ function CreateListingPageInner() {
           {/* Nhu cầu Card */}
           <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleSection("demand")}>
-              <h2 className="font-bold text-[14px]">Nhu cầu <span className="text-[#e03c31]">*</span></h2>
+              <h2 className="font-bold text-[14px]">Nhu cầu <span className="text-primary">*</span></h2>
               {expanded.demand ? <ChevronUp size={20} className="text-[#2c2c2c]" /> : <ChevronDown size={20} className="text-[#2c2c2c]" />}
             </div>
             {expanded.demand ? (
@@ -301,7 +301,7 @@ function CreateListingPageInner() {
           {/* Địa chỉ Card */}
           <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleSection("address")}>
-              <h2 className="font-bold text-[14px]">Địa chỉ <span className="text-[#e03c31]">*</span></h2>
+              <h2 className="font-bold text-[14px]">Địa chỉ <span className="text-primary">*</span></h2>
               {expanded.address ? <ChevronUp size={20} className="text-[#2c2c2c]" /> : <ChevronDown size={20} className="text-[#2c2c2c]" />}
             </div>
 
@@ -326,8 +326,8 @@ function CreateListingPageInner() {
                     </div>
                     {/* <div className="mb-4">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <MapPin size={16} className="text-[#e03c31]" fill="#e03c31" stroke="white" strokeWidth={1} />
-                        <span className="font-bold text-[13px] text-[#e03c31]">Địa chỉ mới</span>
+                        <MapPin size={16} className="text-primary" fill="#e03c31" stroke="white" strokeWidth={1} />
+                        <span className="font-bold text-[13px] text-primary">Địa chỉ mới</span>
                       </div>
                       <div className="pl-6 text-[14px] text-[#2c2c2c]">{selectedAddress.project}, <span className="font-bold">{selectedAddress.ward}</span>, {selectedAddress.province}</div>
                     </div> */}
@@ -344,7 +344,7 @@ function CreateListingPageInner() {
                         <path d="M200 0 L 250 180" fill="none" stroke="#ffffff" strokeWidth="6" />
                       </svg>
                       <div className="relative z-10 flex flex-col items-center drop-shadow-md pb-4 animate-bounce">
-                        <MapPin size={36} className="text-[#e03c31]" fill="#e03c31" stroke="white" strokeWidth={1} />
+                        <MapPin size={36} className="text-primary" fill="#e03c31" stroke="white" strokeWidth={1} />
                         <div className="w-2.5 h-1.5 bg-black/30 rounded-[50%] absolute bottom-2 blur-[1px]"></div>
                       </div>
                     </div>
@@ -363,8 +363,8 @@ function CreateListingPageInner() {
                   </div>
                   {/* <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <MapPin size={16} className="text-[#e03c31]" fill="#e03c31" stroke="white" strokeWidth={1} />
-                    <span className="font-bold text-[13px] text-[#e03c31]">Địa chỉ mới</span>
+                    <MapPin size={16} className="text-primary" fill="#e03c31" stroke="white" strokeWidth={1} />
+                    <span className="font-bold text-[13px] text-primary">Địa chỉ mới</span>
                   </div>
                   <div className="pl-6 text-[14px] text-[#2c2c2c]">{selectedAddress.project}, <span className="font-bold">{selectedAddress.ward}</span>, {selectedAddress.province}</div>
                 </div> */}
@@ -382,14 +382,14 @@ function CreateListingPageInner() {
               {/* Thông tin chính Card */}
               <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleSection("main")}>
-                  <h2 className="font-bold text-[14px]">Thông tin chính <span className="text-[#e03c31]">*</span></h2>
+                  <h2 className="font-bold text-[14px]">Thông tin chính <span className="text-primary">*</span></h2>
                   {expanded.main ? <ChevronUp size={20} className="text-[#2c2c2c]" /> : <ChevronDown size={20} className="text-[#2c2c2c]" />}
                 </div>
 
                 {expanded.main ? (
                   <div className="px-4 pb-6 pt-0 space-y-4">
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Loại bất động sản <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Loại bất động sản <span className="text-primary">*</span></label>
                       <div className="relative">
                         <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white">
                           {propertyTypeOptions.map((option) => <option key={option}>{option}</option>)}
@@ -399,7 +399,7 @@ function CreateListingPageInner() {
                     </div>
 
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Diện tích <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Diện tích <span className="text-primary">*</span></label>
                       <div className="relative">
                         <input type="text" value={area} onChange={(event) => setArea(event.target.value)} className="w-full border border-gray-300 rounded-md pl-3 pr-10 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px]" />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs font-medium">m²</span>
@@ -408,7 +408,7 @@ function CreateListingPageInner() {
 
                     <div className="flex gap-4">
                       <div className="flex-[2]">
-                        <label className="block text-[13px] font-bold mb-2">Mức giá <span className="text-[#e03c31]">*</span></label>
+                        <label className="block text-[13px] font-bold mb-2">Mức giá <span className="text-primary">*</span></label>
                         <input type="text" value={price} onChange={(event) => setPrice(event.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px]" />
                       </div>
                       <div className="flex-1">
@@ -555,14 +555,14 @@ function CreateListingPageInner() {
               {/* Thông tin liên hệ Card */}
               <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleSection("contact")}>
-                  <h2 className="font-bold text-[14px]">Thông tin liên hệ <span className="text-[#e03c31]">*</span></h2>
+                  <h2 className="font-bold text-[14px]">Thông tin liên hệ <span className="text-primary">*</span></h2>
                   {expanded.contact ? <ChevronUp size={20} className="text-[#2c2c2c]" /> : <ChevronDown size={20} className="text-[#2c2c2c]" />}
                 </div>
 
                 {expanded.contact ? (
                   <div className="px-4 pb-6 pt-0 space-y-4">
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Tên liên hệ <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Tên liên hệ <span className="text-primary">*</span></label>
                       <input type="text" value={contactName} onChange={(event) => setContactName(event.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px]" />
                     </div>
                     <div>
@@ -570,7 +570,7 @@ function CreateListingPageInner() {
                       <input type="email" value={contactEmail} onChange={(event) => setContactEmail(event.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px]" />
                     </div>
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Số điện thoại <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Số điện thoại <span className="text-primary">*</span></label>
                       <div className="relative">
                         <select value={contactPhone} onChange={(event) => setContactPhone(event.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white">
                           {phoneOptions.map((option) => <option key={option}>{option}</option>)}
@@ -589,7 +589,7 @@ function CreateListingPageInner() {
               {/* Nội dung tiêu đề & mô tả Card */}
               <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleSection("content")}>
-                  <h2 className="font-bold text-[14px]">Nội dung tiêu đề & mô tả <span className="text-[#e03c31]">*</span></h2>
+                  <h2 className="font-bold text-[14px]">Nội dung tiêu đề & mô tả <span className="text-primary">*</span></h2>
                   {expanded.content ? <ChevronUp size={20} className="text-[#2c2c2c]" /> : <ChevronDown size={20} className="text-[#2c2c2c]" />}
                 </div>
 
@@ -607,7 +607,7 @@ function CreateListingPageInner() {
                     </div>
 
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Tiêu đề <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Tiêu đề <span className="text-primary">*</span></label>
                       <textarea
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
@@ -618,7 +618,7 @@ function CreateListingPageInner() {
                     </div>
 
                     <div>
-                      <label className="block text-[13px] font-bold mb-2">Mô tả <span className="text-[#e03c31]">*</span></label>
+                      <label className="block text-[13px] font-bold mb-2">Mô tả <span className="text-primary">*</span></label>
                       <textarea
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
@@ -646,7 +646,7 @@ function CreateListingPageInner() {
           <div className="w-[700px] max-w-full flex justify-end">
             <button
               onClick={() => setCurrentStep(2)}
-              className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors"
+              className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors"
             >
               Tiếp tục
             </button>
@@ -744,7 +744,7 @@ function CreateListingPageInner() {
                 {/* Form fields */}
                 <div className="space-y-5 mb-8">
                   <div>
-                    <label className="block text-[13px] font-bold mb-2">Tỉnh/Thành <span className="text-[#e03c31]">*</span></label>
+                    <label className="block text-[13px] font-bold mb-2">Tỉnh/Thành <span className="text-primary">*</span></label>
                     <div className="relative">
                       <select value={selectedAddress.province} onChange={(event) => setSelectedAddress({ ...selectedAddress, province: event.target.value })} className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white">
                         {["Hà Nội", "TP.HCM", "Đà Nẵng", "Bình Dương", "Đồng Nai"].map((option) => <option key={option}>{option}</option>)}
@@ -754,7 +754,7 @@ function CreateListingPageInner() {
                   </div>
 
                   <div>
-                    <label className="block text-[13px] font-bold mb-2">Quận/Huyện <span className="text-[#e03c31]">*</span></label>
+                    <label className="block text-[13px] font-bold mb-2">Quận/Huyện <span className="text-primary">*</span></label>
                     <div className="relative">
                       <select value={selectedAddress.district} onChange={(event) => setSelectedAddress({ ...selectedAddress, district: event.target.value })} className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white">
                         {["Quận Hoàng Mai", "Quận Hà Đông", "Quận Cầu Giấy", "Quận Nam Từ Liêm", "Quận Thanh Xuân", "Huyện Gia Lâm"].map((option) => <option key={option}>{option}</option>)}
@@ -764,7 +764,7 @@ function CreateListingPageInner() {
                   </div>
 
                   <div>
-                    <label className="block text-[13px] font-bold mb-2">Phường/Xã <span className="text-[#e03c31]">*</span></label>
+                    <label className="block text-[13px] font-bold mb-2">Phường/Xã <span className="text-primary">*</span></label>
                     <div className="relative">
                       <select value={selectedAddress.ward} onChange={(event) => setSelectedAddress({ ...selectedAddress, ward: event.target.value })} className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white">
                         {["Phường Hoàng Liệt", "Phường Yên Sở", "Phường Định Công", "Phường La Khê", "Phường Mễ Trì", "Phường Dịch Vọng"].map((option) => <option key={option}>{option}</option>)}
@@ -807,7 +807,7 @@ function CreateListingPageInner() {
 
                 {/* Display Address Section */}
                 <div className="mb-8">
-                  <label className="block text-[13px] font-bold mb-3">Địa chỉ hiển thị trên tin đăng <span className="text-[#e03c31]">*</span></label>
+                  <label className="block text-[13px] font-bold mb-3">Địa chỉ hiển thị trên tin đăng <span className="text-primary">*</span></label>
 
                   <div className="bg-[#eef8f2] rounded-md p-3.5 mb-5 flex items-start gap-2.5 border border-[#d3ecd9]">
                     <Check size={18} className="text-[#00a850] mt-0.5 shrink-0" strokeWidth={2.5} />
@@ -830,20 +830,20 @@ function CreateListingPageInner() {
 
                   {/* <div className="mb-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <MapPin size={18} className="text-[#e03c31]" fill="#e03c31" stroke="white" strokeWidth={1} />
-                      <span className="font-bold text-[13px] text-[#e03c31]">Địa chỉ mới</span>
+                      <MapPin size={18} className="text-primary" fill="#e03c31" stroke="white" strokeWidth={1} />
+                      <span className="font-bold text-[13px] text-primary">Địa chỉ mới</span>
                     </div>
                     <div className="pl-6.5">
                       <div className="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
                         <div className="text-[13px] text-gray-500 mb-3 italic">Địa chỉ do hệ thống gợi ý</div>
                         <div className="space-y-3.5">
                           <label className="flex items-center gap-3 cursor-pointer group">
-                            <input type="radio" name="new_address" className="w-[18px] h-[18px] accent-[#e03c31]" defaultChecked />
-                            <span className="text-[14px] font-medium group-hover:text-[#e03c31] transition-colors">{selectedAddress.ward}, {selectedAddress.province}</span>
+                            <input type="radio" name="new_address" className="w-[18px] h-[18px] accent-primary" defaultChecked />
+                            <span className="text-[14px] font-medium group-hover:text-primary transition-colors">{selectedAddress.ward}, {selectedAddress.province}</span>
                           </label>
                           <label className="flex items-center gap-3 cursor-pointer group">
-                            <input type="radio" name="new_address" className="w-[18px] h-[18px] accent-[#e03c31]" />
-                            <span className="text-[14px] font-medium group-hover:text-[#e03c31] transition-colors">Phường Yên Sở, {selectedAddress.province}</span>
+                            <input type="radio" name="new_address" className="w-[18px] h-[18px] accent-primary" />
+                            <span className="text-[14px] font-medium group-hover:text-primary transition-colors">Phường Yên Sở, {selectedAddress.province}</span>
                           </label>
                         </div>
                       </div>
@@ -875,7 +875,7 @@ function CreateListingPageInner() {
 
                     {/* Map Pin */}
                     <div className="relative z-10 flex flex-col items-center drop-shadow-md pb-4 animate-bounce">
-                      <MapPin size={36} className="text-[#e03c31]" fill="#e03c31" stroke="white" strokeWidth={1} />
+                      <MapPin size={36} className="text-primary" fill="#e03c31" stroke="white" strokeWidth={1} />
                       <div className="w-2.5 h-1.5 bg-black/30 rounded-[50%] absolute bottom-2 blur-[1px]"></div>
                     </div>
 
@@ -899,7 +899,7 @@ function CreateListingPageInner() {
                   Quay lại
                 </button>
                 <button
-                  className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors"
+                  className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors"
                   onClick={handleConfirmAddress}
                 >
                   Xác nhận
@@ -920,7 +920,7 @@ function CreateListingPageInner() {
 
       {/* Floating Action Button (Chat) */}
       <div className="fixed bottom-6 right-6 z-20">
-        <button className="w-[52px] h-[52px] bg-[#e03c31] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#c9362c] transition-colors">
+        <button className="w-[52px] h-[52px] bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-primary-hover transition-colors">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 2H4C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM13 14H11V12H13V14ZM13 10H11V6H13V10Z" fill="currentColor" />
           </svg>

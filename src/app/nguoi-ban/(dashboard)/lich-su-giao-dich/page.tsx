@@ -22,7 +22,7 @@ function formatDate(value: string | undefined) {
 }
 
 function getTransactionTone(type: string | undefined) {
-  return type === "deposit" || type === "credit" ? "text-emerald-600 bg-emerald-50" : "text-[#e03c31] bg-red-50";
+  return type === "deposit" || type === "credit" ? "text-emerald-600 bg-emerald-50" : "text-primary bg-red-50";
 }
 
 const PAGE_SIZE = 10;
@@ -120,7 +120,7 @@ export default function WalletHistoryPage() {
                   <select
                     value={typeFilter}
                     onChange={(e) => handleFilterChange(e.target.value)}
-                    className="appearance-none bg-gray-50 border border-gray-200 text-sm font-bold text-gray-700 rounded-xl pl-4 pr-10 py-2.5 cursor-pointer hover:border-gray-300 focus:outline-none focus:border-[#e03c31]"
+                    className="appearance-none bg-gray-50 border border-gray-200 text-sm font-bold text-gray-700 rounded-xl pl-4 pr-10 py-2.5 cursor-pointer hover:border-gray-300 focus:outline-none focus:border-primary"
                   >
                     {TYPE_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -165,7 +165,7 @@ export default function WalletHistoryPage() {
                             {item.description ? <div className="mt-1 text-xs text-gray-400 line-clamp-1">{item.description}</div> : null}
                           </div>
                         </div>
-                        <div className={`text-right font-extrabold ${isIn ? "text-emerald-600" : "text-[#e03c31]"}`}>
+                        <div className={`text-right font-extrabold ${isIn ? "text-emerald-600" : "text-primary"}`}>
                           {isIn ? "+" : "-"}{formatAmount(item.amount)}
                         </div>
                       </div>
@@ -200,7 +200,7 @@ export default function WalletHistoryPage() {
                             <button
                               key={item}
                               onClick={() => handlePageChange(item)}
-                              className={`flex items-center justify-center h-9 w-9 rounded-lg text-sm font-bold transition-colors ${item === safePage ? "bg-[#e03c31] text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+                              className={`flex items-center justify-center h-9 w-9 rounded-lg text-sm font-bold transition-colors ${item === safePage ? "bg-primary text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
                             >
                               {item}
                             </button>

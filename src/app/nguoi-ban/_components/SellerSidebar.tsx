@@ -98,7 +98,7 @@ export function SellerSidebar() {
                 <div className="relative">
                   <item.icon className="w-6 h-6 mb-1.5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.badge && (
-                    <span className="absolute -top-2.5 -right-6 bg-[#e03c31] text-white text-[9px] font-bold px-1 py-0.5 rounded-sm whitespace-nowrap shadow-sm">
+                    <span className="absolute -top-2.5 -right-6 bg-primary text-white text-[9px] font-bold px-1 py-0.5 rounded-sm whitespace-nowrap shadow-sm">
                       {item.badge}
                     </span>
                   )}
@@ -176,7 +176,7 @@ export function SellerSidebar() {
             {/* User Info */}
             <div className="p-5 border-b border-gray-100">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 bg-[#e03c31] rounded-full flex items-center justify-center text-white text-lg font-bold">
+                <div className="w-11 h-11 bg-primary rounded-full flex items-center justify-center text-white text-lg font-bold">
                   {initial}
                 </div>
                 <div>
@@ -188,7 +188,7 @@ export function SellerSidebar() {
               <div className="bg-gray-50 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-gray-500">Số dư</span>
-                  <span className="font-bold text-[#e03c31] text-base">{wallet.total}</span>
+                  <span className="font-bold text-primary text-base">{wallet.total}</span>
                 </div>
                 <div className="space-y-1.5 text-xs text-gray-600">
                   <div className="flex justify-between">
@@ -242,10 +242,10 @@ export function SellerSidebar() {
                   <Crown className="w-[18px] h-[18px] text-[#f59e0b]" strokeWidth={2} />
                   <div className="flex flex-col">
                     <span className="text-[13px] font-medium text-gray-800">Gói Hội viên</span>
-                    <span className="text-[11px] font-bold text-[#e03c31]">Tiết kiệm đến 39%</span>
+                    <span className="text-[11px] font-bold text-primary">Tiết kiệm đến 39%</span>
                   </div>
                 </div>
-                <span className="text-[11px] font-bold text-gray-400 group-hover:text-[#e03c31] transition-colors">Đăng ký mua</span>
+                <span className="text-[11px] font-bold text-gray-400 group-hover:text-primary transition-colors">Đăng ký mua</span>
               </Link>
               <Link href="#" className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-50 transition-colors group">
                 <div className="flex items-center gap-3">
@@ -281,7 +281,7 @@ export function SellerSidebar() {
                 <Gift className="w-[18px] h-[18px] text-pink-500" strokeWidth={2} />
                 <div className="flex flex-col">
                   <span className="text-[13px] font-medium text-gray-800">Gói tin Sài Gòn 1k/ngày</span>
-                  <span className="text-[11px] font-bold text-[#e03c31]">Mới</span>
+                  <span className="text-[11px] font-bold text-primary">Mới</span>
                 </div>
               </Link>
               <Link href="#" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors">
@@ -297,7 +297,7 @@ export function SellerSidebar() {
                 <span className="text-[13px] font-medium text-gray-800">Gói voucher Đẩy tin</span>
               </Link>
               <Link href="#" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors">
-                <Gift className="w-[18px] h-[18px] text-[#e03c31]" strokeWidth={2} />
+                <Gift className="w-[18px] h-[18px] text-primary" strokeWidth={2} />
                 <span className="text-[13px] font-medium text-gray-800">Khuyến mãi của tôi</span>
               </Link>
             </div>

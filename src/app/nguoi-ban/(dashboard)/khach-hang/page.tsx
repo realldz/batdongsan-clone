@@ -128,12 +128,12 @@ export default function KhachHangPage() {
             placeholder="Tìm tên, SĐT, BĐS..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none w-full max-w-xs focus:border-[#e03c31] focus:ring-2 focus:ring-red-100"
+            className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none w-full max-w-xs focus:border-primary focus:ring-2 focus:ring-red-100"
           />
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value as typeof statusFilter); setPage(1); }}
-            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#e03c31]"
+            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary"
           >
             <option value="all">Tất cả trạng thái</option>
             {statusOptions.filter((s) => s !== "all").map((s) => (
@@ -143,7 +143,7 @@ export default function KhachHangPage() {
           <select
             value={propertyFilter}
             onChange={(e) => { setPropertyFilter(e.target.value); setPage(1); }}
-            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#e03c31]"
+            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary"
           >
             <option value="all">Tất cả tin đăng</option>
             {myProperties.map((p) => (
@@ -188,7 +188,7 @@ export default function KhachHangPage() {
                       <td className="px-4 py-3">
                         <Link
                           href={`/properties/${lead.propertyId}`}
-                          className="text-[#e03c31] hover:underline font-medium text-xs max-w-[200px] truncate block"
+                          className="text-primary hover:underline font-medium text-xs max-w-[200px] truncate block"
                           target="_blank"
                         >
                           {lead.propertyTitle}
@@ -207,7 +207,7 @@ export default function KhachHangPage() {
                         <select
                           value={lead.status}
                           onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
-                          className="rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium outline-none focus:border-[#e03c31]"
+                          className="rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium outline-none focus:border-primary"
                         >
                           {statusOptions.filter((s) => s !== "all").map((s) => (
                             <option key={s} value={s}>{statusLabelMap[s]}</option>
@@ -242,7 +242,7 @@ export default function KhachHangPage() {
                           onClick={() => setPage(p)}
                           className={`w-8 h-8 rounded-lg text-xs font-bold transition-colors ${
                             p === currentPage
-                              ? "bg-[#e03c31] text-white"
+                              ? "bg-primary text-white"
                               : "border border-gray-200 hover:bg-gray-50 text-gray-600"
                           }`}
                         >

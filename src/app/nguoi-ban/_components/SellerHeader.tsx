@@ -30,7 +30,7 @@ export function SellerHeader({ title }: { title: string }) {
       <h1 className="text-[22px] font-bold text-gray-900 tracking-tight">{title}</h1>
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 cursor-pointer px-4 py-2 rounded-full text-sm font-bold transition-colors border border-gray-200 shadow-sm">
-          <div className="w-5 h-5 rounded-full bg-[#e03c31] text-white flex items-center justify-center text-xs font-bold leading-none pb-px shadow-inner">
+          <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold leading-none pb-px shadow-inner">
             đ
           </div>
           <span className="text-gray-800">{wallet.total}</span>
@@ -48,7 +48,7 @@ export function SellerHeader({ title }: { title: string }) {
         <div className="relative" ref={profileRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="w-10 h-10 bg-[#e03c31] border-2 border-white shadow-sm rounded-full flex items-center justify-center text-white hover:bg-[#c43329] transition-colors text-lg font-bold"
+            className="w-10 h-10 bg-primary border-2 border-white shadow-sm rounded-full flex items-center justify-center text-white hover:bg-primary-hover transition-colors text-lg font-bold"
           >
             {initial}
           </button>
@@ -56,7 +56,7 @@ export function SellerHeader({ title }: { title: string }) {
           {isProfileOpen && (
             <div className="absolute right-0 top-[calc(100%+8px)] w-[320px] bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden text-[13px] text-gray-700 animate-in fade-in slide-in-from-top-2">
               <div className="p-4 bg-[#fff6f6] border-b border-red-100 flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#e03c31] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl font-bold">
                   {initial}
                 </div>
                 <div>
@@ -70,7 +70,7 @@ export function SellerHeader({ title }: { title: string }) {
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-bold text-gray-900 text-sm">Số dư</span>
-                    <span className="font-bold text-[#e03c31] text-[15px]">{wallet.total}</span>
+                    <span className="font-bold text-primary text-[15px]">{wallet.total}</span>
                   </div>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between items-center text-gray-600">
@@ -117,10 +117,10 @@ export function SellerHeader({ title }: { title: string }) {
                       <Crown className="w-5 h-5 text-[#f59e0b]" />
                       <div className="flex flex-col">
                         <span className="font-medium text-gray-800">Gói Hội viên</span>
-                        <span className="text-[11px] text-[#e03c31] font-bold">Tiết kiệm đến 39%</span>
+                        <span className="text-[11px] text-primary font-bold">Tiết kiệm đến 39%</span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-gray-400 group-hover:text-[#e03c31] transition-colors">Đăng ký mua</span>
+                    <span className="text-xs font-bold text-gray-400 group-hover:text-primary transition-colors">Đăng ký mua</span>
                   </Link>
                   <Link href="#" className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors group">
                     <div className="flex items-center gap-3">

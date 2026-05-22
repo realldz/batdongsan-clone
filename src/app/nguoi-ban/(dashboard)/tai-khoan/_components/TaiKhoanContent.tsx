@@ -179,12 +179,12 @@ export function TaiKhoanContent() {
               }`}
           >
             Tham gia Môi giới chuyên nghiệp
-            <span className="bg-[#e03c31] text-white text-[10px] px-1.5 py-0.5 rounded">Mới</span>
+            <span className="bg-primary text-white text-[10px] px-1.5 py-0.5 rounded">Mới</span>
           </button>
         </div>
 
         {message && (
-          <div className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-[#e03c31]">
+          <div className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-primary">
             {message}
           </div>
         )}
@@ -206,7 +206,7 @@ export function TaiKhoanContent() {
                       className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-[#e03c31] rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md">
+                    <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md">
                       {initial}
                     </div>
                   )}
@@ -233,7 +233,7 @@ export function TaiKhoanContent() {
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => handleInputChange("fullName", e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                 />
               </div>
 
@@ -246,7 +246,7 @@ export function TaiKhoanContent() {
                   type="text"
                   value={formData.personalTaxCode}
                   onChange={(e) => handleInputChange("personalTaxCode", e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                 />
               </div>
             </section>
@@ -276,7 +276,7 @@ export function TaiKhoanContent() {
                     value={phone.value}
                     onChange={(e) => updatePhone(phone.id, e.target.value)}
                     placeholder="Nhập số điện thoại"
-                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                   <button
                     onClick={() => removePhone(phone.id)}
@@ -293,7 +293,7 @@ export function TaiKhoanContent() {
               <button
                 onClick={addPhone}
                 disabled={phoneCount >= 5}
-                className="flex items-center gap-1.5 text-[#e03c31] font-bold text-sm hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed mt-1"
+                className="flex items-center gap-1.5 text-primary font-bold text-sm hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed mt-1"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 Thêm số điện thoại ({phoneCount}/5)
@@ -326,7 +326,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.buyerName}
                     onChange={(e) => handleInputChange("buyerName", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -338,7 +338,7 @@ export function TaiKhoanContent() {
                     type="email"
                     value={formData.invoiceEmail}
                     onChange={(e) => handleInputChange("invoiceEmail", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -350,7 +350,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -362,7 +362,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.taxCode}
                     onChange={(e) => handleInputChange("taxCode", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -374,7 +374,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.dvqhns}
                     onChange={(e) => handleInputChange("dvqhns", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -386,7 +386,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.citizenId}
                     onChange={(e) => handleInputChange("citizenId", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -398,7 +398,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.passport}
                     onChange={(e) => handleInputChange("passport", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
 
@@ -410,7 +410,7 @@ export function TaiKhoanContent() {
                     type="text"
                     value={formData.address}
                     onChange={(e) => handleInputChange("address", e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                   />
                 </div>
               </div>
@@ -419,7 +419,7 @@ export function TaiKhoanContent() {
               <div className="mt-6 p-4 bg-[#f8fafc] rounded-lg border border-gray-200">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[#e03c31] text-xs font-extrabold">VAT</span>
+                    <span className="text-primary text-xs font-extrabold">VAT</span>
                   </div>
                   <div className="text-xs text-gray-500 leading-relaxed">
                     <p className="mb-2">
@@ -444,7 +444,7 @@ export function TaiKhoanContent() {
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="bg-[#e03c31] hover:bg-[#c43329] text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
               </button>
@@ -473,7 +473,7 @@ export function TaiKhoanContent() {
                         currentPassword: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                     placeholder="Nhập mật khẩu hiện tại"
                   />
                 </div>
@@ -491,7 +491,7 @@ export function TaiKhoanContent() {
                         newPassword: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                     placeholder="Nhập mật khẩu mới"
                   />
                 </div>
@@ -509,7 +509,7 @@ export function TaiKhoanContent() {
                         confirmPassword: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-colors"
                     placeholder="Nhập lại mật khẩu mới"
                   />
                 </div>
@@ -519,7 +519,7 @@ export function TaiKhoanContent() {
                 <button
                   onClick={handlePasswordChange}
                   disabled={isChangingPassword}
-                  className="bg-[#e03c31] hover:bg-[#c43329] text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                  className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isChangingPassword ? "Đang đổi..." : "Đổi mật khẩu"}
                 </button>
@@ -534,7 +534,7 @@ export function TaiKhoanContent() {
             <section className="bg-white rounded-xl border border-gray-200 p-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#fff6f6] flex items-center justify-center shrink-0">
-                  <Info className="w-6 h-6 text-[#e03c31]" />
+                  <Info className="w-6 h-6 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">
@@ -545,23 +545,23 @@ export function TaiKhoanContent() {
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600 mb-5">
                     <li className="flex items-start gap-2">
-                      <span className="text-[#e03c31] font-bold mt-0.5">&bull;</span>
+                      <span className="text-primary font-bold mt-0.5">&bull;</span>
                       Tăng độ tin cậy với khách hàng
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-[#e03c31] font-bold mt-0.5">&bull;</span>
+                      <span className="text-primary font-bold mt-0.5">&bull;</span>
                       Hiển thị huy hiệu chuyên nghiệp trên tin đăng
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-[#e03c31] font-bold mt-0.5">&bull;</span>
+                      <span className="text-primary font-bold mt-0.5">&bull;</span>
                       Tiếp cận nhiều khách hàng tiềm năng hơn
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-[#e03c31] font-bold mt-0.5">&bull;</span>
+                      <span className="text-primary font-bold mt-0.5">&bull;</span>
                       Ưu tiên hiển thị trong danh sách môi giới
                     </li>
                   </ul>
-                  <button className="bg-[#e03c31] hover:bg-[#c43329] text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm">
+                  <button className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-bold text-sm transition-colors shadow-sm">
                     Đăng ký ngay
                   </button>
                 </div>

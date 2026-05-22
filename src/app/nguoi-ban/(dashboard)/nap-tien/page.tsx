@@ -63,7 +63,7 @@ export default function RechargePage() {
               <Link 
                 href={`/nguoi-ban/nap-tien/${method.id}`} 
                 key={method.id}
-                className="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-[#e03c31] hover:shadow-[0_4px_20px_rgba(224,60,49,0.1)] transition-all cursor-pointer bg-white"
+                className="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-primary hover:shadow-[0_4px_20px_rgba(224,60,49,0.1)] transition-all cursor-pointer bg-white"
               >
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -71,9 +71,9 @@ export default function RechargePage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-bold text-gray-900 text-[17px] group-hover:text-[#e03c31] transition-colors">{method.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-[17px] group-hover:text-primary transition-colors">{method.title}</h3>
                       {method.popular && (
-                        <span className="bg-[#e03c31] text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Phổ biến</span>
+                        <span className="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Phổ biến</span>
                       )}
                     </div>
                     {method.description && (
@@ -81,7 +81,7 @@ export default function RechargePage() {
                     )}
                   </div>
                 </div>
-                <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-[#e03c31] group-hover:translate-x-1 transition-all" />
+                <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </Link>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function RechargePage() {
                 <h4 className="font-bold text-gray-900 text-base mb-1">Bạn cần hỗ trợ nạp tiền?</h4>
                 <p className="text-gray-600 text-sm mb-3">Vui lòng liên hệ với nhân viên tư vấn hoặc gọi hotline để được hỗ trợ nhanh nhất.</p>
                 <div className="flex items-center gap-4">
-                  <a href="tel:19001881" className="font-bold text-[#e03c31] flex items-center gap-1.5 hover:underline text-sm">
+                  <a href="tel:19001881" className="font-bold text-primary flex items-center gap-1.5 hover:underline text-sm">
                     📞 1900 1881
                   </a>
                   <a href="mailto:hotro@batdongsan.com.vn" className="font-bold text-gray-700 flex items-center gap-1.5 hover:underline text-sm">

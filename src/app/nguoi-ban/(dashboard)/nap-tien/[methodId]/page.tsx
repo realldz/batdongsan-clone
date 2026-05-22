@@ -86,13 +86,13 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
               <div className="relative">
                 <input 
                   type="text" 
-                  className="w-full h-12 px-4 rounded border border-gray-300 focus:outline-none focus:border-[#e03c31] text-base transition-colors font-medium"
+                  className="w-full h-12 px-4 rounded border border-gray-300 focus:outline-none focus:border-primary text-base transition-colors font-medium"
                   placeholder="Vd: 2,000,000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <div className="flex items-start gap-2 mt-3 p-3 bg-red-50 rounded text-sm text-[#e03c31]">
+              <div className="flex items-start gap-2 mt-3 p-3 bg-red-50 rounded text-sm text-primary">
                 <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
                 <span className="font-medium">Nạp từ 2.000.000 đ để được nhận khuyến mãi</span>
               </div>
@@ -102,18 +102,18 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-gray-600 font-medium">Hoặc chọn nhanh</span>
-                <Link href="#" className="text-sm text-[#e03c31] font-bold hover:underline">Xem tất cả ưu đãi</Link>
+                <Link href="#" className="text-sm text-primary font-bold hover:underline">Xem tất cả ưu đãi</Link>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {quickAmounts.map((q) => (
                   <button 
                     key={q.value}
                     onClick={() => setAmount(q.value.toString())}
-                    className="flex flex-col items-center justify-center py-3 px-2 rounded-lg border border-gray-200 hover:border-[#e03c31] hover:bg-red-50 transition-colors"
+                    className="flex flex-col items-center justify-center py-3 px-2 rounded-lg border border-gray-200 hover:border-primary hover:bg-red-50 transition-colors"
                   >
                     <span className="font-bold text-gray-900 mb-0.5">{q.label}</span>
                     {q.bonus > 0 && (
-                      <span className="text-[11px] font-bold text-[#e03c31]">Tặng: {q.bonus.toLocaleString('vi-VN')} đ</span>
+                      <span className="text-[11px] font-bold text-primary">Tặng: {q.bonus.toLocaleString('vi-VN')} đ</span>
                     )}
                   </button>
                 ))}
@@ -130,7 +130,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
                     <button 
                       key={bank}
                       onClick={() => setSelectedBank(bank)}
-                      className={`h-12 border rounded flex items-center justify-center text-xs font-bold transition-colors ${selectedBank === bank ? 'border-[#e03c31] text-[#e03c31] bg-red-50' : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'}`}
+                      className={`h-12 border rounded flex items-center justify-center text-xs font-bold transition-colors ${selectedBank === bank ? 'border-primary text-primary bg-red-50' : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'}`}
                     >
                       {bank}
                     </button>
@@ -143,7 +143,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
             <div className="mb-8 border-t border-gray-100 pt-8">
               <label className="flex items-center justify-between cursor-pointer group">
                 <span className="font-bold text-gray-900">Xuất hóa đơn cho giao dịch</span>
-                <div className={`relative w-11 h-6 rounded-full transition-colors ${needInvoice ? 'bg-[#e03c31]' : 'bg-gray-300'}`} onClick={() => setNeedInvoice(!needInvoice)}>
+                <div className={`relative w-11 h-6 rounded-full transition-colors ${needInvoice ? 'bg-primary' : 'bg-gray-300'}`} onClick={() => setNeedInvoice(!needInvoice)}>
                   <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${needInvoice ? 'left-6' : 'left-1'}`}></div>
                 </div>
               </label>
@@ -152,23 +152,23 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
                 <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Họ tên người mua hàng</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-[#e03c31] focus:outline-none text-sm" defaultValue="Long Ngô Tiến" />
+                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" defaultValue="Long Ngô Tiến" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Email nhận hóa đơn</label>
-                    <input type="email" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-[#e03c31] focus:outline-none text-sm" />
+                    <input type="email" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Tên đơn vị (Tên công ty)</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-[#e03c31] focus:outline-none text-sm" />
+                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Mã số thuế</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-[#e03c31] focus:outline-none text-sm" />
+                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-sm font-medium text-gray-700">Địa chỉ</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-[#e03c31] focus:outline-none text-sm" defaultValue="Việt Nam" />
+                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" defaultValue="Việt Nam" />
                   </div>
                 </div>
               )}
@@ -179,7 +179,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
               <p>• Batdongsan.com.vn sẽ xuất Hóa đơn điện tử tự động theo thông tin khách hàng cung cấp và gửi về Email nhận hóa đơn. Quý khách vui lòng nhập đầy đủ, chính xác và chịu trách nhiệm về những thông tin đã cung cấp.</p>
               <p>• Hoá đơn GTGT sẽ được xuất trong ngày và cho tất cả các giao dịch nộp tiền.</p>
               <p>• Nội dung dịch vụ được thể hiện trên hoá đơn là Phí dịch vụ quảng cáo trên website batdongsan.com.vn.</p>
-              <p>• Mọi vấn đề cần hỗ trợ về hoá đơn của giao dịch nộp tiền trong ngày, vui lòng liên hệ hotline <span className="font-bold text-[#e03c31]">1900 1881</span> trước 18h.</p>
+              <p>• Mọi vấn đề cần hỗ trợ về hoá đơn của giao dịch nộp tiền trong ngày, vui lòng liên hệ hotline <span className="font-bold text-primary">1900 1881</span> trước 18h.</p>
               
               <div className="pt-2 mt-2 border-t border-gray-200">
                 <p className="font-bold text-gray-900 mb-1">Thời hạn sử dụng tiền trong tài khoản:</p>
@@ -190,7 +190,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
             </div>
 
             {submitMessage && (
-              <div className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-[#e03c31]">
+              <div className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-primary">
                 {submitMessage}
               </div>
             )}
@@ -200,7 +200,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
               <label className="flex items-center gap-2 cursor-pointer group w-full sm:w-auto">
                 <input 
                   type="checkbox" 
-                  className="w-5 h-5 rounded border-gray-300 text-[#e03c31] focus:ring-[#e03c31]"
+                  className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-[#e03c31]"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
                 />
@@ -210,7 +210,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
               <button 
                 disabled={isSubmitting || !agreed || !parsedAmount || (methodId === 'atm' && !selectedBank)}
                 onClick={handleSubmit}
-                className="w-full sm:w-auto min-w-[160px] h-[44px] rounded font-bold text-white transition-colors flex items-center justify-center px-8 disabled:bg-gray-300 disabled:cursor-not-allowed bg-[#e03c31] hover:bg-[#c43329]"
+                className="w-full sm:w-auto min-w-[160px] h-[44px] rounded font-bold text-white transition-colors flex items-center justify-center px-8 disabled:bg-gray-300 disabled:cursor-not-allowed bg-primary hover:bg-primary-hover"
               >
                 {isSubmitting ? "Đang gửi..." : "Tiếp tục"}
               </button>

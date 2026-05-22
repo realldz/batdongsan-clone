@@ -33,7 +33,7 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
       subtitle: "Hiển thị trên cùng",
       badge: "x30",
       badgeText: "lượt liên hệ so với tin thường",
-      badgeColor: "bg-[#e03c31]",
+      badgeColor: "bg-primary",
       price: "270.700 đ/ngày"
     },
     {
@@ -77,7 +77,7 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-[16px] text-[#2c2c2c]">Chọn loại tin</h2>
-          <a href="#" className="text-[13px] text-gray-500 hover:text-[#e03c31] flex items-center gap-1 transition-colors">
+          <a href="#" className="text-[13px] text-gray-500 hover:text-primary flex items-center gap-1 transition-colors">
             So sánh các loại tin và giá <Info size={14} />
           </a>
         </div>
@@ -102,7 +102,7 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
               <div className="mb-1 flex items-center justify-between">
                 {/* Visual representation of lines */}
                 <div className="flex flex-col gap-[3px]">
-                  <div className={`h-1.5 w-6 rounded-full ${pkg.id === "diamond" ? "bg-[#e03c31]" : pkg.id === "gold" ? "bg-[#eab308]" : pkg.id === "silver" ? "bg-[#0d9488]" : "bg-[#2c2c2c]"}`}></div>
+                  <div className={`h-1.5 w-6 rounded-full ${pkg.id === "diamond" ? "bg-primary" : pkg.id === "gold" ? "bg-[#eab308]" : pkg.id === "silver" ? "bg-[#0d9488]" : "bg-[#2c2c2c]"}`}></div>
                   <div className="h-1.5 w-4 rounded-full bg-gray-200"></div>
                   <div className="h-1.5 w-8 rounded-full bg-gray-200"></div>
                 </div>
@@ -196,10 +196,10 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
           {/* VIP Callout */}
           <div className="bg-[#fff0f1] rounded-xl p-3 flex items-center justify-between mb-3 border border-red-50 cursor-pointer hover:border-red-100 transition-colors">
             <div className="flex items-center gap-2">
-              <Crown className="text-[#e03c31] w-[18px] h-[18px] fill-current" />
+              <Crown className="text-primary w-[18px] h-[18px] fill-current" />
               <span className="font-bold text-[14px] text-gray-800">Gói Tin VIP ưu đãi riêng cho bạn - Tiết kiệm 300.000 đ</span>
             </div>
-            <span className="font-bold text-[14px] text-gray-800 hover:text-[#e03c31] hover:underline">Xem gói</span>
+            <span className="font-bold text-[14px] text-gray-800 hover:text-primary hover:underline">Xem gói</span>
           </div>
 
           {/* Promotions */}
@@ -215,7 +215,7 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
           </div>
 
           {submitMessage && (
-            <div className="mb-3 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-[#e03c31]">
+            <div className="mb-3 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-primary">
               {submitMessage}
             </div>
           )}
@@ -239,7 +239,7 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
               <button
                 onClick={() => onSubmit(selectedPackage, selectedDuration)}
                 disabled={isSubmitting}
-                className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Đang gửi..." : "Tiếp tục"}
               </button>

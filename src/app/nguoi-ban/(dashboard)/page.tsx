@@ -111,7 +111,7 @@ export default function OverviewPage() {
                 <Link href="#" className="text-gray-600 font-medium hover:text-gray-900 transition-colors text-sm">
                   Mã nạp tiền: <span className="font-bold">{wallet.code}</span>
                 </Link>
-                <Link href="/nguoi-ban/nap-tien" className="bg-red-50 text-[#e03c31] px-4 py-1.5 rounded-full font-bold hover:bg-red-100 transition-colors text-sm">
+                <Link href="/nguoi-ban/nap-tien" className="bg-red-50 text-primary px-4 py-1.5 rounded-full font-bold hover:bg-red-100 transition-colors text-sm">
                   Nạp tiền
                 </Link>
               </div>
@@ -127,7 +127,7 @@ export default function OverviewPage() {
                 <div className="text-[28px] font-extrabold text-gray-900 leading-none">0 tin</div>
                 <div className="text-gray-500 font-medium mt-1.5">Đang hiển thị</div>
               </div>
-              <Link href="/nguoi-ban/tin-dang" className="text-[#e03c31] font-bold mt-auto hover:underline flex items-center gap-1 group w-max">
+              <Link href="/nguoi-ban/tin-dang" className="text-primary font-bold mt-auto hover:underline flex items-center gap-1 group w-max">
                 Đăng tin <ChevronRight className="w-[14px] h-[14px] group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -138,7 +138,7 @@ export default function OverviewPage() {
                 <div className="flex items-center gap-2 font-bold mb-3 text-gray-900 flex-wrap">
                   <Crown className="w-[18px] h-[18px] text-gray-800" />
                   <span>Gói Hội Viên</span>
-                  <span className="bg-[#e03c31] text-white text-[10px] px-2 py-0.5 rounded-[4px] flex items-center shadow-sm whitespace-nowrap">
+                  <span className="bg-primary text-white text-[10px] px-2 py-0.5 rounded-[4px] flex items-center shadow-sm whitespace-nowrap">
                     <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                     Tiết kiệm đến 39%
                   </span>
@@ -175,13 +175,13 @@ export default function OverviewPage() {
             {/* Col 1: Quan trọng */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#e03c31] font-bold">
+                <div className="flex items-center gap-2 text-primary font-bold">
                   <AlertCircle className="w-5 h-5 fill-red-100" /> Quan trọng
                 </div>
-                <div className="w-6 h-6 rounded-full bg-[#e03c31] text-white flex items-center justify-center text-xs font-bold shadow-sm">1</div>
+                <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">1</div>
               </div>
 
-              <div className="bg-[#e03c31] text-white p-8 rounded-xl text-center flex flex-col items-center shadow-md relative overflow-hidden">
+              <div className="bg-primary text-white p-8 rounded-xl text-center flex flex-col items-center shadow-md relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -translate-y-16 translate-x-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-5 rounded-full translate-y-8 -translate-x-8"></div>
 
@@ -193,7 +193,7 @@ export default function OverviewPage() {
                 <p className="text-red-50 mb-8 font-medium leading-relaxed z-10 px-2">
                   Tin đăng của bạn sẽ được tiếp cận hơn 6 triệu người tìm mua/thuê bất động sản mỗi tháng
                 </p>
-                <button className="bg-white text-[#e03c31] font-bold px-6 py-3.5 rounded-full hover:bg-red-50 transition-colors w-full shadow-sm z-10">
+                <button className="bg-white text-primary font-bold px-6 py-3.5 rounded-full hover:bg-red-50 transition-colors w-full shadow-sm z-10">
                   + Tạo tin đăng đầu tiên
                 </button>
               </div>
@@ -205,7 +205,7 @@ export default function OverviewPage() {
                 <div className="flex items-center gap-2 text-emerald-600 font-bold">
                   <Info className="w-5 h-5 fill-emerald-100" /> Thông tin
                 </div>
-                <div className="w-6 h-6 rounded-full bg-[#e03c31] text-white flex items-center justify-center text-xs font-bold shadow-sm">0</div>
+                <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">0</div>
               </div>
 
               <div className="bg-white p-5 rounded-xl border border-gray-200 flex items-start gap-4 shadow-sm hover:border-gray-300 transition-colors">
@@ -220,7 +220,7 @@ export default function OverviewPage() {
                 <div className="flex items-center gap-2 text-teal-600 font-bold">
                   <Lightbulb className="w-5 h-5 fill-teal-100" /> Gợi ý
                 </div>
-                <div className="w-6 h-6 rounded-full bg-[#e03c31] text-white flex items-center justify-center text-xs font-bold shadow-sm">2</div>
+                <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">2</div>
               </div>
 
               {/* Suggestion 1 */}
@@ -260,8 +260,8 @@ export default function OverviewPage() {
                     <div className="flex gap-4">
                       <ImageIcon className="w-[22px] h-[22px] text-gray-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="font-bold text-gray-900 mb-1 group-hover:text-[#e03c31] transition-colors leading-tight">Cập nhật tên và hình ảnh đại diện</div>
-                        <div className="text-gray-500 font-medium leading-relaxed pr-2">Tên và hình ảnh sẽ xuất hiện ở tất cả các tin đăng của bạn, điều đó sẽ giúp bạn cận người mua dễ dàng hơn.</div>
+                        <div className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors leading-tight">Cập nhật tên và hình ảnh đại diện</div>
+                        <div className="text-gray-500 font-medium leading-relaxed pr-2">Tên và hình ảnh sẽ appear ở tất cả các tin đăng của bạn, điều đó sẽ giúp bạn cận người mua dễ dàng hơn.</div>
                       </div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
@@ -270,7 +270,7 @@ export default function OverviewPage() {
                   <div className="flex items-center justify-between cursor-pointer group py-4 border-b border-gray-100">
                     <div className="flex gap-4 items-center">
                       <LayoutList className="w-[22px] h-[22px] text-gray-500 shrink-0" />
-                      <div className="font-bold text-gray-900 group-hover:text-[#e03c31] transition-colors">Khám phá sổ tay đăng tin</div>
+                      <div className="font-bold text-gray-900 group-hover:text-primary transition-colors">Khám phá sổ tay đăng tin</div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
                   </div>
@@ -281,7 +281,7 @@ export default function OverviewPage() {
                         <Plus className="w-3 h-3 stroke-[3]" />
                       </div>
                       <div>
-                        <div className="font-bold text-gray-900 mb-1 group-hover:text-[#e03c31] transition-colors leading-tight">Và bạn đã sẵn sàng để đăng tin đầu tiên. Bắt đầu ngay!</div>
+                        <div className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors leading-tight">Và bạn đã sẵn sàng để đăng tin đầu tiên. Bắt đầu ngay!</div>
                         <div className="text-gray-500 font-medium leading-relaxed pr-2">Batdongsan.com.vn tặng bạn một tin thường 15 ngày để bắt đầu đăng tin.</div>
                       </div>
                     </div>
@@ -300,7 +300,7 @@ export default function OverviewPage() {
             {totalLeads > 10 ? (
               <Link
                 href="/nguoi-ban/khach-hang"
-                className="flex items-center gap-1 text-sm font-bold text-[#e03c31] hover:underline"
+                className="flex items-center gap-1 text-sm font-bold text-primary hover:underline"
               >
                 Xem tất cả <ChevronRight className="w-4 h-4" />
               </Link>

@@ -293,14 +293,14 @@ export default function ListingsPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="Nhập mã tin hoặc tiêu đề tin"
-                className="w-full pl-11 pr-4 py-2.5 border border-gray-300 rounded-full text-[14px] font-medium placeholder-gray-500 focus:outline-none focus:border-[#e03c31] focus:ring-1 focus:ring-[#e03c31] transition-all bg-white"
+                className="w-full pl-11 pr-4 py-2.5 border border-gray-300 rounded-full text-[14px] font-medium placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-[#e03c31] transition-all bg-white"
               />
             </div>
             <button
               type="button"
               onClick={() => setIsFilterDialogOpen(true)}
               className={`flex items-center gap-2.5 px-5 py-2.5 border rounded-full text-[14px] font-bold transition-colors shadow-sm bg-white shrink-0 ${hasActiveFilters
-                  ? "border-[#e03c31] text-[#e03c31] hover:bg-red-50"
+                  ? "border-primary text-primary hover:bg-red-50"
                   : "border-gray-300 hover:bg-gray-50 text-gray-800"
                 }`}
             >
@@ -318,7 +318,7 @@ export default function ListingsPage() {
                 setCurrentPage(1);
               }}
               className={`flex items-center gap-2.5 px-5 py-2.5 border rounded-full text-[14px] font-bold transition-colors shadow-sm bg-white ${draftOnly
-                  ? "border-[#e03c31] text-[#e03c31] hover:bg-red-50"
+                  ? "border-primary text-primary hover:bg-red-50"
                   : "border-gray-300 hover:bg-gray-50 text-gray-800"
                 }`}
             >
@@ -358,7 +358,7 @@ export default function ListingsPage() {
           <section className="rounded-3xl border border-[#ffd7d4] bg-[linear-gradient(135deg,#fff7f6_0%,#fff_55%,#fff3f1_100%)] p-6 shadow-sm">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-3xl">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#e03c31] shadow-sm">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-primary shadow-sm">
                   Gợi ý tối ưu tin đăng
                 </div>
                 <h2 className="text-[28px] font-extrabold leading-tight text-gray-900">
@@ -374,7 +374,7 @@ export default function ListingsPage() {
                 </button>
                 <Link
                   href="/nguoi-ban/dang-tin"
-                  className="flex items-center justify-center gap-2 rounded-full bg-[#e03c31] px-6 py-3 text-[15px] font-bold text-white shadow-md transition-colors hover:bg-red-700"
+                  className="flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-[15px] font-bold text-white shadow-md transition-colors hover:bg-red-700"
                 >
                   Đăng tin mới <ArrowRight className="h-5 w-5 stroke-[2.5]" />
                 </Link>
@@ -565,7 +565,7 @@ export default function ListingsPage() {
               <button
                 type="button"
                 onClick={() => setIsFilterDialogOpen(false)}
-                className="rounded-full bg-[#e03c31] px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700"
+                className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700"
               >
                 Áp dụng
               </button>
@@ -621,7 +621,7 @@ export default function ListingsPage() {
                           setRenewSuccessMessage("");
                         }}
                         className={`rounded-2xl border p-4 text-left transition-colors ${isActive
-                            ? "border-[#e03c31] bg-red-50 text-[#e03c31]"
+                            ? "border-primary bg-red-50 text-primary"
                             : "border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
                           }`}
                       >
@@ -657,7 +657,7 @@ export default function ListingsPage() {
                 type="button"
                 onClick={confirmRenewListing}
                 disabled={isRenewSubmitting}
-                className="rounded-full bg-[#e03c31] px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isRenewSubmitting ? "Đang thanh toán..." : "Xác nhận gia hạn"}
               </button>
@@ -666,7 +666,7 @@ export default function ListingsPage() {
         </div>
       ) : null}
 
-      <button className="fixed bottom-8 right-8 z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#e03c31] text-white shadow-[0_4px_14px_0_rgba(224,60,49,0.39)] transition-all hover:-translate-y-1 hover:bg-red-600 group">
+      <button className="fixed bottom-8 right-8 z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_14px_0_rgba(224,60,49,0.39)] transition-all hover:-translate-y-1 hover:bg-red-600 group">
         <svg
           width="24"
           height="24"
@@ -719,7 +719,7 @@ function FilterSection<T extends string>({
               type="button"
               onClick={() => onSelect(option)}
               className={`rounded-full border px-4 py-2.5 text-sm font-bold transition-colors ${isActive
-                  ? "border-[#e03c31] bg-red-50 text-[#e03c31]"
+                  ? "border-primary bg-red-50 text-primary"
                   : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                 }`}
             >
@@ -743,7 +743,7 @@ function ListingCard({ listing, onRenew }: { listing: Listing; onRenew: () => vo
               {listing.category}
             </span>
             {listing.badge ? (
-              <span className="rounded-full bg-[#e03c31] px-3 py-1 text-xs font-extrabold text-white shadow-sm">
+              <span className="rounded-full bg-primary px-3 py-1 text-xs font-extrabold text-white shadow-sm">
                 {listing.badge}
               </span>
             ) : null}
@@ -765,8 +765,8 @@ function ListingCard({ listing, onRenew }: { listing: Listing; onRenew: () => vo
               <h3 className="mt-3 text-[22px] font-extrabold leading-tight text-gray-900">{listing.title}</h3>
               <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
-                  <CircleDollarSign className="h-4 w-4 text-[#e03c31]" />
-                  <span className="font-bold text-[#e03c31]">{listing.price}</span>
+                  <CircleDollarSign className="h-4 w-4 text-primary" />
+                  <span className="font-bold text-primary">{listing.price}</span>
                 </span>
                 <span className="font-semibold text-gray-700">{listing.area}</span>
                 <span className="rounded-full bg-gray-100 px-3 py-1 font-semibold text-gray-700">{listing.propertyType}</span>

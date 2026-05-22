@@ -92,7 +92,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
         </div>
 
         {isInvalid && (
-          <div className="flex items-center gap-2 mb-4 text-[#e03c31] bg-red-50 p-3 rounded-lg border border-red-100">
+          <div className="flex items-center gap-2 mb-4 text-primary bg-red-50 p-3 rounded-lg border border-red-100">
             <AlertTriangle size={16} />
             <span className="text-[13px] font-medium">Vui lòng đăng tối thiểu 3 ảnh</span>
           </div>
@@ -111,19 +111,19 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
               <div key={img.id} className="relative bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm aspect-[4/3] group">
                 <img src={img.previewUrl} alt="" className="w-full h-full object-cover" />
                 {idx === 0 && (
-                  <div className="absolute top-2 left-2 bg-[#e03c31] text-white text-[11px] font-bold px-2 py-0.5 rounded shadow-sm">
+                  <div className="absolute top-2 left-2 bg-primary text-white text-[11px] font-bold px-2 py-0.5 rounded shadow-sm">
                     Ảnh đại diện
                   </div>
                 )}
                 {/* Overlay actions on hover */}
                 <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-gray-700 hover:text-[#e03c31] shadow-sm">
+                  <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-gray-700 hover:text-primary shadow-sm">
                     <Star size={16} />
                   </button>
                   <button className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-sm">
                     <RotateCw size={16} />
                   </button>
-                  <button onClick={() => handleRemoveImage(idx)} className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-gray-700 hover:text-[#e03c31] shadow-sm">
+                  <button onClick={() => handleRemoveImage(idx)} className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-gray-700 hover:text-primary shadow-sm">
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -167,7 +167,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
       {/* Accordion 1: Hướng dẫn đăng ảnh/video */}
       <div className="border-t border-gray-200">
         <div
-          className="flex items-center justify-between py-4 cursor-pointer hover:text-[#e03c31] transition-colors"
+          className="flex items-center justify-between py-4 cursor-pointer hover:text-primary transition-colors"
           onClick={() => setExpandedGuide(!expandedGuide)}
         >
           <div className="flex items-center gap-2 font-bold text-[14px] text-[#2c2c2c]">
@@ -202,7 +202,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
       {/* Accordion 2: Liên kết video */}
       <div className="border-t border-gray-200">
         <div
-          className="flex items-center justify-between py-4 cursor-pointer hover:text-[#e03c31] transition-colors"
+          className="flex items-center justify-between py-4 cursor-pointer hover:text-primary transition-colors"
           onClick={() => setExpandedLink(!expandedLink)}
         >
           <div className="flex items-center gap-2 font-bold text-[14px] text-[#2c2c2c]">
@@ -234,7 +234,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
           </button>
           <button
             onClick={onNext}
-            className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm"
+            className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm"
           >
             Tiếp tục
           </button>
@@ -253,7 +253,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
             </div>
             <div className="p-5 flex flex-col flex-1">
               <p className="text-[14px] text-gray-700 mb-1">Chọn hình có sẵn từ dự án HH2 Linh Đàm</p>
-              <p className="text-[13px] font-bold mb-4"><span className="text-[#e03c31]">{selectedLibraryImages.length}</span>/{libraryImages.length} hình được chọn</p>
+              <p className="text-[13px] font-bold mb-4"><span className="text-primary">{selectedLibraryImages.length}</span>/{libraryImages.length} hình được chọn</p>
 
               <div className="grid grid-cols-3 gap-3 mb-6 max-h-[50vh] overflow-y-auto">
                 {libraryImages.map((img, idx) => {
@@ -285,7 +285,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
                   onClick={handleAddLibraryImages}
                   disabled={selectedLibraryImages.length === 0}
                   className={`px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors ${selectedLibraryImages.length > 0
-                      ? 'bg-[#e03c31] hover:bg-[#c9362c] text-white shadow-sm'
+                      ? 'bg-primary hover:bg-primary-hover text-white shadow-sm'
                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                 >
@@ -320,20 +320,20 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
                     <div className="relative w-40 aspect-[4/3] rounded overflow-hidden bg-gray-100 flex-shrink-0">
                       <img src={img.previewUrl} alt="" className="w-full h-full object-cover" />
                       {idx === 0 && (
-                        <div className="absolute top-1 left-1 bg-[#e03c31] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+                        <div className="absolute top-1 left-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
                           Ảnh đại diện
                         </div>
                       )}
                     </div>
                     <div className="flex-1 flex flex-col justify-between self-stretch">
                       <div className="flex gap-2 justify-end mb-2">
-                        <button className="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:text-[#e03c31] shadow-sm hover:border-red-200 transition-colors">
+                        <button className="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:text-primary shadow-sm hover:border-red-200 transition-colors">
                           <Star size={14} />
                         </button>
                         <button className="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:text-blue-600 shadow-sm transition-colors">
                           <RotateCw size={14} />
                         </button>
-                        <button onClick={() => handleRemoveImage(idx)} className="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:text-[#e03c31] shadow-sm transition-colors hover:border-red-200">
+                        <button onClick={() => handleRemoveImage(idx)} className="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:text-primary shadow-sm transition-colors hover:border-red-200">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -353,7 +353,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
             <div className="p-4 border-t border-gray-200 flex justify-end">
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="bg-[#e03c31] hover:bg-[#c9362c] text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm"
+                className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm"
               >
                 Hoàn tất
               </button>

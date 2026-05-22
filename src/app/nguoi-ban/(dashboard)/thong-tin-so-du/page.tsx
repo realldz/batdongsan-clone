@@ -25,11 +25,11 @@ export default function WalletBalancePage() {
             ) : (
               <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <div className="mb-2 text-sm font-extrabold uppercase tracking-[0.18em] text-[#e03c31]">Số dư khả dụng</div>
+                  <div className="mb-2 text-sm font-extrabold uppercase tracking-[0.18em] text-primary">Số dư khả dụng</div>
                   <h2 className="text-4xl font-extrabold text-gray-900">{wallet.total}</h2>
                   <p className="mt-2 text-sm font-medium text-gray-500">Nguồn dữ liệu: {wallet.source === "api" ? "API ví" : "fallback mock"}</p>
                 </div>
-                <Link href="/nguoi-ban/nap-tien" className="inline-flex items-center justify-center rounded-full bg-[#e03c31] px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-[#c43329]">
+                <Link href="/nguoi-ban/nap-tien" className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-primary-hover">
                   Nạp tiền
                 </Link>
               </div>
@@ -68,7 +68,7 @@ export default function WalletBalancePage() {
 function BalanceCard({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-[#e03c31]">{icon}</div>
+      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-primary">{icon}</div>
       <div className="text-sm font-bold text-gray-500">{label}</div>
       <div className="mt-2 text-2xl font-extrabold text-gray-900">{value}</div>
     </div>
