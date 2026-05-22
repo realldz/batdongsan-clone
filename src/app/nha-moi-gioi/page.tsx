@@ -1,9 +1,9 @@
-import { Header } from "@/components/Header/Header";
-import { Footer } from "@/components/Footer/Footer";
 import { AgentSearchBox } from "@/components/Directory/AgentSearchBox";
 import { AgentCard, AgentData } from "@/components/Directory/AgentCard";
 import { DirectorySidebar } from "@/components/Directory/DirectorySidebar";
 import React from "react";
+import { Pagination } from "@/components/molecules";
+import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
 
 const mockAgents: AgentData[] = [
   {
@@ -50,55 +50,42 @@ const mockAgents: AgentData[] = [
 ];
 
 export default function AgentDirectoryPage() {
-    return (
-        <div className="min-h-screen flex flex-col font-sans bg-[#f1f5f9]">
-            <Header />
-            
-            <AgentSearchBox />
+  return (
+    <PublicPageLayout className="bg-[#f1f5f9]">
+      <AgentSearchBox />
 
-            <main className="flex-1 w-full max-w-[1140px] xl:max-w-[1240px] mx-auto px-4 lg:px-0 py-6">
-                
-                {/* Title */}
-                <h1 className="text-xl md:text-2xl font-bold text-[#1c1f22] mb-6 tracking-tight">
-                    Danh bạ nhà môi giới
-                </h1>
+      <div className="max-w-[1240px] mx-auto px-4 lg:px-0 py-6">
+        {/* Title */}
+        <h1 className="text-xl md:text-2xl font-bold text-[#1c1f22] mb-6 tracking-tight">
+          Danh bạ nhà môi giới
+        </h1>
 
-                {/* Tabs */}
-                <div className="flex items-center gap-0 mb-6 border-b border-[#c42c23]">
-                    <button className="px-6 py-2.5 bg-white border-t border-l border-r border-[#c42c23] border-b-0 text-[#1c1f22] font-bold text-sm rounded-t translate-y-[1px]">
-                        Công ty môi giới
-                    </button>
-                    <button className="px-6 py-2.5 bg-transparent text-gray-600 hover:text-primary transition-colors text-sm rounded-t font-medium">
-                        Cá nhân môi giới
-                    </button>
-                </div>
-
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Left Column - Agent List 70% */}
-                    <div className="flex-[3] lg:w-[70%]">
-                        {mockAgents.map((agent) => (
-                            <AgentCard key={agent.id} data={agent} />
-                        ))}
-
-                        {/* Pagination */}
-                        <div className="flex items-center justify-center gap-2 mt-8 py-8">
-                            <button className="w-8 h-8 rounded bg-primary text-white flex items-center justify-center font-bold">1</button>
-                            <button className="w-8 h-8 rounded bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center font-bold transition-colors">2</button>
-                            <button className="w-8 h-8 rounded bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center font-bold transition-colors">3</button>
-                            <span className="text-gray-400">...</span>
-                            <button className="w-8 h-8 rounded bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center font-bold transition-colors">&gt;</button>
-                        </div>
-                    </div>
-
-                    {/* Right Sidebar - 30% */}
-                    <div className="w-full lg:w-[30%]">
-                        <DirectorySidebar />
-                    </div>
-                </div>
-
-            </main>
-
-            <Footer />
+        {/* Tabs */}
+        <div className="flex items-center gap-0 mb-6 border-b border-[#c42c23]">
+          <button className="px-6 py-2.5 bg-white border-t border-l border-r border-[#c42c23] border-b-0 text-[#1c1f22] font-bold text-sm rounded-t translate-y-[1px] cursor-pointer">
+            Công ty môi giới
+          </button>
+          <button className="px-6 py-2.5 bg-transparent text-gray-600 hover:text-primary transition-colors text-sm rounded-t font-medium cursor-pointer">
+            Cá nhân môi giới
+          </button>
         </div>
-    );
+
+        <TwoColumnLayout
+          main={
+            <>
+              {mockAgents.map((agent) => (
+                <AgentCard key={agent.id} data={agent} />
+              ))}
+
+              {/* Pagination */}
+              <Pagination page={1} totalPages={3} />
+            </>
+          }
+          sidebar={
+            <DirectorySidebar />
+          }
+        />
+      </div>
+    </PublicPageLayout>
+  );
 }

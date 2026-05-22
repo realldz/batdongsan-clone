@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useDropdown } from "@/hooks/useDropdown";
 import { cn } from "@/lib/utils";

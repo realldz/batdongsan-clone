@@ -42,7 +42,8 @@ import {
   CreditCard,
   Grid,
   List,
-  AlertCircle
+  AlertCircle,
+  ArrowLeft
 } from "lucide-react";
 import { ZaloIcon, BdsLogo } from "./custom-icons";
 
@@ -84,6 +85,7 @@ const iconMap = {
   Bell,
   Wallet,
   ArrowRight,
+  ArrowLeft,
   TrendingUp,
   History,
   CreditCard,

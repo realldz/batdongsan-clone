@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef } from "react";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { useEscapeKey } from "@/hooks/useEscapeKey";

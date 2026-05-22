@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useCallback } from "react";
 import { useClickOutside } from "./useClickOutside";
 import { useEscapeKey } from "./useEscapeKey";

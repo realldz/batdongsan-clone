@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-store";
-import { Header } from "@/components/Header/Header";
-import { Footer } from "@/components/Footer/Footer";
 import { ListingCard, type ListingData } from "@/components/ListingCard/ListingCard";
 import { getFavorites } from "@/services/interactions";
 import { propertyToListingData } from "@/lib/api-adapters";
 import type { Property } from "@/services/properties";
+import { Icon } from "@/components/atoms";
+import { Pagination } from "@/components/molecules";
+import { PublicPageLayout } from "@/components/templates";
 
 function unwrapFavorites(value: unknown): Property[] {
   if (Array.isArray(value)) return value as Property[];
@@ -76,42 +77,11 @@ export default function SavedListingsPage() {
     };
   }, [isAuthenticated, authLoading, page, router]);
 
-  const pageNumbers = (() => {
-    const maxVisible = 7;
-
-    if (totalPages <= maxVisible + 2) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-
-    const pages: (number | "ellipsis-start" | "ellipsis-end")[] = [];
-
-    if (page <= Math.ceil(maxVisible / 2) + 1) {
-      for (let i = 1; i <= maxVisible; i += 1) pages.push(i);
-      pages.push("ellipsis-end");
-      pages.push(totalPages);
-    } else if (page >= totalPages - Math.ceil(maxVisible / 2)) {
-      pages.push(1);
-      pages.push("ellipsis-start");
-      for (let i = totalPages - maxVisible + 1; i <= totalPages; i += 1) pages.push(i);
-    } else {
-      pages.push(1);
-      pages.push("ellipsis-start");
-      const half = Math.floor(maxVisible / 2);
-      for (let i = page - half; i <= page + half; i += 1) pages.push(i);
-      pages.push("ellipsis-end");
-      pages.push(totalPages);
-    }
-
-    return pages;
-  })();
-
   if (authLoading) return null;
 
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-[#f1f5f9]">
-      <Header />
-
-      <main className="flex-1 w-full max-w-[1140px] xl:max-w-[1240px] mx-auto px-4 lg:px-0 py-6">
+    <PublicPageLayout className="bg-[#f1f5f9] py-6">
+      <div className="max-w-[1240px] mx-auto px-4 lg:px-0">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-[#2c2c2c] mb-1">Tin đã lưu</h1>
           <p className="text-sm text-gray-500">
@@ -136,11 +106,9 @@ export default function SavedListingsPage() {
             ))}
           </div>
         ) : listings.length === 0 ? (
-          <div className="text-center py-20">
+          <div className="text-center py-20 bg-white border border-gray-100 rounded-xl shadow-sm">
             <div className="mb-4">
-              <svg className="mx-auto h-16 w-16 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
+              <Icon name="Heart" size={64} className="mx-auto text-gray-300" />
             </div>
             <h2 className="text-lg font-bold text-gray-900 mb-2">Chưa có tin đã lưu</h2>
             <p className="text-gray-500 mb-6">
@@ -156,39 +124,17 @@ export default function SavedListingsPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-1 mt-6 mb-12">
-                {pageNumbers.map((p) => {
-                  if (p === "ellipsis-start" || p === "ellipsis-end") {
-                    return (
-                      <span key={p} className="w-8 h-8 flex items-center justify-center text-gray-500">
-                        ...
-                      </span>
-                    );
-                  }
-
-                  const isActive = p === page;
-                  return (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setPage(p)}
-                      className={`w-8 h-8 flex items-center justify-center font-medium rounded transition-colors ${
-                        isActive
-                          ? "bg-[#2c2c2c] text-white"
-                          : "text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  );
-                })}
+              <div className="mt-8 mb-12 flex justify-center">
+                <Pagination
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
               </div>
             )}
           </>
         )}
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </PublicPageLayout>
   );
 }

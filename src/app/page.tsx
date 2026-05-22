@@ -1,5 +1,3 @@
-import { Header } from "@/components/Header/Header";
-import { Footer } from "@/components/Footer/Footer";
 import { HeroSearch } from "@/components/HeroSearch/HeroSearch";
 import { PropertyGrid } from "@/components/PropertyGrid/PropertyGrid";
 import { LocationGrid } from "@/components/LocationGrid/LocationGrid";
@@ -8,6 +6,7 @@ import { PropertyData } from "@/components/PropertyCard/PropertyCard";
 import { searchArticles, type Article } from "@/services/articles";
 import { searchProperties, type Property } from "@/services/properties";
 import { apiArticleToPublicCard, propertyToPropertyData, unwrapArray, unwrapPaginated, type PublicArticleCard } from "@/lib/api-adapters";
+import { PublicPageLayout } from "@/components/templates";
 
 export default async function Home() {
   let featuredProperties: PropertyData[] = [];
@@ -34,30 +33,24 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <Header />
+    <PublicPageLayout className="bg-[#f1f5f9] pb-12">
+      <HeroSearch />
 
-      <main className="flex-1 w-full bg-[#f1f5f9] pb-12">
-        <HeroSearch />
+      <div className="mt-8 space-y-4">
+        <PropertyGrid
+          title="Bất động sản dành cho bạn"
+          properties={featuredProperties}
+        />
 
-        <div className="mt-8 space-y-4">
-          <PropertyGrid
-            title="Bất động sản dành cho bạn"
-            properties={featuredProperties}
-          />
+        <LocationGrid />
 
-          <LocationGrid />
+        <PropertyGrid
+          title="Dự án bất động sản nổi bật"
+          properties={hotProjectsData}
+        />
 
-          <PropertyGrid
-            title="Dự án bất động sản nổi bật"
-            properties={hotProjectsData}
-          />
-
-          <NewsSection articles={newsArticles} />
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+        <NewsSection articles={newsArticles} />
+      </div>
+    </PublicPageLayout>
   );
 }

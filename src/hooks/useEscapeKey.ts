@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 
 export function useEscapeKey(handler: () => void, isEnabled: boolean = true) {
