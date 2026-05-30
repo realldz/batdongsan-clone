@@ -50,3 +50,16 @@ export async function getWalletHistory(params?: { page?: number; perPage?: numbe
   const url = query ? `/wallet/history?${query}` : "/wallet/history";
   return api.get<WalletTransaction[]>(url, { cache: "no-store" });
 }
+
+export async function createPaymentUrl(method: string, amount: number) {
+  return api.post<{
+    paymentUrl: string
+  }>("/wallet/deposit/gateway", {
+    method,
+    amount
+  }, { cache: "no-store" });
+}
+
+export async function handleReturnPayment(params: string) {
+  return api.get("/wallet/deposit/return" + "?" + params);
+}

@@ -12,6 +12,13 @@ export default function RechargePage() {
       popular: true,
     },
     {
+      id: "vnpay",
+      icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
+      title: "Thanh toán bằng VNPay",
+      description: "VNPay",
+      popular: true,
+    },
+    {
       id: "bank",
       icon: <Building2 className="w-8 h-8 text-blue-600" strokeWidth={1.5} />,
       title: "Chuyển khoản ngân hàng định danh",
@@ -60,8 +67,8 @@ export default function RechargePage() {
 
           <div className="space-y-4">
             {paymentMethods.map((method) => (
-              <Link 
-                href={`/nguoi-ban/nap-tien/${method.id}`} 
+              <Link
+                href={`/nguoi-ban/nap-tien/${method.id}`}
                 key={method.id}
                 className="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-primary hover:shadow-[0_4px_20px_rgba(224,60,49,0.1)] transition-all cursor-pointer bg-white"
               >
