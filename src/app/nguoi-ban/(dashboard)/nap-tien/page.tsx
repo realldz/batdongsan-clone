@@ -1,59 +1,91 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { SellerHeader } from "../../_components/SellerHeader";
 import { QrCode, Building2, CreditCard, Globe, Wallet, CheckCircle2, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { getPaymentMethods, type PaymentMethod } from "@/services/wallet";
+
+const methodConfig: Record<string, { icon: React.ReactNode; popular?: boolean }> = {
+  vnpay: {
+    icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
+    popular: true,
+  },
+  qr: {
+    icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
+    popular: true,
+  },
+  bank: {
+    icon: <Building2 className="w-8 h-8 text-blue-600" strokeWidth={1.5} />,
+    popular: false,
+  },
+  atm: {
+    icon: <CreditCard className="w-8 h-8 text-gray-700" strokeWidth={1.5} />,
+    popular: false,
+  },
+  international: {
+    icon: <Globe className="w-8 h-8 text-indigo-600" strokeWidth={1.5} />,
+    popular: false,
+  },
+  momo: {
+    icon: <Wallet className="w-8 h-8 text-pink-600" strokeWidth={1.5} />,
+    popular: false,
+  },
+  installment: {
+    icon: <CheckCircle2 className="w-8 h-8 text-orange-500" strokeWidth={1.5} />,
+    popular: false,
+  },
+};
+
+function getMethodDetails(code: string, type: string) {
+  const normalized = code.toLowerCase();
+  const config = methodConfig[normalized];
+  if (config) return config;
+
+  if (type === "gateway") {
+    return {
+      icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
+      popular: false,
+    };
+  }
+  return {
+    icon: <Wallet className="w-8 h-8 text-gray-600" strokeWidth={1.5} />,
+    popular: false,
+  };
+}
 
 export default function RechargePage() {
-  const paymentMethods = [
-    {
-      id: "qr",
-      icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
-      title: "Thanh toán bằng mã QR",
-      description: "Quét mã QR từ ứng dụng ngân hàng và ví điện tử",
-      popular: true,
-    },
-    {
-      id: "vnpay",
-      icon: <QrCode className="w-8 h-8 text-[#009ba1]" strokeWidth={1.5} />,
-      title: "Thanh toán bằng VNPay",
-      description: "VNPay",
-      popular: true,
-    },
-    {
-      id: "bank",
-      icon: <Building2 className="w-8 h-8 text-blue-600" strokeWidth={1.5} />,
-      title: "Chuyển khoản ngân hàng định danh",
-      description: "Tài khoản định danh, nạp tiền nhanh chóng",
-      popular: false,
-    },
-    {
-      id: "atm",
-      icon: <CreditCard className="w-8 h-8 text-gray-700" strokeWidth={1.5} />,
-      title: "Thanh toán bằng thẻ ATM nội địa",
-      description: "",
-      popular: false,
-    },
-    {
-      id: "international",
-      icon: <Globe className="w-8 h-8 text-indigo-600" strokeWidth={1.5} />,
-      title: "Thanh toán bằng thẻ quốc tế, Apple Pay, Google Pay",
-      description: "",
-      popular: false,
-    },
-    {
-      id: "momo",
-      icon: <Wallet className="w-8 h-8 text-pink-600" strokeWidth={1.5} />,
-      title: "Thanh toán bằng ví MoMo",
-      description: "",
-      popular: false,
-    },
-    {
-      id: "installment",
-      icon: <CheckCircle2 className="w-8 h-8 text-orange-500" strokeWidth={1.5} />,
-      title: "Trả góp qua thẻ tín dụng (Visa, Master, JCB)",
-      description: "",
-      popular: false,
-    },
-  ];
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+    async function loadMethods() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getPaymentMethods();
+        if (!ignore) {
+          setMethods(Array.isArray(data) ? data : []);
+        }
+      } catch (err: any) {
+        if (!ignore) {
+          setError(err.message || "Không thể tải danh sách phương thức thanh toán.");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadMethods();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <>
@@ -65,33 +97,65 @@ export default function RechargePage() {
             <p className="text-gray-600 text-base">Bạn hãy chọn một trong các hình thức thanh toán dưới đây</p>
           </div>
 
-          <div className="space-y-4">
-            {paymentMethods.map((method) => (
-              <Link
-                href={`/nguoi-ban/nap-tien/${method.id}`}
-                key={method.id}
-                className="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-primary hover:shadow-[0_4px_20px_rgba(224,60,49,0.1)] transition-all cursor-pointer bg-white"
-              >
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    {method.icon}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-bold text-gray-900 text-[17px] group-hover:text-primary transition-colors">{method.title}</h3>
-                      {method.popular && (
-                        <span className="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Phổ biến</span>
-                      )}
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2].map((i) => (
+                <div key={i} className="flex items-center justify-between p-5 rounded-xl border border-gray-100 bg-white animate-pulse">
+                  <div className="flex items-center gap-5 w-full">
+                    <div className="w-14 h-14 rounded-full bg-gray-100 shrink-0"></div>
+                    <div className="space-y-2 w-full max-w-[240px]">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                    {method.description && (
-                      <p className="text-gray-500 text-sm">{method.description}</p>
-                    )}
                   </div>
+                  <div className="w-6 h-6 bg-gray-100 rounded-full"></div>
                 </div>
-                <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="p-6 text-center rounded-xl border border-red-100 bg-red-50 text-red-600 font-medium">
+              {error}
+            </div>
+          ) : methods.length === 0 ? (
+            <div className="p-12 text-center rounded-xl border border-gray-200 bg-gray-50 text-gray-500">
+              Không tìm thấy phương thức thanh toán khả dụng.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {methods.map((method) => {
+                const details = getMethodDetails(method.code, method.type);
+                const title = method.name.toLowerCase().startsWith("thanh toán")
+                  ? method.name
+                  : `Thanh toán bằng ${method.name}`;
+
+                return (
+                  <Link
+                    href={`/nguoi-ban/nap-tien/${method.code}`}
+                    key={method.code}
+                    className="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-primary hover:shadow-[0_4px_20px_rgba(224,60,49,0.1)] transition-all cursor-pointer bg-white"
+                  >
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        {details.icon}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="font-bold text-gray-900 text-[17px] group-hover:text-primary transition-colors">{title}</h3>
+                          {details.popular && (
+                            <span className="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Phổ biến</span>
+                          )}
+                        </div>
+                        {method.description && (
+                          <p className="text-gray-500 text-sm">{method.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  </Link>
+                );
+              })}
+            </div>
+          )}
 
           <div className="mt-12 p-6 bg-[#fff6f6] rounded-xl border border-red-100">
             <div className="flex items-start gap-4">

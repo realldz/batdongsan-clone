@@ -18,6 +18,13 @@ export interface WalletTransaction {
   [key: string]: unknown;
 }
 
+export interface PaymentMethod {
+  code: string;
+  name: string;
+  type: string;
+  description: string;
+}
+
 export interface WalletDepositRequest {
   amount: number;
   method?: string;
@@ -62,4 +69,8 @@ export async function createPaymentUrl(method: string, amount: number) {
 
 export async function handleReturnPayment(params: string) {
   return api.get("/wallet/deposit/return" + "?" + params);
+}
+
+export async function getPaymentMethods() {
+  return api.get<PaymentMethod[]>("/payment/methods", { cache: "no-store" });
 }

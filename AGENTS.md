@@ -9,6 +9,7 @@
 - Single-package Next.js 16 App Router app with React 19, TypeScript, Tailwind CSS 4.
 - App entrypoints live under `src/app`; the global shell is `src/app/layout.tsx` and global styles are in `src/app/globals.css`.
 - Shared UI is organized by feature under `src/components/<Feature>/<Feature>.tsx`, not as flat utility components.
+- Apply Atomic Design principles when building user interfaces (components should be structured using Atoms, Molecules, Organisms, Templates, and Pages).
 - The TypeScript import alias is `@/* -> src/*`.
 
 ## Repo-Specific Constraints

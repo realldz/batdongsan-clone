@@ -92,7 +92,7 @@ export default function ReturnPaymentClient() {
   return (
     <div className="max-w-md w-full mx-auto px-4">
       <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden transition-all duration-300">
-        
+
         {/* Processing State */}
         {status === "processing" && (
           <div className="p-8 text-center flex flex-col items-center">
@@ -201,7 +201,7 @@ export default function ReturnPaymentClient() {
                 </div>
                 {bankCode && (
                   <div className="flex justify-between">
-                    <span className="font-medium">Ngân hàng:</span>
+                    <span className="font-medium">Phương thức thanh toán:</span>
                     <span className="font-bold text-gray-900">{bankCode}</span>
                   </div>
                 )}

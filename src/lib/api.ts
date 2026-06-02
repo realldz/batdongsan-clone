@@ -83,6 +83,12 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
+    }
     const fallback = `Lỗi yêu cầu (${res.status})`;
     let message = fallback;
 
@@ -105,6 +111,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   }
 
   return res.text() as T;
+
 }
 
 export const api = {

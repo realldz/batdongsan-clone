@@ -25,6 +25,24 @@ function getTransactionTone(type: string | undefined) {
   return type === "deposit" || type === "credit" ? "text-emerald-600 bg-emerald-50" : "text-primary bg-red-50";
 }
 
+function getStatusLabelAndColor(status: string | undefined) {
+  if (!status) return { label: "--", color: "text-gray-400" };
+  const s = status.toLowerCase();
+  if (s === "success" || s === "thành công" || s === "completed") {
+    return { label: "Thành công", color: "text-emerald-600 font-semibold" };
+  }
+  if (s === "failed" || s === "thất bại" || s === "error" || s === "failure") {
+    return { label: "Thất bại", color: "text-red-600 font-semibold" };
+  }
+  if (s === "pending" || s === "đang xử lý" || s === "processing") {
+    return { label: "Đang xử lý", color: "text-amber-600 font-semibold" };
+  }
+  if (s === "cancelled" || s === "hủy" || s === "cancel") {
+    return { label: "Đã hủy", color: "text-gray-600 font-semibold" };
+  }
+  return { label: status, color: "text-gray-600 font-semibold" };
+}
+
 const PAGE_SIZE = 10;
 
 const TYPE_OPTIONS = [
@@ -150,8 +168,19 @@ export default function WalletHistoryPage() {
               <>
                 <div className="divide-y divide-gray-100">
                   {paginated.map((item) => {
-                    const tone = getTransactionTone(item.type);
+                    const statusLower = item.status?.toLowerCase();
+                    const isFailed = statusLower === "failed" || statusLower === "thất bại" || statusLower === "error";
+                    const isCancelled = statusLower === "cancelled" || statusLower === "hủy" || statusLower === "cancel";
+
+                    let tone = getTransactionTone(item.type);
+                    if (isFailed) {
+                      tone = "text-red-600 bg-red-50";
+                    } else if (isCancelled) {
+                      tone = "text-gray-500 bg-gray-100";
+                    }
+
                     const isIn = item.type === "deposit" || item.type === "credit";
+                    const statusInfo = getStatusLabelAndColor(item.status);
 
                     return (
                       <div key={item.id} className="flex items-center justify-between gap-4 px-6 py-4 hover:bg-gray-50">
@@ -161,11 +190,15 @@ export default function WalletHistoryPage() {
                           </div>
                           <div>
                             <div className="font-extrabold text-gray-900">{isIn ? "Nạp tiền" : "Thanh toán"}</div>
-                            <div className="mt-1 text-xs font-medium text-gray-500">{formatDate(item.createdAt)} · {item.status ?? "--"}</div>
+                            <div className="mt-1 text-xs font-medium text-gray-500 flex items-center gap-1.5">
+                              <span>{formatDate(item.createdAt)}</span>
+                              <span>·</span>
+                              <span className={statusInfo.color}>{statusInfo.label}</span>
+                            </div>
                             {item.description ? <div className="mt-1 text-xs text-gray-400 line-clamp-1">{item.description}</div> : null}
                           </div>
                         </div>
-                        <div className={`text-right font-extrabold ${isIn ? "text-emerald-600" : "text-primary"}`}>
+                        <div className={`text-right font-extrabold ${(isFailed || isCancelled) ? "text-gray-400 line-through" : (isIn ? "text-emerald-600" : "text-primary")}`}>
                           {isIn ? "+" : "-"}{formatAmount(item.amount)}
                         </div>
                       </div>
