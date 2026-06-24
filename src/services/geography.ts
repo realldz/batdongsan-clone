@@ -7,7 +7,7 @@ export interface GeographyDivision {
   parent: string | null;
   lat: number;
   lon: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export async function getProvinces(search?: string) {

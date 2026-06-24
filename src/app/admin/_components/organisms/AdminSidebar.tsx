@@ -50,7 +50,7 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`group flex items-center justify-between rounded-xl px-3.5 py-3 transition-colors ${
+              className={`group flex items-center justify-between rounded-xl px-3.5 py-3 transition-colors cursor-pointer ${
                 isActive ? "bg-red-50 text-[#e03c31]" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >

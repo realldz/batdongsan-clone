@@ -1,4 +1,4 @@
-import type { AdminArticle } from "@/app/admin/_data/mock";
+import type { AdminArticle } from "@/app/admin/_data/types";
 import type { Article } from "@/services/articles";
 import type { PublicArticleCard } from "@/types";
 import { formatDate, formatRelativeTime } from "@/lib/formatters/date";

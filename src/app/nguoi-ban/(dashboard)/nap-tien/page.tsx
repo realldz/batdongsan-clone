@@ -69,9 +69,10 @@ export default function RechargePage() {
         if (!ignore) {
           setMethods(Array.isArray(data) ? data : []);
         }
-      } catch (err: any) {
+      } catch (err) {
         if (!ignore) {
-          setError(err.message || "Không thể tải danh sách phương thức thanh toán.");
+          const error = err as { message?: string };
+          setError(error.message || "Không thể tải danh sách phương thức thanh toán.");
         }
       } finally {
         if (!ignore) {

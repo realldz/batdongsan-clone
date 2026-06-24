@@ -1,4 +1,4 @@
-import { AdminSidebar } from "./_components/AdminSidebar";
+import { AdminSidebar } from "./_components/organisms/AdminSidebar";
 
 export const metadata = {
   title: "Admin | Batdongsan",

@@ -1,4 +1,4 @@
-import type { AdminListing, AdminListingStatus, AdminListingType } from "@/app/admin/_data/mock";
+import type { AdminListing, AdminListingStatus, AdminListingType } from "@/app/admin/_data/types";
 import type { ListingData, PropertyData, PropertyDetailView } from "@/types";
 import type { Property, PropertyOwner, PropertyStatus, PropertyType } from "@/services/properties";
 import { formatCurrency, formatPricePerSqm } from "@/lib/formatters/currency";

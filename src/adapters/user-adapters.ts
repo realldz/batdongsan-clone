@@ -1,4 +1,4 @@
-import type { AdminUser, AdminUserRole, AdminUserStatus } from "@/app/admin/_data/mock";
+import type { AdminUser, AdminUserRole, AdminUserStatus } from "@/app/admin/_data/types";
 import type { ApiUser } from "@/services/admin";
 import { formatDate } from "@/lib/formatters/date";
 import { formatCompactNumber } from "@/lib/formatters/currency";
