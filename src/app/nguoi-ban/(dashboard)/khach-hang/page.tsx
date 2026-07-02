@@ -1,15 +1,15 @@
 "use client";
 
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import { SellerHeader } from "@/app/nguoi-ban/_components/SellerHeader";
 import { SellerPagination } from "@/app/nguoi-ban/_components/SellerPagination";
-import { StatusBadge } from "@/app/admin/_components/AdminUi";
+import { EmptyState } from "@/app/nguoi-ban/_components/atoms";
+import { LeadsTable } from "@/app/nguoi-ban/_components/molecules";
 import { useAuth } from "@/lib/auth-store";
 import { apiLeadToView, unwrapArray, type LeadView } from "@/lib/api-adapters";
 import { searchProperties, type Property } from "@/services/properties";
 import { searchLeads, updateLeadStatus, type LeadStatus } from "@/services/leads";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
 
 const statusOptions: Array<"all" | LeadStatus> = ["all", "new", "contacted", "qualified", "lost"];
 
@@ -19,13 +19,6 @@ const statusLabelMap: Record<string, string> = {
   qualified: "Tiềm năng",
   lost: "Mất",
 };
-
-function leadStatusTone(status: string) {
-  if (status === "new") return "blue" as const;
-  if (status === "contacted") return "amber" as const;
-  if (status === "qualified") return "green" as const;
-  return "gray" as const;
-}
 
 const PER_PAGE = 20;
 
@@ -46,7 +39,7 @@ export default function KhachHangPage() {
       const propsResp = await searchProperties({ page: 1, perPage: 100 });
       const allProps = unwrapArray<Property>(propsResp);
       const myProps = allProps.filter(
-        (p) => p.host === user.id || p.user?.id === user.id,
+        (p) => p.host === user.id || p.user?.id === user.id
       );
 
       setMyProperties(myProps);
@@ -61,8 +54,8 @@ export default function KhachHangPage() {
           searchLeads({ propertyId: p.id, page: 1, perPage: 50 }).catch(() => ({
             leads: [],
             pagination: { page: 1, totalPages: 0, total: 0, perPage: 10 },
-          })),
-        ),
+          }))
+        )
       );
 
       const merged = leadResults
@@ -91,7 +84,7 @@ export default function KhachHangPage() {
         (l) =>
           l.name.toLowerCase().includes(q) ||
           l.phone.includes(q) ||
-          l.propertyTitle.toLowerCase().includes(q),
+          l.propertyTitle.toLowerCase().includes(q)
       );
     }
     return result;
@@ -106,8 +99,8 @@ export default function KhachHangPage() {
       await updateLeadStatus(id, status);
       setAllLeads((prev) =>
         prev.map((l) =>
-          l.id === id ? { ...l, status, statusLabel: statusLabelMap[status] } : l,
-        ),
+          l.id === id ? { ...l, status, statusLabel: statusLabelMap[status] } : l
+        )
       );
     } catch {
       // silently fail
@@ -119,8 +112,12 @@ export default function KhachHangPage() {
       <SellerHeader title="Quản lý khách hàng" />
       <main className="flex-1 overflow-y-auto p-6 lg:p-8 xl:p-10 space-y-6 pb-20">
         <div>
-          <h2 className="text-[22px] font-bold text-gray-900 tracking-tight mb-2">Danh sách liên hệ</h2>
-          <p className="text-sm text-gray-500">Quản lý liên hệ từ khách hàng quan tâm đến tin đăng của bạn</p>
+          <h2 className="text-[22px] font-bold text-gray-900 tracking-tight mb-2">
+            Danh sách liên hệ
+          </h2>
+          <p className="text-sm text-gray-500">
+            Quản lý liên hệ từ khách hàng quan tâm đến tin đăng của bạn
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -128,27 +125,42 @@ export default function KhachHangPage() {
             type="text"
             placeholder="Tìm tên, SĐT, BĐS..."
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none w-full max-w-xs focus:border-primary focus:ring-2 focus:ring-red-100"
           />
           <select
             value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value as typeof statusFilter); setPage(1); }}
-            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary"
+            onChange={(e) => {
+              setStatusFilter(e.target.value as typeof statusFilter);
+              setPage(1);
+            }}
+            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary font-bold text-gray-700"
           >
             <option value="all">Tất cả trạng thái</option>
-            {statusOptions.filter((s) => s !== "all").map((s) => (
-              <option key={s} value={s}>{statusLabelMap[s]}</option>
-            ))}
+            {statusOptions
+              .filter((s) => s !== "all")
+              .map((s) => (
+                <option key={s} value={s}>
+                  {statusLabelMap[s]}
+                </option>
+              ))}
           </select>
           <select
             value={propertyFilter}
-            onChange={(e) => { setPropertyFilter(e.target.value); setPage(1); }}
-            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary"
+            onChange={(e) => {
+              setPropertyFilter(e.target.value);
+              setPage(1);
+            }}
+            className="rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary font-bold text-gray-700 max-w-xs"
           >
             <option value="all">Tất cả tin đăng</option>
             {myProperties.map((p) => (
-              <option key={p.id} value={p.id}>{p.title}</option>
+              <option key={p.id} value={p.id}>
+                {p.title}
+              </option>
             ))}
           </select>
         </div>
@@ -157,68 +169,24 @@ export default function KhachHangPage() {
           {loading ? (
             <div className="py-14 text-center text-sm text-gray-500">Đang tải...</div>
           ) : filtered.length === 0 ? (
-            <div className="py-14 text-center">
-              <div className="text-base font-extrabold text-gray-900 mb-2">Chưa có liên hệ nào</div>
-              <div className="text-sm text-gray-500">
-                {allLeads.length === 0
-                  ? "Liên hệ từ khách hàng cho tin đăng của bạn sẽ hiển thị ở đây"
-                  : "Không tìm thấy liên hệ phù hợp với bộ lọc"}
-              </div>
+            <div className="py-6">
+              <EmptyState
+                title="Chưa có liên hệ nào"
+                description={
+                  allLeads.length === 0
+                    ? "Liên hệ từ khách hàng cho tin đăng của bạn sẽ hiển thị ở đây"
+                    : "Không tìm thấy liên hệ phù hợp với bộ lọc"
+                }
+                icon={<Search className="h-6 w-6 text-gray-500" />}
+              />
             </div>
           ) : (
             <>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Tên</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">SĐT</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Email</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Tin đăng</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Nguồn</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Thời gian</th>
-                    <th className="text-left px-4 py-3 text-xs font-extrabold text-gray-500 uppercase tracking-wider">Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pagedLeads.map((lead) => (
-                    <tr key={lead.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-3 font-bold text-gray-900">{lead.name}</td>
-                      <td className="px-4 py-3 text-gray-700 font-medium">{lead.phone}</td>
-                      <td className="px-4 py-3 text-gray-600">{lead.email}</td>
-                      <td className="px-4 py-3">
-                        <Link
-                          href={`/properties/${lead.propertyId}`}
-                          className="text-primary hover:underline font-medium text-xs max-w-[200px] truncate block"
-                          target="_blank"
-                        >
-                          {lead.propertyTitle}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3">
-                        <StatusBadge tone={lead.source === "property_detail" ? "blue" : lead.source === "search" ? "violet" : "gray"}>
-                          {lead.sourceLabel}
-                        </StatusBadge>
-                      </td>
-                      <td className="px-4 py-3">
-                        <StatusBadge tone={leadStatusTone(lead.status)}>{lead.statusLabel}</StatusBadge>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-500">{lead.createdTime}</td>
-                      <td className="px-4 py-3">
-                        <select
-                          value={lead.status}
-                          onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
-                          className="rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium outline-none focus:border-primary"
-                        >
-                          {statusOptions.filter((s) => s !== "all").map((s) => (
-                            <option key={s} value={s}>{statusLabelMap[s]}</option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <LeadsTable
+                leads={pagedLeads}
+                showActions={true}
+                onStatusChange={handleStatusChange}
+              />
 
               <SellerPagination
                 currentPage={currentPage}

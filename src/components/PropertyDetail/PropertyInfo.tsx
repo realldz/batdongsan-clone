@@ -97,8 +97,110 @@ export const PropertyInfo = ({ property }: { property: PropertyDetailView }) => 
             </span>
             <span className="font-medium">{property.legalInfo}</span>
           </div>
+          {property.bedrooms !== undefined && property.bedrooms > 0 && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                Số phòng ngủ
+              </span>
+              <span className="font-medium">{property.bedrooms} phòng</span>
+            </div>
+          )}
+          {property.bathrooms !== undefined && property.bathrooms > 0 && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                Số phòng tắm
+              </span>
+              <span className="font-medium">{property.bathrooms} phòng</span>
+            </div>
+          )}
+          {property.interior && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                Nội thất
+              </span>
+              <span className="font-medium">{property.interior}</span>
+            </div>
+          )}
+          {property.balconyDirection && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                Hướng ban công
+              </span>
+              <span className="font-medium">{property.balconyDirection}</span>
+            </div>
+          )}
+          {property.rentDetails && (
+            <>
+              {property.rentDetails.moveInTime && (
+                <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+                  <span className="text-gray-500 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    Thời hạn bàn giao
+                  </span>
+                  <span className="font-medium">{property.rentDetails.moveInTime}</span>
+                </div>
+              )}
+              {property.rentDetails.electricityPrice && (
+                <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+                  <span className="text-gray-500 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    Tiền điện
+                  </span>
+                  <span className="font-medium">{property.rentDetails.electricityPrice}</span>
+                </div>
+              )}
+              {property.rentDetails.waterPrice && (
+                <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+                  <span className="text-gray-500 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 15v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4m16-4V7a2 2 0 00-2-2H6a2 2 0 00-2 2v4m16 4H4" /></svg>
+                    Tiền nước
+                  </span>
+                  <span className="font-medium">{property.rentDetails.waterPrice}</span>
+                </div>
+              )}
+              {property.rentDetails.internetPrice && (
+                <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+                  <span className="text-gray-500 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.05 9.879A3 3 0 119.88 5.05m0 0a8.001 8.001 0 11-9.88 9.879" /></svg>
+                    Tiền Internet
+                  </span>
+                  <span className="font-medium">{property.rentDetails.internetPrice}</span>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
+
+      {property.amenities && (property.amenities.camera || property.amenities.baove || property.amenities.pccc) && (
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-3">Tiện ích đi kèm</h2>
+          <div className="flex flex-wrap gap-3">
+            {property.amenities.camera && (
+              <span className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-full font-medium border border-green-100 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                Camera an ninh
+              </span>
+            )}
+            {property.amenities.baove && (
+              <span className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-full font-medium border border-green-100 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                Bảo vệ 24/7
+              </span>
+            )}
+            {property.amenities.pccc && (
+              <span className="bg-green-50 text-green-700 text-xs px-3 py-1.5 rounded-full font-medium border border-green-100 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                Hệ thống PCCC
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Map Placeholder */}
       <div className="mb-8 border-t border-gray-100 pt-8 mt-8">

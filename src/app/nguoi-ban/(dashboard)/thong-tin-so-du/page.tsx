@@ -1,10 +1,10 @@
 "use client";
 
-import { SellerHeader } from "../../_components/SellerHeader";
-import type { ReactNode } from "react";
 import { useWalletBalance, useWalletLoading } from "@/lib/use-wallet-balance";
 import { CreditCard, Gift, Wallet } from "lucide-react";
 import Link from "next/link";
+import { SellerHeader } from "../../_components/SellerHeader";
+import { BalanceCard, SkeletonBalanceCard } from "../../_components/atoms";
 
 export default function WalletBalancePage() {
   const wallet = useWalletBalance();
@@ -25,11 +25,21 @@ export default function WalletBalancePage() {
             ) : (
               <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <div className="mb-2 text-sm font-extrabold uppercase tracking-[0.18em] text-primary">Số dư khả dụng</div>
-                  <h2 className="text-4xl font-extrabold text-gray-900">{wallet.total}</h2>
-                  <p className="mt-2 text-sm font-medium text-gray-500">Nguồn dữ liệu: {wallet.source === "api" ? "API ví" : "fallback mock"}</p>
+                  <div className="mb-2 text-sm font-extrabold uppercase tracking-[0.18em] text-primary">
+                    Số dư khả dụng
+                  </div>
+                  <h2 className="text-4xl font-extrabold text-gray-900">
+                    {wallet.total}
+                  </h2>
+                  <p className="mt-2 text-sm font-medium text-gray-500">
+                    Nguồn dữ liệu:{" "}
+                    {wallet.source === "api" ? "API ví" : "fallback mock"}
+                  </p>
                 </div>
-                <Link href="/nguoi-ban/nap-tien" className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-primary-hover">
+                <Link
+                  href="/nguoi-ban/nap-tien"
+                  className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-red-700"
+                >
                   Nạp tiền
                 </Link>
               </div>
@@ -37,24 +47,44 @@ export default function WalletBalancePage() {
           </section>
 
           <section className="grid gap-4 md:grid-cols-3">
-            {loading
-              ? Array.from({ length: 3 }).map((_, i) => <SkeletonBalanceCard key={i} />)
-              : (
-                <>
-                  <BalanceCard icon={<Wallet className="h-5 w-5" />} label="Tài khoản chính" value={wallet.main} />
-                  <BalanceCard icon={<Gift className="h-5 w-5" />} label="Tài khoản khuyến mãi" value={wallet.promotion} />
-                  <BalanceCard icon={<CreditCard className="h-5 w-5" />} label="Mã nạp tiền" value={wallet.code} />
-                </>
-              )}
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <SkeletonBalanceCard key={i} />
+              ))
+            ) : (
+              <>
+                <BalanceCard
+                  icon={<Wallet className="h-5 w-5" />}
+                  label="Tài khoản chính"
+                  value={wallet.main}
+                />
+                <BalanceCard
+                  icon={<Gift className="h-5 w-5" />}
+                  label="Tài khoản khuyến mãi"
+                  value={wallet.promotion}
+                />
+                <BalanceCard
+                  icon={<CreditCard className="h-5 w-5" />}
+                  label="Mã nạp tiền"
+                  value={wallet.code}
+                />
+              </>
+            )}
           </section>
 
           <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-extrabold text-gray-900">Quản lý ví</h3>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Link href="/nguoi-ban/lich-su-giao-dich" className="rounded-2xl border border-gray-200 px-5 py-4 font-bold text-gray-800 transition-colors hover:bg-gray-50">
+              <Link
+                href="/nguoi-ban/lich-su-giao-dich"
+                className="rounded-2xl border border-gray-200 px-5 py-4 font-bold text-gray-800 transition-colors hover:bg-gray-50"
+              >
                 Xem lịch sử giao dịch
               </Link>
-              <Link href="/nguoi-ban/nap-tien" className="rounded-2xl border border-gray-200 px-5 py-4 font-bold text-gray-800 transition-colors hover:bg-gray-50">
+              <Link
+                href="/nguoi-ban/nap-tien"
+                className="rounded-2xl border border-gray-200 px-5 py-4 font-bold text-gray-800 transition-colors hover:bg-gray-50"
+              >
                 Nạp thêm tiền
               </Link>
             </div>
@@ -62,25 +92,5 @@ export default function WalletBalancePage() {
         </div>
       </main>
     </>
-  );
-}
-
-function BalanceCard({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
-  return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-primary">{icon}</div>
-      <div className="text-sm font-bold text-gray-500">{label}</div>
-      <div className="mt-2 text-2xl font-extrabold text-gray-900">{value}</div>
-    </div>
-  );
-}
-
-function SkeletonBalanceCard() {
-  return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm animate-pulse">
-      <div className="mb-4 h-11 w-11 rounded-2xl bg-gray-100" />
-      <div className="h-4 w-24 bg-gray-100 rounded" />
-      <div className="mt-3 h-8 w-32 bg-gray-100 rounded" />
-    </div>
   );
 }

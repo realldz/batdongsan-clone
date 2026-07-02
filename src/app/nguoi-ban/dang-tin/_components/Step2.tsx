@@ -16,14 +16,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
   const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const libraryImages = [
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-30ba_wm.jpg",
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-42b7_wm.jpg",
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-f58c_wm.jpg",
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-1234_wm.jpg",
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-5678_wm.jpg",
-    "https://file4.batdongsan.com.vn/crop/350x232/2023/10/24/20231024093844-abcd_wm.jpg",
-  ];
+  const libraryImages: string[] = [];
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedLibraryImages, setSelectedLibraryImages] = useState<number[]>([]);

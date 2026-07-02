@@ -50,4 +50,24 @@ export interface PropertyDetailView {
     avatar: string;
     phone: string;
   };
+  bedrooms?: number;
+  bathrooms?: number;
+  interior?: string;
+  balconyDirection?: string;
+  ward?: string;
+  street?: string;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  amenities?: {
+    camera: boolean;
+    baove: boolean;
+    pccc: boolean;
+  } | null;
+  rentDetails?: {
+    moveInTime?: string;
+    electricityPrice?: string;
+    waterPrice?: string;
+    internetPrice?: string;
+  } | null;
 }

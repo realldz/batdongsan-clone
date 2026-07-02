@@ -1,53 +1,40 @@
 "use client";
 
-import { SellerHeader } from "../../_components/SellerHeader";
-import { SellerPagination } from "../../_components/SellerPagination";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
-  Calendar,
-  ChevronDown,
-  CircleDollarSign,
   FileText,
   Filter,
-  MapPin,
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import Link from "next/link";
+
+import { SellerHeader } from "../../_components/SellerHeader";
+import { SellerPagination } from "../../_components/SellerPagination";
+import { SummaryCard, EmptyState } from "../../_components/atoms";
+import { ListingCard, type Listing, type ListingStatus } from "../../_components/molecules";
+import { FilterDialog, RenewDialog, renewOptions } from "../../_components/organisms";
+
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
 import { getMyProperties, type Property, type PropertyStatus } from "@/services/properties";
 import { payWallet } from "@/services/wallet";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
-import { useEffect, useMemo, useRef, useState } from "react";
 
-type ListingStatus =
-  | "Đang hiển thị"
-  | "Chờ duyệt"
-  | "Sắp hết hạn"
-  | "Hết hạn"
-  | "Đã hạ"
-  | "Chờ thanh toán";
+const PAGE_SIZE = 10;
 
-type ListingCategory = "Bán" | "Thuê";
-type ListingPackage = "Tin thường" | "Tin VIP" | "Tin nổi bật";
-
-type Listing = {
-  id: string;
-  title: string;
-  code: string;
-  category: ListingCategory;
-  propertyType: string;
-  location: string;
-  price: string;
-  area: string;
-  postedAt: string;
-  expiresAt: string;
-  status: ListingStatus;
-  packageName: ListingPackage;
-  inquiries: number;
-  views: number;
-  image: string;
-  badge?: string;
+const filterSections = {
+  categories: ["Tất cả", "Bán", "Thuê"] as const,
+  packages: ["Tất cả", "Tin thường", "Tin VIP", "Tin nổi bật"] as const,
+  statuses: [
+    "Tất cả",
+    "Đang hiển thị",
+    "Chờ duyệt",
+    "Sắp hết hạn",
+    "Hết hạn",
+    "Đã hạ",
+    "Chờ thanh toán",
+  ] as const,
 };
 
 function mapPropertyStatusToListingStatus(status: PropertyStatus | undefined): ListingStatus {
@@ -87,42 +74,11 @@ function propertyToSellerListing(property: Property): Listing {
   };
 }
 
-const filterSections = {
-  categories: ["Tất cả", "Bán", "Thuê"] as const,
-  packages: ["Tất cả", "Tin thường", "Tin VIP", "Tin nổi bật"] as const,
-  statuses: [
-    "Tất cả",
-    "Đang hiển thị",
-    "Chờ duyệt",
-    "Sắp hết hạn",
-    "Hết hạn",
-    "Đã hạ",
-    "Chờ thanh toán",
-  ] as const,
-};
-
-const statusTone: Record<ListingStatus, string> = {
-  "Đang hiển thị": "bg-emerald-50 text-emerald-700 border-emerald-200",
-  "Chờ duyệt": "bg-amber-50 text-amber-700 border-amber-200",
-  "Sắp hết hạn": "bg-orange-50 text-orange-700 border-orange-200",
-  "Hết hạn": "bg-rose-50 text-rose-700 border-rose-200",
-  "Đã hạ": "bg-slate-100 text-slate-700 border-slate-200",
-  "Chờ thanh toán": "bg-violet-50 text-violet-700 border-violet-200",
-};
-
-const renewOptions = [
-  { days: 7, label: "7 ngày", price: "99.000 đ", helper: "Phù hợp tin sắp hết hạn" },
-  { days: 15, label: "15 ngày", price: "169.000 đ", helper: "Tiết kiệm hơn 15%" },
-  { days: 30, label: "30 ngày", price: "299.000 đ", helper: "Hiển thị lâu hơn" },
-] as const;
-
 function parseVnd(value: string): number {
   return Number(value.replace(/[^\d]/g, ""));
 }
 
-const PAGE_SIZE = 3;
-
-export default function ListingsPage() {
+export default function RechargePage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -140,7 +96,6 @@ export default function ListingsPage() {
   const [loading, setLoading] = useState(true);
   const wallet = useWalletBalance();
   const refreshWallet = useRefreshWallet();
-  const dialogRef = useRef<HTMLDivElement>(null);
 
   const isAnyDialogOpen = isFilterDialogOpen || renewListing !== null;
 
@@ -390,7 +345,11 @@ export default function ListingsPage() {
               value={String(listings.filter((listing) => listing.status === "Đang hiển thị").length)}
               helper="Ưu tiên gia hạn trước khi hết hạn"
             />
-            <SummaryCard label="Lượt xem tích lũy" value={listings.reduce((sum, listing) => sum + listing.views, 0).toLocaleString("vi-VN")} helper="Tổng lượt xem của các tin" />
+            <SummaryCard
+              label="Lượt xem tích lũy"
+              value={listings.reduce((sum, listing) => sum + listing.views, 0).toLocaleString("vi-VN")}
+              helper="Tổng lượt xem của các tin"
+            />
           </section>
 
           <section className="rounded-3xl border border-gray-200 bg-white shadow-sm">
@@ -420,15 +379,11 @@ export default function ListingsPage() {
                   <ListingCard key={listing.id} listing={listing} onRenew={() => openRenewDialog(listing)} />
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm">
-                    <Search className="h-6 w-6 text-gray-500" />
-                  </div>
-                  <h4 className="text-lg font-bold text-gray-900">Không tìm thấy tin phù hợp</h4>
-                  <p className="mt-2 text-sm leading-6 text-gray-500">
-                    Thử đổi từ khóa, trạng thái hoặc loại tin trong bộ lọc để xem thêm tin.
-                  </p>
-                </div>
+                <EmptyState
+                  title="Không tìm thấy tin phù hợp"
+                  description="Thử đổi từ khóa, trạng thái hoặc loại tin trong bộ lọc để xem thêm tin."
+                  icon={<Search className="h-6 w-6 text-gray-500" />}
+                />
               )}
             </div>
 
@@ -437,180 +392,37 @@ export default function ListingsPage() {
               totalPages={totalPages}
               onPageChange={setCurrentPage}
               totalItems={total}
-              itemsLabel="tin"
               pageSize={PAGE_SIZE}
+              itemsLabel="tin đăng"
             />
           </section>
         </div>
       </main>
 
-      {isFilterDialogOpen ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 sm:items-center sm:p-6">
-          <button
-            type="button"
-            aria-label="Đóng bộ lọc"
-            className="absolute inset-0 cursor-default"
-            onClick={() => setIsFilterDialogOpen(false)}
-          />
-          <div
-            ref={dialogRef}
-            className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]"
-          >
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
-              <div>
-                <div className="text-[22px] font-extrabold text-gray-900">Lọc tin đăng</div>
-                <p className="mt-1 text-sm text-gray-500">Chọn điều kiện để thu hẹp danh sách tin đăng demo</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsFilterDialogOpen(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
-              >
-                <span className="text-xl leading-none">×</span>
-              </button>
-            </div>
+      <FilterDialog
+        isOpen={isFilterDialogOpen}
+        onClose={() => setIsFilterDialogOpen(false)}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        packageFilter={packageFilter}
+        setPackageFilter={setPackageFilter}
+        activeStatus={activeStatus}
+        setActiveStatus={setActiveStatus}
+        onReset={resetFilters}
+      />
 
-            <div className="space-y-6 overflow-y-auto px-6 py-6">
-              <FilterSection
-                title="Nhu cầu"
-                value={categoryFilter}
-                options={filterSections.categories}
-                onSelect={(value) => {
-                  setCategoryFilter(value);
-                  setCurrentPage(1);
-                }}
-              />
-              <FilterSection
-                title="Loại gói tin"
-                value={packageFilter}
-                options={filterSections.packages}
-                onSelect={(value) => {
-                  setPackageFilter(value);
-                  setCurrentPage(1);
-                }}
-              />
-              <FilterSection
-                title="Trạng thái"
-                value={activeStatus}
-                options={filterSections.statuses}
-                onSelect={(value) => {
-                  setActiveStatus(value);
-                  setCurrentPage(1);
-                }}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 border-t border-gray-100 px-6 py-5">
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="rounded-full border border-gray-300 px-5 py-3 text-[15px] font-bold text-gray-800 transition-colors hover:bg-gray-50"
-              >
-                Đặt lại
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsFilterDialogOpen(false)}
-                className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700"
-              >
-                Áp dụng
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {renewListing ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 sm:items-center sm:p-6">
-          <button
-            type="button"
-            aria-label="Đóng gia hạn tin"
-            className="absolute inset-0 cursor-default"
-            onClick={() => setRenewListing(null)}
-          />
-          <div className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]">
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
-              <div>
-                <div className="text-[22px] font-extrabold text-gray-900">Gia hạn tin</div>
-                <p className="mt-1 text-sm text-gray-500">Mã tin {renewListing.code}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setRenewListing(null)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
-              >
-                <span className="text-xl leading-none">×</span>
-              </button>
-            </div>
-
-            <div className="space-y-5 overflow-y-auto px-6 py-6">
-              <div className="rounded-2xl bg-gray-50 p-4">
-                <div className="line-clamp-2 text-[17px] font-extrabold text-gray-900">{renewListing.title}</div>
-                <div className="mt-3 flex flex-wrap gap-3 text-sm text-gray-500">
-                  <span>Gói hiện tại: <span className="font-bold text-gray-800">{renewListing.packageName}</span></span>
-                  <span>Hết hạn: <span className="font-bold text-gray-800">{renewListing.expiresAt}</span></span>
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-3 text-sm font-extrabold uppercase tracking-[0.16em] text-gray-400">Chọn thời hạn gia hạn</div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {renewOptions.map((option) => {
-                    const isActive = selectedRenewDays === option.days;
-
-                    return (
-                      <button
-                        key={option.days}
-                        type="button"
-                        onClick={() => {
-                          setSelectedRenewDays(option.days);
-                          setRenewSuccessMessage("");
-                        }}
-                        className={`rounded-2xl border p-4 text-left transition-colors ${isActive
-                            ? "border-primary bg-red-50 text-primary"
-                            : "border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
-                          }`}
-                      >
-                        <div className="text-lg font-extrabold">{option.label}</div>
-                        <div className="mt-1 text-sm font-bold">{option.price}</div>
-                        <div className={`mt-2 text-xs font-medium ${isActive ? "text-red-500" : "text-gray-500"}`}>{option.helper}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-                Khi xác nhận, hệ thống gọi API thanh toán ví để trừ tiền gia hạn tin.
-              </div>
-
-              {renewSuccessMessage ? (
-                <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-700">
-                  {renewSuccessMessage}
-                </div>
-              ) : null}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 border-t border-gray-100 px-6 py-5">
-              <button
-                type="button"
-                onClick={() => setRenewListing(null)}
-                className="rounded-full border border-gray-300 px-5 py-3 text-[15px] font-bold text-gray-800 transition-colors hover:bg-gray-50"
-              >
-                Hủy
-              </button>
-              <button
-                type="button"
-                onClick={confirmRenewListing}
-                disabled={isRenewSubmitting}
-                className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isRenewSubmitting ? "Đang thanh toán..." : "Xác nhận gia hạn"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {renewListing && (
+        <RenewDialog
+          listing={renewListing}
+          onClose={() => setRenewListing(null)}
+          selectedRenewDays={selectedRenewDays}
+          setSelectedRenewDays={setSelectedRenewDays}
+          renewSuccessMessage={renewSuccessMessage}
+          setRenewSuccessMessage={setRenewSuccessMessage}
+          isRenewSubmitting={isRenewSubmitting}
+          onConfirm={confirmRenewListing}
+        />
+      )}
 
       <button className="fixed bottom-8 right-8 z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-primary text-white shadow-[0_4px_14px_0_rgba(224,60,49,0.39)] transition-all hover:-translate-y-1 hover:bg-red-600 group">
         <svg
@@ -628,152 +440,5 @@ export default function ListingsPage() {
         </svg>
       </button>
     </>
-  );
-}
-
-function SummaryCard({ label, value, helper }: { label: string; value: string; helper: string }) {
-  return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="text-sm font-semibold text-gray-500">{label}</div>
-      <div className="mt-3 text-[30px] font-extrabold leading-none text-gray-900">{value}</div>
-      <div className="mt-2 text-sm text-gray-500">{helper}</div>
-    </div>
-  );
-}
-
-function FilterSection<T extends string>({
-  title,
-  value,
-  options,
-  onSelect,
-}: {
-  title: string;
-  value: T;
-  options: readonly T[];
-  onSelect: (value: T) => void;
-}) {
-  return (
-    <div>
-      <div className="mb-3 text-sm font-extrabold uppercase tracking-[0.16em] text-gray-400">{title}</div>
-      <div className="flex flex-wrap gap-3">
-        {options.map((option) => {
-          const isActive = value === option;
-
-          return (
-            <button
-              key={option}
-              type="button"
-              onClick={() => onSelect(option)}
-              className={`rounded-full border px-4 py-2.5 text-sm font-bold transition-colors ${isActive
-                  ? "border-primary bg-red-50 text-primary"
-                  : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-            >
-              {option}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function ListingCard({ listing, onRenew }: { listing: Listing; onRenew: () => void }) {
-  return (
-    <article className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-      <div className="flex flex-col lg:flex-row">
-        <div className="relative h-56 w-full overflow-hidden bg-gray-100 lg:h-auto lg:w-[280px]">
-          <img src={listing.image} alt={listing.title} className="h-full w-full object-cover" />
-          <div className="absolute left-4 top-4 flex items-center gap-2">
-            <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.14em] text-gray-700 shadow-sm">
-              {listing.category}
-            </span>
-            {listing.badge ? (
-              <span className="rounded-full bg-primary px-3 py-1 text-xs font-extrabold text-white shadow-sm">
-                {listing.badge}
-              </span>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="flex flex-1 flex-col p-5 lg:p-6">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-            <div className="max-w-3xl">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`rounded-full border px-3 py-1 text-xs font-bold ${statusTone[listing.status]}`}>
-                  {listing.status}
-                </span>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">
-                  {listing.packageName}
-                </span>
-                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-400">Mã tin {listing.code}</span>
-              </div>
-              <h3 className="mt-3 text-[22px] font-extrabold leading-tight text-gray-900">{listing.title}</h3>
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-gray-500">
-                <span className="flex items-center gap-2">
-                  <CircleDollarSign className="h-4 w-4 text-primary" />
-                  <span className="font-bold text-primary">{listing.price}</span>
-                </span>
-                <span className="font-semibold text-gray-700">{listing.area}</span>
-                <span className="rounded-full bg-gray-100 px-3 py-1 font-semibold text-gray-700">{listing.propertyType}</span>
-              </div>
-              <div className="mt-4 flex items-start gap-2 text-sm leading-6 text-gray-500">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                <span>{listing.location}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 xl:min-w-[250px] xl:grid-cols-1">
-              <MetricCard label="Lượt xem" value={String(listing.views)} />
-              <MetricCard label="Liên hệ" value={String(listing.inquiries)} />
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-col gap-4 border-t border-gray-100 pt-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-gray-500">
-              <span className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                Đăng ngày <span className="font-bold text-gray-700">{listing.postedAt}</span>
-              </span>
-              <span className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                Hết hạn <span className="font-bold text-gray-700">{listing.expiresAt}</span>
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href={`/properties/${listing.id}`}
-                className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                Xem chi tiết
-              </Link>
-              <Link
-                href={`/nguoi-ban/dang-tin?edit=${listing.id}`}
-                className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                Chỉnh sửa
-              </Link>
-              <button
-                type="button"
-                onClick={onRenew}
-                className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-black"
-              >
-                Gia hạn tin <ChevronDown className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-[#f6f7f9] px-4 py-3 text-center xl:text-left">
-      <div className="text-xs font-bold uppercase tracking-[0.14em] text-gray-400">{label}</div>
-      <div className="mt-1 text-xl font-extrabold text-gray-900">{value}</div>
-    </div>
   );
 }

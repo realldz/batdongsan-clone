@@ -8,6 +8,19 @@ export interface PropertyCoordinates {
   lng: number;
 }
 
+export interface PropertyAmenities {
+  camera: boolean;
+  baove: boolean;
+  pccc: boolean;
+}
+
+export interface PropertyRentDetails {
+  moveInTime?: string;
+  electricityPrice?: string;
+  waterPrice?: string;
+  internetPrice?: string;
+}
+
 export interface Property {
   id: string;
   createdAt?: string;
@@ -21,6 +34,8 @@ export interface Property {
   address: string;
   district?: string;
   province?: string;
+  ward?: string;
+  street?: string;
   coordinates: PropertyCoordinates;
   images?: string[];
   direction?: string;
@@ -29,6 +44,15 @@ export interface Property {
   host?: string;
   owner?: PropertyOwner;
   user?: PropertyOwner;
+  bedrooms?: number;
+  bathrooms?: number;
+  interior?: string;
+  balconyDirection?: string;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  amenities?: PropertyAmenities | null;
+  rentDetails?: PropertyRentDetails | null;
 }
 
 export interface PropertyOwner {
@@ -53,6 +77,8 @@ export interface PropertySearchParams {
   address?: string;
   district?: string;
   province?: string;
+  ward?: string;
+  bedrooms?: number;
   direction?: string;
   status?: Exclude<PropertyStatus, "rejected">;
 }
@@ -66,10 +92,21 @@ export interface CreatePropertyRequest {
   address: string;
   district?: string;
   province?: string;
+  ward?: string;
+  street?: string;
   coordinates: PropertyCoordinates;
   images?: string[];
   direction?: string;
   legalInfo?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  interior?: string;
+  balconyDirection?: string;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  amenities?: PropertyAmenities | null;
+  rentDetails?: PropertyRentDetails | null;
 }
 
 export type UpdatePropertyRequest = Partial<CreatePropertyRequest>;

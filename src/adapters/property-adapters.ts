@@ -30,11 +30,13 @@ export function getOwner(property: Property): PropertyOwner | undefined {
 }
 
 export function getOwnerName(property: Property): string {
+  if (property.contactName) return property.contactName;
   const owner = getOwner(property);
   return owner?.fullName ?? owner?.name ?? "Người đăng tin";
 }
 
 export function getOwnerPhone(property: Property): string {
+  if (property.contactPhone) return property.contactPhone;
   const owner = getOwner(property);
   return owner?.phone ?? "0900 000 ***";
 }
@@ -53,8 +55,8 @@ export function propertyToListingData(property: Property): ListingData {
     price: formatCurrency(property.price, property.type),
     area: formatArea(property.area),
     pricePerSqm: formatPricePerSqm(property.price, property.area),
-    beds: 0,
-    baths: 0,
+    beds: property.bedrooms ?? 0,
+    baths: property.bathrooms ?? 0,
     direction: property.direction ?? "Đang cập nhật",
     location: formatLocation(property),
     description: property.description,
@@ -147,5 +149,16 @@ export function propertyToDetailView(property: Property): PropertyDetailView {
       avatar: getOwnerAvatar(property),
       phone: getOwnerPhone(property),
     },
+    bedrooms: property.bedrooms,
+    bathrooms: property.bathrooms,
+    interior: property.interior,
+    balconyDirection: property.balconyDirection,
+    ward: property.ward,
+    street: property.street,
+    contactName: property.contactName,
+    contactPhone: property.contactPhone,
+    contactEmail: property.contactEmail,
+    amenities: property.amenities,
+    rentDetails: property.rentDetails,
   };
 }

@@ -3,8 +3,7 @@
 import { SellerHeader } from "../../../_components/SellerHeader";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { createPaymentUrl, depositWallet } from "@/services/wallet";
-import { useRefreshWallet } from "@/lib/use-wallet-balance";
+import { createPaymentUrl } from "@/services/wallet";
 import { useState, use } from "react";
 
 export default function RechargeDetailPage({ params }: { params: Promise<{ methodId: string }> }) {
@@ -44,7 +43,6 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
 
   const currentTitle = methodTitles[methodId] || "Nạp tiền";
   const parsedAmount = Number(amount.replace(/[^\d]/g, ""));
-  const refreshWallet = useRefreshWallet();
 
   const handleSubmit = async () => {
     if (!agreed || !parsedAmount || (methodId === "atm" && !selectedBank)) {

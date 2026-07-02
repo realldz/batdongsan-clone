@@ -1,47 +1,12 @@
 "use client";
 
-import { SellerHeader } from "../../_components/SellerHeader";
-import { getWalletHistory, type WalletTransaction } from "@/services/wallet";
-import { ArrowDownCircle, ArrowUpCircle, ChevronLeft, ChevronRight, Filter, Receipt } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-
-function formatAmount(value: number | string) {
-  const number = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(number)) return String(value);
-
-  return `${new Intl.NumberFormat("vi-VN").format(number)} đ`;
-}
-
-function formatDate(value: string | undefined) {
-  if (!value) return "--";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(date);
-}
-
-function getTransactionTone(type: string | undefined) {
-  return type === "deposit" || type === "credit" ? "text-emerald-600 bg-emerald-50" : "text-primary bg-red-50";
-}
-
-function getStatusLabelAndColor(status: string | undefined) {
-  if (!status) return { label: "--", color: "text-gray-400" };
-  const s = status.toLowerCase();
-  if (s === "success" || s === "thành công" || s === "completed") {
-    return { label: "Thành công", color: "text-emerald-600 font-semibold" };
-  }
-  if (s === "failed" || s === "thất bại" || s === "error" || s === "failure") {
-    return { label: "Thất bại", color: "text-red-600 font-semibold" };
-  }
-  if (s === "pending" || s === "đang xử lý" || s === "processing") {
-    return { label: "Đang xử lý", color: "text-amber-600 font-semibold" };
-  }
-  if (s === "cancelled" || s === "hủy" || s === "cancel") {
-    return { label: "Đã hủy", color: "text-gray-600 font-semibold" };
-  }
-  return { label: status, color: "text-gray-600 font-semibold" };
-}
+import { Filter, Receipt } from "lucide-react";
+import { SellerHeader } from "../../_components/SellerHeader";
+import { SellerPagination } from "../../_components/SellerPagination";
+import { SummaryCard, EmptyState } from "../../_components/atoms";
+import { TransactionRow, formatAmount } from "../../_components/molecules/TransactionRow";
+import { getWalletHistory, type WalletTransaction } from "@/services/wallet";
 
 const PAGE_SIZE = 10;
 
@@ -95,12 +60,19 @@ export default function WalletHistoryPage() {
   }, [transactions, typeFilter]);
 
   const totalIn = useMemo(
-    () => filtered.filter((item) => item.type === "deposit" || item.type === "credit").reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    [filtered],
+    () =>
+      filtered
+        .filter((item) => item.type === "deposit" || item.type === "credit")
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    [filtered]
   );
+
   const totalOut = useMemo(
-    () => filtered.filter((item) => item.type !== "deposit" && item.type !== "credit").reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    [filtered],
+    () =>
+      filtered
+        .filter((item) => item.type !== "deposit" && item.type !== "credit")
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    [filtered]
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -131,7 +103,9 @@ export default function WalletHistoryPage() {
             <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
               <div>
                 <h2 className="text-xl font-extrabold text-gray-900">Giao dịch ví</h2>
-                <p className="mt-1 text-sm font-medium text-gray-500">Nguồn dữ liệu: {source === "api" ? "API ví" : "fallback rỗng"}</p>
+                <p className="mt-1 text-sm font-medium text-gray-500">
+                  Nguồn dữ liệu: {source === "api" ? "API ví" : "fallback rỗng"}
+                </p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -141,7 +115,9 @@ export default function WalletHistoryPage() {
                     className="appearance-none bg-gray-50 border border-gray-200 text-sm font-bold text-gray-700 rounded-xl pl-4 pr-10 py-2.5 cursor-pointer hover:border-gray-300 focus:outline-none focus:border-primary"
                   >
                     {TYPE_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
                     ))}
                   </select>
                   <Filter className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
@@ -154,115 +130,39 @@ export default function WalletHistoryPage() {
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 text-gray-400">
                   <Receipt className="h-6 w-6 animate-pulse" />
                 </div>
-                <h3 className="text-lg font-extrabold text-gray-900">Đang tải dữ liệu...</h3>
+                <h3 className="text-lg font-extrabold text-gray-900">
+                  Đang tải dữ liệu...
+                </h3>
               </div>
             ) : filtered.length === 0 ? (
-              <div className="px-6 py-16 text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 text-gray-400">
-                  <Receipt className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-extrabold text-gray-900">Chưa có giao dịch</h3>
-                <p className="mt-2 text-sm font-medium text-gray-500">Lịch sử sẽ xuất hiện sau khi có giao dịch trên ví.</p>
+              <div className="py-6">
+                <EmptyState
+                  title="Chưa có giao dịch"
+                  description="Lịch sử sẽ xuất hiện sau khi có giao dịch trên ví."
+                  icon={<Receipt className="h-6 w-6 text-gray-500" />}
+                />
               </div>
             ) : (
               <>
                 <div className="divide-y divide-gray-100">
-                  {paginated.map((item) => {
-                    const statusLower = item.status?.toLowerCase();
-                    const isFailed = statusLower === "failed" || statusLower === "thất bại" || statusLower === "error";
-                    const isCancelled = statusLower === "cancelled" || statusLower === "hủy" || statusLower === "cancel";
-
-                    let tone = getTransactionTone(item.type);
-                    if (isFailed) {
-                      tone = "text-red-600 bg-red-50";
-                    } else if (isCancelled) {
-                      tone = "text-gray-500 bg-gray-100";
-                    }
-
-                    const isIn = item.type === "deposit" || item.type === "credit";
-                    const statusInfo = getStatusLabelAndColor(item.status);
-
-                    return (
-                      <div key={item.id} className="flex items-center justify-between gap-4 px-6 py-4 hover:bg-gray-50">
-                        <div className="flex items-center gap-3">
-                          <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tone}`}>
-                            {isIn ? <ArrowDownCircle className="h-5 w-5" /> : <ArrowUpCircle className="h-5 w-5" />}
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-gray-900">{isIn ? "Nạp tiền" : "Thanh toán"}</div>
-                            <div className="mt-1 text-xs font-medium text-gray-500 flex items-center gap-1.5">
-                              <span>{formatDate(item.createdAt)}</span>
-                              <span>·</span>
-                              <span className={statusInfo.color}>{statusInfo.label}</span>
-                            </div>
-                            {item.description ? <div className="mt-1 text-xs text-gray-400 line-clamp-1">{item.description}</div> : null}
-                          </div>
-                        </div>
-                        <div className={`text-right font-extrabold ${(isFailed || isCancelled) ? "text-gray-400 line-through" : (isIn ? "text-emerald-600" : "text-primary")}`}>
-                          {isIn ? "+" : "-"}{formatAmount(item.amount)}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {paginated.map((item) => (
+                    <TransactionRow key={item.id} item={item} />
+                  ))}
                 </div>
 
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
-                    <span className="text-sm font-medium text-gray-500">
-                      Hiển thị {(safePage - 1) * PAGE_SIZE + 1}-{Math.min(safePage * PAGE_SIZE, filtered.length)} trên {filtered.length} giao dịch
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        disabled={safePage <= 1}
-                        onClick={() => handlePageChange(safePage - 1)}
-                        className="flex items-center justify-center h-9 w-9 rounded-lg border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </button>
-                      {Array.from({ length: totalPages }, (_, i) => i + 1)
-                        .filter((p) => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
-                        .reduce<(number | "...")[]>((acc, p, i, arr) => {
-                          if (i > 0 && p - (arr[i - 1] as number) > 1) acc.push("...");
-                          acc.push(p);
-                          return acc;
-                        }, [])
-                        .map((item, i) =>
-                          item === "..." ? (
-                            <span key={`dot-${i}`} className="text-sm text-gray-400 px-1">...</span>
-                          ) : (
-                            <button
-                              key={item}
-                              onClick={() => handlePageChange(item)}
-                              className={`flex items-center justify-center h-9 w-9 rounded-lg text-sm font-bold transition-colors ${item === safePage ? "bg-primary text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
-                            >
-                              {item}
-                            </button>
-                          ),
-                        )}
-                      <button
-                        disabled={safePage >= totalPages}
-                        onClick={() => handlePageChange(safePage + 1)}
-                        className="flex items-center justify-center h-9 w-9 rounded-lg border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <SellerPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  totalItems={filtered.length}
+                  pageSize={PAGE_SIZE}
+                  itemsLabel="giao dịch"
+                />
               </>
             )}
           </section>
         </div>
       </main>
     </>
-  );
-}
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="text-sm font-bold text-gray-500">{label}</div>
-      <div className="mt-2 text-2xl font-extrabold text-gray-900">{value}</div>
-    </div>
   );
 }

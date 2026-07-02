@@ -18,6 +18,24 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
   const [selectedDuration, setSelectedDuration] = useState<DurationDays>(15);
   const total = useMemo(() => PACKAGE_PRICES[selectedPackage] * selectedDuration, [selectedPackage, selectedDuration]);
 
+  const { startDateStr, endDateStr } = useMemo(() => {
+    const start = new Date();
+    const end = new Date();
+    end.setDate(start.getDate() + selectedDuration);
+
+    const format = (date: Date) => {
+      const dd = String(date.getDate()).padStart(2, "0");
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    };
+
+    return {
+      startDateStr: format(start),
+      endDateStr: format(end),
+    };
+  }, [selectedDuration]);
+
   const packages: {
     id: PackageId;
     name: string;
@@ -168,13 +186,13 @@ export function Step3({ onBack, onSubmit, isSubmitting = false, submitMessage = 
             <div className="relative">
               <input
                 type="text"
-                value="01/04/2026"
+                value={startDateStr}
                 readOnly
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] bg-white cursor-pointer"
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-[18px] h-[18px]" />
             </div>
-            <p className="text-[12px] text-gray-500 mt-2">Kết thúc ngày 16/04/2026</p>
+            <p className="text-[12px] text-gray-500 mt-2">Kết thúc ngày {endDateStr}</p>
           </div>
           <div>
             <label className="block text-[14px] font-bold text-[#2c2c2c] mb-2">Hẹn giờ đăng tin</label>
