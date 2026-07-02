@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 
 export type PropertyType = "sale" | "rent";
-export type PropertyStatus = "pending" | "active" | "sold" | "rented" | "hidden" | "draft" | "rejected";
+export type PropertyStatus = "pending" | "active" | "sold" | "rented" | "hidden" | "draft" | "rejected" | "expired";
 
 export interface PropertyCoordinates {
   lat: number;
@@ -144,7 +144,13 @@ export async function updateProperty(id: string, data: UpdatePropertyRequest) {
   return api.patch<Property>(`/properties/${id}`, data);
 }
 
-export async function getMyProperties(params?: { page?: number; perPage?: number; title?: string }) {
+export async function getMyProperties(params?: {
+  page?: number;
+  perPage?: number;
+  title?: string;
+  status?: PropertyStatus;
+  type?: PropertyType;
+}) {
   return api.get<Property[]>(`/properties/my${buildQuery(params ?? {})}`, { cache: "no-store" });
 }
 

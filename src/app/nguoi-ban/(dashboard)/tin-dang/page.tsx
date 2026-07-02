@@ -17,7 +17,7 @@ import { ListingCard, type Listing, type ListingStatus } from "../../_components
 import { FilterDialog, RenewDialog, renewOptions } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
-import { getMyProperties, type Property, type PropertyStatus } from "@/services/properties";
+import { getMyProperties, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
 import { payWallet } from "@/services/wallet";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 
@@ -43,6 +43,16 @@ function mapPropertyStatusToListingStatus(status: PropertyStatus | undefined): L
   if (status === "sold" || status === "rented") return "Hết hạn";
   if (status === "draft") return "Chờ thanh toán";
   return "Chờ duyệt";
+}
+
+function mapListingStatusToPropertyStatus(status: ListingStatus): PropertyStatus | undefined {
+  if (status === "Đang hiển thị") return "active";
+  if (status === "Chờ duyệt") return "pending";
+  if (status === "Sắp hết hạn") return "expired";
+  if (status === "Hết hạn") return "sold";
+  if (status === "Đã hạ") return "hidden";
+  if (status === "Chờ thanh toán") return "draft";
+  return undefined;
 }
 
 function formatDate(value: string | undefined): string {
@@ -105,8 +115,33 @@ export default function RechargePage() {
     async function loadListings() {
       setLoading(true);
       try {
-        const params: { page: number; perPage: number; title?: string } = { page: currentPage, perPage: PAGE_SIZE };
-        if (search.trim()) params.title = search.trim();
+        const params: {
+          page: number;
+          perPage: number;
+          title?: string;
+          status?: PropertyStatus;
+          type?: PropertyType;
+        } = { page: currentPage, perPage: PAGE_SIZE };
+
+        if (search.trim()) {
+          params.title = search.trim();
+        }
+
+        if (categoryFilter === "Bán") {
+          params.type = "sale";
+        } else if (categoryFilter === "Thuê") {
+          params.type = "rent";
+        }
+
+        if (draftOnly) {
+          params.status = "draft";
+        } else if (activeStatus !== "Tất cả") {
+          const mappedStatus = mapListingStatusToPropertyStatus(activeStatus);
+          if (mappedStatus) {
+            params.status = mappedStatus;
+          }
+        }
+
         const response = await getMyProperties(params);
         const result = unwrapPaginated<Property>(response);
 
@@ -129,7 +164,7 @@ export default function RechargePage() {
 
     loadListings();
     return () => { ignore = true; };
-  }, [currentPage, search]);
+  }, [currentPage, search, activeStatus, categoryFilter, draftOnly]);
 
   useEffect(() => {
     if (!isAnyDialogOpen) {
@@ -153,21 +188,11 @@ export default function RechargePage() {
   }, [isAnyDialogOpen]);
 
   const filteredListings = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
-
     return listings.filter((listing) => {
-      const matchesSearch =
-        keyword.length === 0 ||
-        listing.title.toLowerCase().includes(keyword) ||
-        listing.code.includes(keyword);
-      const matchesStatus = activeStatus === "Tất cả" || listing.status === activeStatus;
-      const matchesCategory = categoryFilter === "Tất cả" || listing.category === categoryFilter;
       const matchesPackage = packageFilter === "Tất cả" || listing.packageName === packageFilter;
-      const matchesDraft = !draftOnly;
-
-      return matchesSearch && matchesStatus && matchesCategory && matchesPackage && matchesDraft;
+      return matchesPackage;
     });
-  }, [activeStatus, categoryFilter, draftOnly, listings, packageFilter, search]);
+  }, [listings, packageFilter]);
 
   const paginatedListings = filteredListings.slice(0, PAGE_SIZE);
   const paginationStart = filteredListings.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
