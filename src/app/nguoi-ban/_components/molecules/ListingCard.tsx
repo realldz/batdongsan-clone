@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { CircleDollarSign, MapPin, Calendar, ChevronDown } from "lucide-react";
+import { CircleDollarSign, MapPin, Calendar, ChevronDown, Trash2 } from "lucide-react";
 import { MetricCard } from "../atoms/MetricCard";
 
 export type ListingStatus =
@@ -45,13 +45,14 @@ export const statusTone: Record<ListingStatus, string> = {
 interface ListingCardProps {
   listing: Listing;
   onRenew: () => void;
+  onDelete?: () => void;
 }
 
-export function ListingCard({ listing, onRenew }: ListingCardProps) {
+export function ListingCard({ listing, onRenew, onDelete }: ListingCardProps) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
-        <div className="relative h-56 w-full overflow-hidden bg-gray-100 lg:h-auto lg:w-[280px]">
+        <div className="relative h-56 w-full shrink-0 overflow-hidden bg-gray-100 lg:h-[220px] lg:w-[280px]">
           <img
             src={listing.image}
             alt={listing.title}
@@ -69,9 +70,9 @@ export function ListingCard({ listing, onRenew }: ListingCardProps) {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col p-5 lg:p-6">
+        <div className="flex min-w-0 flex-1 flex-col p-5 lg:p-6">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-            <div className="max-w-3xl">
+            <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span
                   className={`rounded-full border px-3 py-1 text-xs font-bold ${
@@ -87,7 +88,7 @@ export function ListingCard({ listing, onRenew }: ListingCardProps) {
                   Mã tin {listing.code}
                 </span>
               </div>
-              <h3 className="mt-3 text-[22px] font-extrabold leading-tight text-gray-900">
+              <h3 className="mt-3 line-clamp-2 break-all text-[22px] font-extrabold leading-tight text-gray-900">
                 {listing.title}
               </h3>
               <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-gray-500">
@@ -143,6 +144,13 @@ export function ListingCard({ listing, onRenew }: ListingCardProps) {
               >
                 Chỉnh sửa
               </Link>
+              <button
+                type="button"
+                onClick={onDelete}
+                className="inline-flex items-center gap-2 rounded-full border border-red-200 px-4 py-2.5 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" /> Xóa
+              </button>
               <button
                 type="button"
                 onClick={onRenew}

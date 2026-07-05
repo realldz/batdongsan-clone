@@ -37,8 +37,9 @@ export interface PropertyDetailView {
   type: string;
   address: string;
   location: string;
-  direction: string;
-  legalInfo: string;
+  direction?: string | null;
+  legalInfo?: string | null;
+  coordinates?: { lat: number; lng: number } | null;
   images: string[];
   postedAt: string;
   expiresAt: string;

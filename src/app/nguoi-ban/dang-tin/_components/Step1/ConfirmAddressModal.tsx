@@ -198,7 +198,7 @@ export function ConfirmAddressModal() {
               Địa chỉ hiển thị trên tin đăng <span className="text-primary">*</span>
             </label>
 
-            <div className="bg-[#eef8f2] rounded-md p-3.5 mb-5 flex items-start gap-2.5 border border-[#d3ecd9]">
+            {/* <div className="bg-[#eef8f2] rounded-md p-3.5 mb-5 flex items-start gap-2.5 border border-[#d3ecd9]">
               <Check
                 size={18}
                 className="text-[#00a850] mt-0.5 shrink-0"
@@ -213,7 +213,7 @@ export function ConfirmAddressModal() {
                   giúp tiếp cận nhiều người tìm nhà hơn
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-5">
               <div className="flex items-center gap-2 mb-2">

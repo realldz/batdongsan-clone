@@ -17,7 +17,7 @@ import { ListingCard, type Listing, type ListingStatus } from "../../_components
 import { FilterDialog, RenewDialog, renewOptions } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
-import { getMyProperties, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
+import { deleteProperty, getMyProperties, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
 import { payWallet } from "@/services/wallet";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 
@@ -401,7 +401,21 @@ export default function RechargePage() {
                 <div className="p-10 text-center text-gray-500">Đang tải...</div>
               ) : paginatedListings.length > 0 ? (
                 paginatedListings.map((listing) => (
-                  <ListingCard key={listing.id} listing={listing} onRenew={() => openRenewDialog(listing)} />
+                  <ListingCard 
+                    key={listing.id} 
+                    listing={listing} 
+                    onRenew={() => openRenewDialog(listing)} 
+                    onDelete={async () => {
+                      if (!window.confirm("Bạn có chắc chắn muốn xóa tin này không?")) return;
+                      try {
+                        await deleteProperty(listing.id);
+                        setListings((prev) => prev.filter((l) => l.id !== listing.id));
+                        setTotal((prev) => Math.max(0, prev - 1));
+                      } catch {
+                        alert("Xóa tin thất bại, vui lòng thử lại sau.");
+                      }
+                    }}
+                  />
                 ))
               ) : (
                 <EmptyState
