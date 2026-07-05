@@ -1,6 +1,7 @@
 import React from "react";
 import { ChevronUp, ChevronDown, MapPin, Search, Edit2 } from "lucide-react";
 import { useCreateListing } from "../CreateListingContext";
+import { DraggableMap } from "@/components/Map";
 
 export function AddressSection() {
   const {
@@ -9,6 +10,7 @@ export function AddressSection() {
     displayAddress,
     expanded,
     toggleSection,
+    selectedAddress,
   } = useCreateListing();
 
   return (
@@ -57,31 +59,12 @@ export function AddressSection() {
                 <Edit2 size={14} className="text-gray-600" />
               </button>
 
-              <div className="w-full h-[180px] bg-[#e5e3df] rounded-md relative overflow-hidden border border-gray-300 flex items-center justify-center mt-4">
-                <div className="absolute inset-0 opacity-60 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=20.9634,105.8285&zoom=14&size=640x300&maptype=roadmap&key=mock')] bg-cover bg-center mix-blend-multiply"></div>
-                <svg
-                  className="absolute inset-0 w-full h-full opacity-20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0 50 Q 150 20, 300 100 T 640 80"
-                    fill="none"
-                    stroke="#2c2c2c"
-                    strokeWidth="3"
-                  />
-                  <path d="M200 0 L 250 180" fill="none" stroke="#ffffff" strokeWidth="6" />
-                </svg>
-                <div className="relative z-10 flex flex-col items-center drop-shadow-md pb-4 animate-bounce">
-                  <MapPin
-                    size={36}
-                    className="text-primary"
-                    fill="#e03c31"
-                    stroke="white"
-                    strokeWidth={1}
-                  />
-                  <div className="w-2.5 h-1.5 bg-black/30 rounded-[50%] absolute bottom-2 blur-[1px]"></div>
-                </div>
-              </div>
+              <DraggableMap
+                lat={selectedAddress.lat || 20.9634}
+                lng={selectedAddress.lng || 105.8285}
+                draggable={false}
+                className="mt-4"
+              />
             </div>
           )}
         </div>

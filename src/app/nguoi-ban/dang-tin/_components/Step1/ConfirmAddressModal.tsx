@@ -1,6 +1,7 @@
 import React from "react";
 import { X, MapPin, ChevronDown, Check } from "lucide-react";
 import { useCreateListing } from "../CreateListingContext";
+import { DraggableMap } from "@/components/Map";
 
 export function ConfirmAddressModal() {
   const {
@@ -22,6 +23,18 @@ export function ConfirmAddressModal() {
     handleStreetChange,
     handleConfirmAddress,
   } = useCreateListing();
+
+  const handleResetMap = () => {
+    const dist = apiDistricts.find((d) => d.id === districtId);
+    const prov = apiProvinces.find((p) => p.id === provinceId);
+    const resetLat = dist?.lat || prov?.lat || 20.9634;
+    const resetLng = dist?.lon || prov?.lon || 105.8285;
+    setSelectedAddress((prev) => ({
+      ...prev,
+      lat: resetLat,
+      lng: resetLng,
+    }));
+  };
 
   if (!isConfirmModalOpen) return null;
 
@@ -229,6 +242,7 @@ export function ConfirmAddressModal() {
               </span>
               <button
                 type="button"
+                onClick={handleResetMap}
                 className="text-[13px] text-gray-500 hover:text-[#2c2c2c] font-bold"
               >
                 Đặt lại
@@ -237,40 +251,14 @@ export function ConfirmAddressModal() {
             <div className="text-[13px] text-gray-500 mb-3 font-medium">
               Kéo bản đồ để đổi vị trí ghim
             </div>
-            <div className="w-full h-[180px] bg-[#e5e3df] rounded-md relative overflow-hidden border border-gray-300 flex items-center justify-center">
-              <div className="absolute inset-0 opacity-40 bg-[url(https://maps.googleapis.com/maps/api/staticmap?center=20.9634,105.8285&zoom=14&size=640x300&maptype=roadmap&key=mock)] bg-cover bg-center mix-blend-multiply"></div>
-              <svg
-                className="absolute inset-0 w-full h-full opacity-20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 50 Q 150 20, 300 100 T 640 80"
-                  fill="none"
-                  stroke="#2c2c2c"
-                  strokeWidth="3"
-                />
-                <path d="M200 0 L 250 180" fill="none" stroke="#ffffff" strokeWidth="6" />
-                <path d="M0 120 L 640 150" fill="none" stroke="#ffffff" strokeWidth="4" />
-              </svg>
-              <div className="relative z-10 flex flex-col items-center drop-shadow-md pb-4 animate-bounce">
-                <MapPin
-                  size={36}
-                  className="text-primary"
-                  fill="#e03c31"
-                  stroke="white"
-                  strokeWidth={1}
-                />
-                <div className="w-2.5 h-1.5 bg-black/30 rounded-[50%] absolute bottom-2 blur-[1px]"></div>
-              </div>
-              <div className="absolute right-2 bottom-2 bg-white rounded-md shadow-sm border border-gray-200 flex flex-col">
-                <div className="w-8 h-8 flex items-center justify-center border-b border-gray-200 font-bold text-gray-600 cursor-pointer">
-                  +
-                </div>
-                <div className="w-8 h-8 flex items-center justify-center font-bold text-gray-600 cursor-pointer">
-                  -
-                </div>
-              </div>
-            </div>
+            <DraggableMap
+              lat={selectedAddress.lat || 20.9634}
+              lng={selectedAddress.lng || 105.8285}
+              draggable={true}
+              onPositionChange={(lat, lng) =>
+                setSelectedAddress((prev) => ({ ...prev, lat, lng }))
+              }
+            />
           </div>
         </div>
 

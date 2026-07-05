@@ -64,6 +64,35 @@ export function useGeographyState(
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
+  // Geocode address when street or detail changes (debounced)
+  useEffect(() => {
+    const fullAddress = [
+      selectedAddress.detail,
+      selectedAddress.street,
+      selectedAddress.district,
+      selectedAddress.province,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    if (!selectedAddress.province) return;
+    if (!selectedAddress.detail && !selectedAddress.street) return;
+
+    const delayDebounce = setTimeout(async () => {
+      const { geocodeAddress } = await import("@/lib/geocoding");
+      const coords = await geocodeAddress(fullAddress);
+      if (coords) {
+        setSelectedAddress((prev) => ({
+          ...prev,
+          lat: coords.lat,
+          lng: coords.lng,
+        }));
+      }
+    }, 1000);
+
+    return () => clearTimeout(delayDebounce);
+  }, [selectedAddress.street, selectedAddress.detail]);
+
   const handleProvinceChange = async (provId: string) => {
     const prov = apiProvinces.find((p) => p.id === provId);
     if (!prov) return;
