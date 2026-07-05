@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Download, Pencil, Plus, Star, Trash2 } from "lucide-react";
 
-import { apiArticleToAdminArticle, mapAdminStatusToArticleStatus, unwrapArray } from "@/lib/api-adapters";
+import { apiArticleToAdminArticle, mapAdminStatusToArticleStatus, unwrapArray, unwrapPaginated } from "@/lib/api-adapters";
 import { createArticle, deleteArticle, searchArticles, updateArticle, type Article, type ArticleCategory, type CreateArticleRequest } from "@/services/articles";
 
 import { type AdminArticle, type AdminArticleStatus } from "../_data/types";
@@ -15,6 +15,7 @@ import { ActionButton } from "../_components/atoms/ActionButton";
 import { TableShell } from "../_components/molecules/TableShell";
 import { EmptyState } from "../_components/atoms/EmptyState";
 import { FilterBar } from "../_components/molecules/FilterBar";
+import { AdminPagination } from "../_components/molecules/AdminPagination";
 import { AdminPageTemplate } from "../_components/templates/AdminPageTemplate";
 import { ArticleFormModal } from "../_components/organisms/ArticleFormModal";
 import { downloadCsv } from "../_components/utils/csv-export";
@@ -49,12 +50,17 @@ function getArticleStatusTone(status: AdminArticleStatus) {
   return "gray";
 }
 
+const PAGE_SIZE = 10;
+
 export default function AdminArticlesPage() {
   const [articles, setArticles] = useState<AdminArticle[]>([]);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<(typeof categoryOptions)[number]>("Tất cả");
   const [statusFilter, setStatusFilter] = useState<(typeof statusOptions)[number]>("Tất cả");
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<AdminArticle | null>(null);
@@ -63,12 +69,30 @@ export default function AdminArticlesPage() {
     let ignore = false;
 
     async function loadArticles() {
+      setIsLoading(true);
       try {
-        const response = await searchArticles({ page: 1, perPage: 100 });
-        const apiArticles = unwrapArray<Article>(response).map(apiArticleToAdminArticle);
+        const params: Parameters<typeof searchArticles>[0] = {
+          page: currentPage,
+          perPage: PAGE_SIZE,
+        };
+        if (search.trim()) params.keyword = search.trim();
+        if (categoryFilter !== "Tất cả") params.category = categoryToApi[categoryFilter];
+        if (statusFilter !== "Tất cả") params.status = mapAdminStatusToArticleStatus(statusFilter);
+
+        const response = await searchArticles(params);
+        const result = unwrapPaginated<Article>(response, PAGE_SIZE);
+        const apiArticles = result.data.map(apiArticleToAdminArticle);
 
         if (!ignore) {
           setArticles(apiArticles);
+          setTotal(result.pagination.total);
+          setTotalPages(result.pagination.totalPages || 1);
+        }
+      } catch {
+        if (!ignore) {
+          setArticles([]);
+          setTotal(0);
+          setTotalPages(1);
         }
       } finally {
         if (!ignore) setIsLoading(false);
@@ -80,19 +104,9 @@ export default function AdminArticlesPage() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [currentPage, search, categoryFilter, statusFilter]);
 
-  const filteredArticles = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
-
-    return articles.filter((article) => {
-      const matchesSearch = keyword.length === 0 || article.title.toLowerCase().includes(keyword) || article.slug.toLowerCase().includes(keyword) || article.author.toLowerCase().includes(keyword);
-      const matchesCategory = categoryFilter === "Tất cả" || article.category === categoryFilter;
-      const matchesStatus = statusFilter === "Tất cả" || article.status === statusFilter;
-
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [articles, search, categoryFilter, statusFilter]);
+  const filteredArticles = articles;
 
   const totalViews = useMemo(() => articles.reduce((sum, a) => sum + a.views, 0), [articles]);
 
@@ -194,7 +208,7 @@ export default function AdminArticlesPage() {
   return (
     <AdminPageTemplate header={header}>
       <StatsGrid cols={4}>
-        <StatCard title="Tổng bài viết" value={`${articles.length}`} helper="Tất cả bài viết trong hệ thống" icon={<Building2 className="w-5 h-5" />} />
+        <StatCard title="Tổng bài viết" value={`${total}`} helper="Tất cả bài viết trong hệ thống" icon={<Building2 className="w-5 h-5" />} />
         <StatCard title="Đã xuất bản" value={`${articles.filter((a) => a.status === "Đã xuất bản").length}`} helper="Tin hiển thị công khai" tone="green" icon={<FileCheck2 className="w-5 h-5" />} />
         <StatCard title="Bản nháp" value={`${articles.filter((a) => a.status === "Bản nháp").length}`} helper="Tin chưa xuất bản" tone="amber" icon={<Users className="w-5 h-5" />} />
         <StatCard title="Tổng lượt xem" value={totalViews.toLocaleString("vi-VN")} helper="Tương tác người dùng" tone="red" icon={<Eye className="w-5 h-5" />} />
@@ -215,66 +229,78 @@ export default function AdminArticlesPage() {
         <SearchInput
           placeholder="Tìm theo tiêu đề, slug, tác giả"
           value={search}
-          onChange={setSearch}
+          onChange={(val) => {
+            setSearch(val);
+            setCurrentPage(1);
+          }}
           className="flex-1 min-w-[240px] max-w-md"
         />
         <FilterSelect
           value={categoryFilter}
-          onChange={(val) => setCategoryFilter(val as (typeof categoryOptions)[number])}
+          onChange={(val) => {
+            setCategoryFilter(val as (typeof categoryOptions)[number]);
+            setCurrentPage(1);
+          }}
           options={categoryFilterOptions}
         />
         <FilterSelect
           value={statusFilter}
-          onChange={(val) => setStatusFilter(val as (typeof statusOptions)[number])}
+          onChange={(val) => {
+            setStatusFilter(val as (typeof statusOptions)[number]);
+            setCurrentPage(1);
+          }}
           options={statusFilterOptions}
         />
       </FilterBar>
 
-      <TableShell title="Danh sách bài viết" description={`${filteredArticles.length} bài viết phù hợp bộ lọc hiện tại`}>
+      <TableShell title="Danh sách bài viết" description={`${total} bài viết phù hợp bộ lọc hiện tại`}>
         {isLoading ? (
           <div className="py-14 text-center text-sm font-medium text-gray-400">Đang tải dữ liệu...</div>
         ) : filteredArticles.length === 0 ? (
           <EmptyState title="Không có bài viết" description="Thử đổi từ khóa hoặc bộ lọc khác." />
         ) : (
-          <table className="w-full min-w-[1000px] text-left">
-            <thead className="bg-gray-50 text-[11px] uppercase tracking-wider text-gray-500 font-extrabold">
-              <tr>
-                <th className="px-5 py-3">Bài viết</th>
-                <th className="px-5 py-3">Danh mục</th>
-                <th className="px-5 py-3">Tác giả</th>
-                <th className="px-5 py-3">Trạng thái</th>
-                <th className="px-5 py-3">Ngày xuất bản</th>
-                <th className="px-5 py-3 text-right">Lượt xem</th>
-                <th className="px-5 py-3 text-right">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredArticles.map((article) => (
-                <tr key={article.id} className="hover:bg-gray-50 align-top">
-                  <td className="px-5 py-4 max-w-[400px]">
-                    <div className="flex items-center gap-2">
-                      {article.isFeatured && <Star className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />}
-                      <div>
-                        <div className="font-extrabold text-gray-900 line-clamp-2">{article.title}</div>
-                        <div className="text-xs font-medium text-gray-400 mt-1">/{article.slug}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-5 py-4 font-bold text-gray-700">{article.category}</td>
-                  <td className="px-5 py-4 font-bold text-gray-700">{article.author}</td>
-                  <td className="px-5 py-4"><StatusBadge tone={getArticleStatusTone(article.status)}>{article.status}</StatusBadge></td>
-                  <td className="px-5 py-4 font-bold text-gray-700">{article.publishedAt}</td>
-                  <td className="px-5 py-4 text-right font-extrabold text-gray-900">{article.views.toLocaleString("vi-VN")}</td>
-                  <td className="px-5 py-4">
-                    <div className="flex justify-end gap-2">
-                      <button onClick={() => setEditingArticle(article)} className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-extrabold text-gray-700 hover:bg-white hover:border-gray-300 flex items-center gap-1.5 cursor-pointer"><Pencil className="w-3.5 h-3.5" /> Sửa</button>
-                      <button onClick={() => removeArticle(article.id)} className="rounded-lg border border-rose-200 px-3 py-2 text-xs font-extrabold text-rose-600 hover:bg-rose-50 flex items-center gap-1.5 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /> Xóa</button>
-                    </div>
-                  </td>
+          <>
+            <table className="w-full min-w-[1000px] text-left">
+              <thead className="bg-gray-50 text-[11px] uppercase tracking-wider text-gray-500 font-extrabold">
+                <tr>
+                  <th className="px-5 py-3">Bài viết</th>
+                  <th className="px-5 py-3">Danh mục</th>
+                  <th className="px-5 py-3">Tác giả</th>
+                  <th className="px-5 py-3">Trạng thái</th>
+                  <th className="px-5 py-3">Ngày xuất bản</th>
+                  <th className="px-5 py-3 text-right">Lượt xem</th>
+                  <th className="px-5 py-3 text-right">Thao tác</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {filteredArticles.map((article) => (
+                  <tr key={article.id} className="hover:bg-gray-50 align-top">
+                    <td className="px-5 py-4 max-w-[400px]">
+                      <div className="flex items-center gap-2">
+                        {article.isFeatured && <Star className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />}
+                        <div>
+                          <div className="font-extrabold text-gray-900 line-clamp-2">{article.title}</div>
+                          <div className="text-xs font-medium text-gray-400 mt-1">/{article.slug}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 font-bold text-gray-700">{article.category}</td>
+                    <td className="px-5 py-4 font-bold text-gray-700">{article.author}</td>
+                    <td className="px-5 py-4"><StatusBadge tone={getArticleStatusTone(article.status)}>{article.status}</StatusBadge></td>
+                    <td className="px-5 py-4 font-bold text-gray-700">{article.publishedAt}</td>
+                    <td className="px-5 py-4 text-right font-extrabold text-gray-900">{article.views.toLocaleString("vi-VN")}</td>
+                    <td className="px-5 py-4">
+                      <div className="flex justify-end gap-2">
+                        <button onClick={() => setEditingArticle(article)} className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-extrabold text-gray-700 hover:bg-white hover:border-gray-300 flex items-center gap-1.5 cursor-pointer"><Pencil className="w-3.5 h-3.5" /> Sửa</button>
+                        <button onClick={() => removeArticle(article.id)} className="rounded-lg border border-rose-200 px-3 py-2 text-xs font-extrabold text-rose-600 hover:bg-rose-50 flex items-center gap-1.5 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /> Xóa</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <AdminPagination page={currentPage} totalPages={totalPages} onChange={setCurrentPage} />
+          </>
         )}
       </TableShell>
 

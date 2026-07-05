@@ -8,7 +8,6 @@ export interface WalletBalanceView {
   main: string;
   promotion: string;
   code: string;
-  source: "api" | "mock";
 }
 
 const fallbackWallet: WalletBalanceView = {
@@ -16,7 +15,6 @@ const fallbackWallet: WalletBalanceView = {
   main: "0 đ",
   promotion: "0 đ",
   code: "BDSVN050",
-  source: "mock",
 };
 
 function toNumber(value: unknown): number | null {
@@ -45,7 +43,6 @@ function mapWalletBalance(balance: WalletBalance): WalletBalanceView {
     main: formatAmount(main),
     promotion: formatAmount(promotion),
     code: typeof balance.code === "string" && balance.code ? balance.code : fallbackWallet.code,
-    source: "api",
   };
 }
 

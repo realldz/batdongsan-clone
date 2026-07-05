@@ -18,7 +18,6 @@ const TYPE_OPTIONS = [
 
 export default function WalletHistoryPage() {
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
-  const [source, setSource] = useState("api");
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,12 +31,10 @@ export default function WalletHistoryPage() {
         const history = await getWalletHistory();
         if (!ignore) {
           setTransactions(Array.isArray(history) ? history : []);
-          setSource("api");
         }
       } catch {
         if (!ignore) {
           setTransactions([]);
-          setSource("mock");
         }
       } finally {
         if (!ignore) setLoading(false);
@@ -103,9 +100,6 @@ export default function WalletHistoryPage() {
             <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
               <div>
                 <h2 className="text-xl font-extrabold text-gray-900">Giao dịch ví</h2>
-                <p className="mt-1 text-sm font-medium text-gray-500">
-                  Nguồn dữ liệu: {source === "api" ? "API ví" : "fallback rỗng"}
-                </p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">

@@ -346,7 +346,7 @@ export default function RechargePage() {
                   Quản lý danh sách tin rao bán và cho thuê ngay trong một màn hình
                 </h2>
                 <p className="mt-3 max-w-2xl text-[15px] leading-7 text-gray-600">
-                  Theo dõi hiệu suất tin, kiểm tra thời hạn hiển thị và lọc nhanh theo loại tin từ dữ liệu API.
+                  Theo dõi hiệu suất tin, kiểm tra thời hạn hiển thị và lọc nhanh theo loại tin.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">

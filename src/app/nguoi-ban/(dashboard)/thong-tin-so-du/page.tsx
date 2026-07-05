@@ -31,10 +31,6 @@ export default function WalletBalancePage() {
                   <h2 className="text-4xl font-extrabold text-gray-900">
                     {wallet.total}
                   </h2>
-                  <p className="mt-2 text-sm font-medium text-gray-500">
-                    Nguồn dữ liệu:{" "}
-                    {wallet.source === "api" ? "API ví" : "fallback mock"}
-                  </p>
                 </div>
                 <Link
                   href="/nguoi-ban/nap-tien"

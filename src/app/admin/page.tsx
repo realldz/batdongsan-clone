@@ -6,7 +6,7 @@ import { getAdminStatistics, getAdminUsers, getPendingProperties, type AdminStat
 import type { Property } from "@/services/properties";
 import { propertyToAdminListing, unwrapArray, apiUserToAdminUser } from "@/lib/api-adapters";
 
-import { adminActivities, adminListings, adminUsers } from "./_data/mock";
+import { adminActivities } from "./_data/mock";
 import { type AdminListing, type AdminUser } from "./_data/types";
 
 import { AdminHeader } from "./_components/organisms/AdminHeader";
@@ -16,10 +16,9 @@ import { DashboardStatsGrid } from "./_components/organisms/DashboardStatsGrid";
 import { AdminPageTemplate } from "./_components/templates/AdminPageTemplate";
 
 export default function AdminDashboardPage() {
-  const [dashboardListings, setDashboardListings] = useState<AdminListing[]>(adminListings);
-  const [dashboardUsers, setDashboardUsers] = useState<AdminUser[]>(adminUsers);
+  const [dashboardListings, setDashboardListings] = useState<AdminListing[]>([]);
+  const [dashboardUsers, setDashboardUsers] = useState<AdminUser[]>([]);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
-  const [dataSource, setDataSource] = useState("mock");
 
   useEffect(() => {
     let ignore = false;
@@ -40,9 +39,8 @@ export default function AdminDashboardPage() {
         setStatistics(statsResponse);
         if (pending.length > 0) setDashboardListings(pending);
         if (apiUsers.length > 0) setDashboardUsers(apiUsers);
-        setDataSource("api");
       } catch {
-        if (!ignore) setDataSource("mock");
+        // failed to fetch data
       }
     }
 
@@ -65,7 +63,7 @@ export default function AdminDashboardPage() {
   const header = (
     <AdminHeader
       title="Tổng quan admin"
-      description={`Theo dõi vận hành, duyệt tin và sức khỏe dữ liệu toàn hệ thống (${dataSource === "api" ? "API" : "mock"}).`}
+      description={`Theo dõi vận hành, duyệt tin và sức khỏe dữ liệu toàn hệ thống.`}
     />
   );
 

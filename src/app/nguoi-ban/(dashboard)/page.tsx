@@ -92,7 +92,7 @@ export default function OverviewPage() {
           leadsLoading={leadsLoading}
         />
       </main>
-      <SellerFooter />
+      {/* <SellerFooter /> */}
     </>
   );
 }
