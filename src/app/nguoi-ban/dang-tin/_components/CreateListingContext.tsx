@@ -131,7 +131,6 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
       [
         selectedAddress.detail,
         selectedAddress.street,
-        selectedAddress.ward,
         selectedAddress.district,
         selectedAddress.province,
       ]

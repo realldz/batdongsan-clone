@@ -110,10 +110,10 @@ export function useGeographyState(
     }));
 
     try {
-      const wrds = await getWards(distId);
-      setApiWards(wrds);
+      const strts = await getStreets(distId);
+      setApiStreets(strts);
     } catch (e) {
-      console.error("Failed to load wards", e);
+      console.error("Failed to load streets", e);
     }
   };
 
@@ -184,8 +184,8 @@ export function useGeographyState(
         try {
           const dists = await getDistricts(parentProv.id);
           setApiDistricts(dists);
-          const wrds = await getWards(res.id);
-          setApiWards(wrds);
+          const strts = await getStreets(res.id);
+          setApiStreets(strts);
         } catch (e) {
           console.error(e);
         }

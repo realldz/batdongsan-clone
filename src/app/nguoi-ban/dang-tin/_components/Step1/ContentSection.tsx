@@ -30,7 +30,7 @@ export function ContentSection() {
 
       {expanded.content ? (
         <div className="px-4 pb-6 pt-0 space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
+          {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
             <div>
               <div className="font-bold text-[13px] mb-1">Tạo nhanh với AI</div>
               <div className="text-[12px] text-gray-500 font-medium">
@@ -45,7 +45,7 @@ export function ContentSection() {
               <Sparkles size={16} className="text-[#7e22ce]" fill="#7e22ce" />
               Tạo với AI
             </button>
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-[13px] font-bold mb-2">

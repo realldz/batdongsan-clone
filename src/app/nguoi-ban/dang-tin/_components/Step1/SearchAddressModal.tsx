@@ -84,7 +84,7 @@ export function SearchAddressModal() {
           ) : (
             <div className="flex flex-col gap-4">
               <p className="text-gray-600 text-[13px] font-medium">
-                Tìm kiếm bằng cách nhập tên quận huyện, phường xã, đường phố hoặc
+                Tìm kiếm bằng cách nhập tên phường xã, đường phố hoặc
                 tên dự án, hoặc:
               </p>
               <button

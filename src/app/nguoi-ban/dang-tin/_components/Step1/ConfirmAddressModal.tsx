@@ -66,9 +66,11 @@ export function ConfirmAddressModal() {
               </div>
             </div>
 
+
+
             <div>
               <label className="block text-[13px] font-bold mb-2">
-                Quận/Huyện <span className="text-primary">*</span>
+                Phường/Xã <span className="text-primary">*</span>
               </label>
               {apiDistricts.length > 0 ? (
                 <div className="relative">
@@ -77,7 +79,7 @@ export function ConfirmAddressModal() {
                     onChange={(event) => handleDistrictChange(event.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white font-medium text-gray-800"
                   >
-                    <option value="">-- Chọn Quận/Huyện --</option>
+                    <option value="">-- Chọn Phường/Xã --</option>
                     {apiDistricts.map((option) => (
                       <option key={option.id} value={option.id}>
                         {option.name}
@@ -97,45 +99,6 @@ export function ConfirmAddressModal() {
                     setSelectedAddress({
                       ...selectedAddress,
                       district: event.target.value,
-                    })
-                  }
-                  placeholder="Nhập Quận/Huyện"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium text-gray-800 bg-white"
-                />
-              )}
-            </div>
-
-            <div>
-              <label className="block text-[13px] font-bold mb-2">
-                Phường/Xã <span className="text-primary">*</span>
-              </label>
-              {apiWards.length > 0 ? (
-                <div className="relative">
-                  <select
-                    value={wardId}
-                    onChange={(event) => handleWardChange(event.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white font-medium text-gray-800"
-                  >
-                    <option value="">-- Chọn Phường/Xã --</option>
-                    {apiWards.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
-                  />
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  value={selectedAddress.ward}
-                  onChange={(event) =>
-                    setSelectedAddress({
-                      ...selectedAddress,
-                      ward: event.target.value,
                     })
                   }
                   placeholder="Nhập Phường/Xã"
@@ -248,7 +211,6 @@ export function ConfirmAddressModal() {
                 <span className="text-gray-400 mt-0.5">↳</span>
                 <span>
                   {[
-                    selectedAddress.ward,
                     selectedAddress.district,
                     selectedAddress.province,
                   ]
