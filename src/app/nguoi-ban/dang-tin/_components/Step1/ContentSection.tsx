@@ -10,16 +10,21 @@ export function ContentSection() {
     setDescription,
     expanded,
     toggleSection,
+    errors,
+    setErrors,
   } = useCreateListing();
 
+  const hasContentErrors = Boolean(errors.title || errors.description);
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden font-sans">
+    <div className={`bg-white rounded-lg border mb-6 shadow-sm overflow-hidden font-sans ${hasContentErrors ? "border-red-500" : "border-gray-200"}`}>
       <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={() => toggleSection("content")}
       >
-        <h2 className="font-bold text-[14px]">
+        <h2 className="font-bold text-[14px] flex items-center gap-1.5">
           Nội dung tiêu đề & mô tả <span className="text-primary">*</span>
+          {hasContentErrors && <span className="text-red-500 text-xs font-normal">(Có lỗi nhập liệu)</span>}
         </h2>
         {expanded.content ? (
           <ChevronUp size={20} className="text-[#2c2c2c]" />
@@ -53,10 +58,16 @@ export function ContentSection() {
             </label>
             <textarea
               value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              onChange={(event) => {
+                setTitle(event.target.value);
+                setErrors((prev) => ({ ...prev, title: "" }));
+              }}
               placeholder="Mô tả ngắn gọn về loại hình bất động sản, diện tích, địa chỉ (VD: Bán nhà riêng 50m2 chính chủ tại Cầu Giấy)"
-              className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium min-h-[80px] resize-y placeholder:text-gray-400"
+              className={`w-full border rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium min-h-[80px] resize-y placeholder:text-gray-400 ${errors.title ? "border-red-500 focus:border-red-500" : "border-gray-300"}`}
             />
+            {errors.title && (
+              <p className="text-red-500 text-[12px] mt-1.5 font-medium">{errors.title}</p>
+            )}
             <div className="text-[12px] text-gray-500 mt-1.5 font-medium">
               Tối thiểu 30 ký tự, tối đa 99 ký tự
             </div>
@@ -68,10 +79,16 @@ export function ContentSection() {
             </label>
             <textarea
               value={description}
-              onChange={(event) => setDescription(event.target.value)}
+              onChange={(event) => {
+                setDescription(event.target.value);
+                setErrors((prev) => ({ ...prev, description: "" }));
+              }}
               placeholder={`Mô tả chi tiết về:\n• Loại hình bất động sản\n• Vị trí\n• Diện tích, tiện ích\n• Tình trạng nội thất\n...\n(VD: Khu nhà có vị trí thuận lợi, gần công viên, trường học...)`}
-              className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium min-h-[160px] resize-y placeholder:text-gray-400 leading-relaxed"
+              className={`w-full border rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium min-h-[160px] resize-y placeholder:text-gray-400 leading-relaxed ${errors.description ? "border-red-500 focus:border-red-500" : "border-gray-300"}`}
             />
+            {errors.description && (
+              <p className="text-red-500 text-[12px] mt-1.5 font-medium">{errors.description}</p>
+            )}
             <div className="text-[12px] text-gray-500 mt-1.5 font-medium">
               Tối thiểu 30 ký tự, tối đa 3000 ký tự
             </div>

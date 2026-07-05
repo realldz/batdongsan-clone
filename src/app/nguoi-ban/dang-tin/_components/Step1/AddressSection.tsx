@@ -11,10 +11,11 @@ export function AddressSection() {
     expanded,
     toggleSection,
     selectedAddress,
+    errors,
   } = useCreateListing();
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden">
+    <div className={`bg-white rounded-lg border mb-6 shadow-sm overflow-hidden ${errors.address ? "border-red-500" : "border-gray-200"}`}>
       <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={() => toggleSection("address")}
@@ -32,13 +33,18 @@ export function AddressSection() {
       {expanded.address ? (
         <div className="px-4 pb-6 pt-0">
           {!isAddressConfirmed ? (
-            <div
-              onClick={() => setIsAddressModalOpen(true)}
-              className="flex items-center gap-2 w-full border border-gray-300 rounded-full px-4 py-2.5 cursor-text bg-white hover:border-gray-400 transition-colors"
-            >
-              <Search size={18} className="text-[#2c2c2c]" />
-              <span className="text-gray-500 text-[14px] font-medium">Nhập địa chỉ</span>
-            </div>
+            <>
+              <div
+                onClick={() => setIsAddressModalOpen(true)}
+                className={`flex items-center gap-2 w-full border rounded-full px-4 py-2.5 cursor-text bg-white transition-colors ${errors.address ? "border-red-500 hover:border-red-600" : "border-gray-300 hover:border-gray-400"}`}
+              >
+                <Search size={18} className="text-[#2c2c2c]" />
+                <span className="text-gray-500 text-[14px] font-medium">Nhập địa chỉ</span>
+              </div>
+              {errors.address && (
+                <p className="text-red-500 text-[12px] mt-2 font-medium">{errors.address}</p>
+              )}
+            </>
           ) : (
             <div className="relative font-sans">
               <div className="mb-4">

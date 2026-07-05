@@ -28,16 +28,21 @@ export function MainInfoSection() {
     priceSummary,
     expanded,
     toggleSection,
+    errors,
+    setErrors,
   } = useCreateListing();
 
+  const hasMainErrors = Boolean(errors.area || errors.price);
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 mb-6 shadow-sm overflow-hidden font-sans">
+    <div className={`bg-white rounded-lg border mb-6 shadow-sm overflow-hidden font-sans ${hasMainErrors ? "border-red-500" : "border-gray-200"}`}>
       <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={() => toggleSection("main")}
       >
-        <h2 className="font-bold text-[14px]">
+        <h2 className="font-bold text-[14px] flex items-center gap-1.5">
           Thông tin chính <span className="text-primary">*</span>
+          {hasMainErrors && <span className="text-red-500 text-xs font-normal">(Có lỗi nhập liệu)</span>}
         </h2>
         {expanded.main ? (
           <ChevronUp size={20} className="text-[#2c2c2c]" />
@@ -79,13 +84,19 @@ export function MainInfoSection() {
               <input
                 type="text"
                 value={area}
-                onChange={(event) => setArea(event.target.value)}
-                className="w-full border border-gray-300 rounded-md pl-3 pr-10 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium"
+                onChange={(event) => {
+                  setArea(event.target.value);
+                  setErrors((prev) => ({ ...prev, area: "" }));
+                }}
+                className={`w-full border rounded-md pl-3 pr-10 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium ${errors.area ? "border-red-500 focus:border-red-500" : "border-gray-300"}`}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs font-semibold">
                 m²
               </span>
             </div>
+            {errors.area && (
+              <p className="text-red-500 text-[12px] mt-1.5 font-medium">{errors.area}</p>
+            )}
           </div>
 
           <div className="flex gap-4">
@@ -96,16 +107,27 @@ export function MainInfoSection() {
               <input
                 type="text"
                 value={price}
-                onChange={(event) => setPrice(event.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium"
+                onChange={(event) => {
+                  setPrice(event.target.value);
+                  setErrors((prev) => ({ ...prev, price: "" }));
+                }}
+                className={`w-full border rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium ${errors.price ? "border-red-500 focus:border-red-500" : "border-gray-300"}`}
               />
+              {errors.price && (
+                <p className="text-red-500 text-[12px] mt-1.5 font-medium">{errors.price}</p>
+              )}
             </div>
             <div className="flex-1">
               <label className="block text-[13px] font-bold mb-2">Đơn vị</label>
               <div className="relative">
                 <select
                   value={priceUnit}
-                  onChange={(event) => setPriceUnit(event.target.value)}
+                  onChange={(event) => {
+                    setPriceUnit(event.target.value);
+                    if (event.target.value === "Thỏa thuận") {
+                      setErrors((prev) => ({ ...prev, price: "" }));
+                    }
+                  }}
                   className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white font-medium text-gray-800"
                 >
                   {priceUnitOptions.map((option) => (

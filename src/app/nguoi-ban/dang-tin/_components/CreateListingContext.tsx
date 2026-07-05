@@ -50,6 +50,7 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Additional Step 1 states
   const [bedrooms, setBedrooms] = useState(0);
@@ -139,6 +140,12 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     [selectedAddress]
   );
 
+  useEffect(() => {
+    if (isAddressConfirmed) {
+      setErrors((prev) => ({ ...prev, address: "" }));
+    }
+  }, [isAddressConfirmed]);
+
 
   useEffect(() => {
     if (user) {
@@ -155,11 +162,11 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     if (
       !demand ||
       !parsedArea ||
-      !parsedPrice ||
-      title.trim().length < 10 ||
-      description.trim().length < 10
+      (priceUnit !== "Thỏa thuận" && !parsedPrice) ||
+      title.trim().length < 30 ||
+      description.trim().length < 30
     ) {
-      setSubmitMessage("Vui lòng kiểm tra tiêu đề, mô tả, diện tích và mức giá.");
+      setSubmitMessage("Vui lòng kiểm tra lại thông tin tin đăng. Tiêu đề và Mô tả cần tối thiểu 30 ký tự.");
       return;
     }
 
@@ -331,6 +338,8 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
         priceSummary,
         displayAddress,
         handleSubmitListing,
+        errors,
+        setErrors,
       }}
     >
       {children}

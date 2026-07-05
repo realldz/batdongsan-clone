@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { Info, Upload, Image as ImageIcon, ChevronUp, ChevronDown, Check, X, Star, RotateCw, Trash2, Edit2, AlertTriangle, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 type UploadedImage = {
   id: string;
@@ -15,6 +16,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
   const [expandedLink, setExpandedLink] = useState(true);
   const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const libraryImages: string[] = [];
 
@@ -24,6 +26,9 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
 
   const syncImages = (images: UploadedImage[]) => {
     setUploadedImages(images);
+    if (images.length >= 3) {
+      setShowError(false);
+    }
     onFilesChange(images.flatMap((image) => (image.file ? [image.file] : [])));
     onImageUrlsChange(images.flatMap((image) => (image.url ? [image.url] : [])));
   };
@@ -67,6 +72,15 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
 
   const isInvalid = uploadedImages.length > 0 && uploadedImages.length < 3;
 
+  const handleContinue = () => {
+    if (uploadedImages.length < 3) {
+      setShowError(true);
+      toast.error("Vui lòng tải lên tối thiểu 3 ảnh để tiếp tục.");
+      return;
+    }
+    onNext();
+  };
+
   return (
     <div className="flex-1 w-[700px] max-w-full mx-auto px-4 py-8 pb-32">
       <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFilesSelected} />
@@ -84,15 +98,15 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
           )}
         </div>
 
-        {isInvalid && (
-          <div className="flex items-center gap-2 mb-4 text-primary bg-red-50 p-3 rounded-lg border border-red-100">
+        {(showError || isInvalid) && (
+          <div className="flex items-center gap-2 mb-4 text-primary bg-red-50 p-3 rounded-lg border border-red-100 font-sans">
             <AlertTriangle size={16} />
             <span className="text-[13px] font-medium">Vui lòng đăng tối thiểu 3 ảnh</span>
           </div>
         )}
 
-        {uploadedImages.length === 0 ? (
-          <div className="bg-[#e4e9f2] rounded-lg p-3 flex items-center gap-2 text-gray-700 mb-6">
+        {uploadedImages.length === 0 && !showError ? (
+          <div className="bg-[#e4e9f2] rounded-lg p-3 flex items-center gap-2 text-gray-700 mb-6 font-sans">
             <Info size={16} className="text-gray-500" />
             <span className="text-[13px]">Đăng tối thiểu 3 ảnh</span>
           </div>
@@ -226,7 +240,7 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
             Quay lại
           </button>
           <button
-            onClick={onNext}
+            onClick={handleContinue}
             className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-full font-bold text-[14px] transition-colors shadow-sm"
           >
             Tiếp tục

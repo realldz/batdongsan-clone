@@ -127,6 +127,10 @@ export interface CreateListingContextType {
   priceSummary: string;
   displayAddress: string;
   handleSubmitListing: (packageId: PackageId, durationDays: DurationDays) => Promise<void>;
+
+  // Validation
+  errors: Record<string, string>;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 export function formatPriceSummary(price: string, unit: string, demand: "sale" | "rent" | null) {
