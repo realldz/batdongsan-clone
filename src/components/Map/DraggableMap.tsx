@@ -13,12 +13,20 @@ const DefaultIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-// Component to dynamically update map center when lat/lng changes from parent
+// Component to dynamically update map center and fix tile rendering in modals
 function MapRecenter({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
+
+  // Fix tiles not fully loading when map is inside a modal or hidden container
   useEffect(() => {
-    map.setView([lat, lng], map.getZoom());
+    const timer = setTimeout(() => map.invalidateSize(), 100);
+    return () => clearTimeout(timer);
+  }, [map]);
+
+  useEffect(() => {
+    map.flyTo([lat, lng], map.getZoom());
   }, [lat, lng, map]);
+
   return null;
 }
 

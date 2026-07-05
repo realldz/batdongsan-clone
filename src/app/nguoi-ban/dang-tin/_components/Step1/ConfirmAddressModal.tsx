@@ -234,32 +234,34 @@ export function ConfirmAddressModal() {
             </div>
           </div>
 
-          {/* Map Section */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-bold text-[13px]">
-                Chọn vị trí trên bản đồ
-              </span>
-              <button
-                type="button"
-                onClick={handleResetMap}
-                className="text-[13px] text-gray-500 hover:text-[#2c2c2c] font-bold"
-              >
-                Đặt lại
-              </button>
+          {/* Map Section – only shows when street/detail is filled */}
+          {(selectedAddress.street || selectedAddress.detail) && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-bold text-[13px]">
+                  Chọn vị trí trên bản đồ
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResetMap}
+                  className="text-[13px] text-gray-500 hover:text-[#2c2c2c] font-bold"
+                >
+                  Đặt lại
+                </button>
+              </div>
+              <div className="text-[13px] text-gray-500 mb-3 font-medium">
+                Kéo bản đồ để đổi vị trí ghim
+              </div>
+              <DraggableMap
+                lat={selectedAddress.lat || 20.9634}
+                lng={selectedAddress.lng || 105.8285}
+                draggable={true}
+                onPositionChange={(lat, lng) =>
+                  setSelectedAddress((prev) => ({ ...prev, lat, lng }))
+                }
+              />
             </div>
-            <div className="text-[13px] text-gray-500 mb-3 font-medium">
-              Kéo bản đồ để đổi vị trí ghim
-            </div>
-            <DraggableMap
-              lat={selectedAddress.lat || 20.9634}
-              lng={selectedAddress.lng || 105.8285}
-              draggable={true}
-              onPositionChange={(lat, lng) =>
-                setSelectedAddress((prev) => ({ ...prev, lat, lng }))
-              }
-            />
-          </div>
+          )}
         </div>
 
         <div className="p-4 border-t border-gray-200 flex items-center justify-between shrink-0 bg-white">
