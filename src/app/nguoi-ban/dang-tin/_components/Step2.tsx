@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Info, Upload, Image as ImageIcon, ChevronUp, ChevronDown, Check, X, Star, RotateCw, Trash2, Edit2, AlertTriangle, Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -11,7 +11,7 @@ type UploadedImage = {
   url?: string;
 };
 
-export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { onBack: () => void; onNext: () => void; onFilesChange: (files: File[]) => void; onImageUrlsChange: (urls: string[]) => void }) {
+export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange, imageUrls = [], isEditMode = false }: { onBack: () => void; onNext: () => void; onFilesChange: (files: File[]) => void; onImageUrlsChange: (urls: string[]) => void; imageUrls?: string[]; isEditMode?: boolean }) {
   const [expandedGuide, setExpandedGuide] = useState(true);
   const [expandedLink, setExpandedLink] = useState(true);
   const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
@@ -23,6 +23,21 @@ export function Step2({ onBack, onNext, onFilesChange, onImageUrlsChange }: { on
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedLibraryImages, setSelectedLibraryImages] = useState<number[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!initialized && (imageUrls.length > 0 || !isEditMode)) {
+      if (imageUrls.length > 0) {
+        const initialImages = imageUrls.map(url => ({
+          id: `url-${url}`,
+          previewUrl: url,
+          url: url,
+        }));
+        setUploadedImages(initialImages);
+      }
+      setInitialized(true);
+    }
+  }, [imageUrls, isEditMode, initialized]);
 
   const syncImages = (images: UploadedImage[]) => {
     setUploadedImages(images);

@@ -29,6 +29,8 @@ function CreateListingPageInner() {
     setCurrentStep,
     setImageFiles,
     setImageUrls,
+    imageUrls,
+    isEditMode,
     handleSubmitListing,
     isSubmitting,
     submitMessage,
@@ -48,6 +50,8 @@ function CreateListingPageInner() {
           onNext={() => setCurrentStep(3)}
           onFilesChange={setImageFiles}
           onImageUrlsChange={setImageUrls}
+          imageUrls={imageUrls}
+          isEditMode={isEditMode}
         />
       </div>
 

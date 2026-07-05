@@ -13,7 +13,7 @@ const propertyTypeOptions = [
   "Đất nền",
   "Kho, nhà xưởng",
 ];
-const priceUnitOptions = ["VND", "Triệu/tháng", "Tỷ", "Triệu/m²", "Thỏa thuận"];
+const priceUnitOptions = ["VND", "Thỏa thuận"];
 
 export function MainInfoSection() {
   const {
@@ -106,12 +106,13 @@ export function MainInfoSection() {
               </label>
               <input
                 type="text"
-                value={price}
+                value={priceUnit === "Thỏa thuận" ? "0" : price}
+                disabled={priceUnit === "Thỏa thuận"}
                 onChange={(event) => {
                   setPrice(event.target.value);
                   setErrors((prev) => ({ ...prev, price: "" }));
                 }}
-                className={`w-full border rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium ${errors.price ? "border-red-500 focus:border-red-500" : "border-gray-300"}`}
+                className={`w-full border rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] font-medium ${errors.price ? "border-red-500 focus:border-red-500" : "border-gray-300"} ${priceUnit === "Thỏa thuận" ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
               />
               {errors.price && (
                 <p className="text-red-500 text-[12px] mt-1.5 font-medium">{errors.price}</p>

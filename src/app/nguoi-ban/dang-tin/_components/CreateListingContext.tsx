@@ -109,11 +109,47 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
           setTitle(property.title);
           setDescription(property.description);
           setArea(String(property.area));
-          setPrice(String(property.price));
+          if (Number(property.price) === 0) {
+            setPrice("");
+            setPriceUnit("Thỏa thuận");
+          } else {
+            setPrice(String(property.price));
+            setPriceUnit("VND");
+          }
           setHouseDirection(property.direction ?? "Không xác định");
           if (property.images) setImageUrls(property.images);
-          if (property.address) {
+          const hasAddress = property.address || property.province || property.district || property.street || property.coordinates;
+          if (hasAddress) {
             setIsAddressConfirmed(true);
+            setSelectedAddress({
+              label: property.address || [property.street, property.district, property.province].filter(Boolean).join(", "),
+              province: property.province || "",
+              district: property.district || "",
+              ward: property.ward || "",
+              street: property.street || "",
+              detail: "",
+              project: "",
+              lat: property.coordinates?.lat || 21.028511,
+              lng: property.coordinates?.lng || 105.804817,
+            });
+          }
+
+          
+          if (property.contactName) setContactName(property.contactName);
+          if (property.contactPhone) setContactPhone(property.contactPhone);
+          if (property.contactEmail) setContactEmail(property.contactEmail);
+          
+          if (property.bedrooms) setBedrooms(property.bedrooms);
+          if (property.bathrooms) setBathrooms(property.bathrooms);
+          if (property.interior) setInterior(property.interior);
+          if (property.balconyDirection) setBalconyDirection(property.balconyDirection);
+          if (property.amenities) setAmenities(property.amenities);
+          
+          if (property.rentDetails) {
+            if (property.rentDetails.moveInTime) setMoveInTime(property.rentDetails.moveInTime);
+            if (property.rentDetails.electricityPrice) setElectricityPrice(property.rentDetails.electricityPrice);
+            if (property.rentDetails.waterPrice) setWaterPrice(property.rentDetails.waterPrice);
+            if (property.rentDetails.internetPrice) setInternetPrice(property.rentDetails.internetPrice);
           }
         })
         .catch(() => {
@@ -157,7 +193,7 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
 
   const handleSubmitListing = async (packageId: PackageId, durationDays: DurationDays) => {
     const parsedArea = Number(area.replace(/[^\d.]/g, ""));
-    const parsedPrice = Number(price.replace(/[^\d]/g, ""));
+    const parsedPrice = priceUnit === "Thỏa thuận" ? 0 : Number(price.replace(/[^\d]/g, ""));
 
     if (
       !demand ||
