@@ -10,7 +10,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   phone?: string;
-  role?: string;
+  role?: number;
 }
 
 export interface AuthUser {
@@ -18,7 +18,7 @@ export interface AuthUser {
   email: string;
   fullName: string;
   phone?: string;
-  role?: string;
+  role?: number;
 }
 
 export interface AuthResponse {
@@ -72,7 +72,7 @@ function userFromJwt(token: string): AuthUser | null {
     id: String(sub),
     email: String(email),
     fullName: String(fullName),
-    role: typeof role === "string" ? role : undefined,
+    role: typeof role === "number" || typeof role === "string" ? Number(role) : undefined,
     phone: typeof payload.phone === "string" ? payload.phone : undefined,
   };
 }
@@ -105,7 +105,7 @@ export async function register(data: RegisterRequest): Promise<AuthUser> {
       id: String(res.id),
       email: String(res.email),
       fullName: String(res.fullName),
-      role: typeof res.role !== "undefined" ? String(res.role) : undefined,
+      role: typeof res.role !== "undefined" ? Number(res.role) : undefined,
       phone: typeof res.phone === "string" ? res.phone : undefined,
     };
   }

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth-store";
 import { ApiError } from "@/lib/api";
 import { Avatar, Button, Input, Icon } from "@/components/atoms";
 import { Dropdown, FormField, Modal } from "@/components/molecules";
+import { Role, hasAnyPermission } from "@/lib/role.constant";
 
 type AuthView = "login" | "register";
 
@@ -121,6 +122,18 @@ export function HeaderAuthActions() {
               <li className="px-4 py-2 border-b border-[#e8e8e8] mb-1">
                 <span className="text-sm font-semibold text-gray-900">{user?.fullName}</span>
               </li>
+
+              {user && hasAnyPermission(user.role, [Role.ADMIN, Role.SUPER_ADMIN]) && (
+                <li className="border-b border-[#e8e8e8] pb-1 mb-1">
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                  >
+                    <Icon name="Lock" size={16} className="text-red-500" />
+                    Trang quản trị Admin
+                  </Link>
+                </li>
+              )}
 
               <li>
                 <Link

@@ -108,7 +108,7 @@ export function TaiKhoanContent() {
         fullName: nextUser.fullName ?? nextUser.name ?? formData.fullName,
         email: nextUser.email ?? formData.email,
         phone: nextUser.phone ?? formData.phone,
-        role: typeof nextUser.role === "string" ? nextUser.role : user.role,
+        role: nextUser.role !== undefined ? Number(nextUser.role) : user.role,
       });
       setMessage("Đã lưu thông tin tài khoản.");
       router.refresh();
