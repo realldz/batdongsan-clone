@@ -44,11 +44,11 @@ export const statusTone: Record<ListingStatus, string> = {
 
 interface ListingCardProps {
   listing: Listing;
-  onRenew: () => void;
+  onBoost: () => void;
   onDelete?: () => void;
 }
 
-export function ListingCard({ listing, onRenew, onDelete }: ListingCardProps) {
+export function ListingCard({ listing, onBoost, onDelete }: ListingCardProps) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
@@ -153,10 +153,10 @@ export function ListingCard({ listing, onRenew, onDelete }: ListingCardProps) {
               </button>
               <button
                 type="button"
-                onClick={onRenew}
+                onClick={onBoost}
                 className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-black"
               >
-                Gia hạn tin <ChevronDown className="h-4 w-4" />
+                Đẩy tin <ChevronDown className="h-4 w-4" />
               </button>
             </div>
           </div>

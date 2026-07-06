@@ -161,3 +161,7 @@ export async function deleteProperty(id: string) {
 export async function updatePropertyStatus(id: string, status: PropertyStatus) {
   return api.put<Property>(`/properties/${id}/status`, { status });
 }
+
+export async function boostProperty(id: string, pushType: "pushed" | "vip_pushed") {
+  return api.post<Property>(`/properties/${id}/boost`, { pushType });
+}

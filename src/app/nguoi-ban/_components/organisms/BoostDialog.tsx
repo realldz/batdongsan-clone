@@ -1,45 +1,64 @@
 import React from "react";
 import type { Listing } from "../molecules/ListingCard";
+import type { PricingInfo } from "@/services/pricing";
 
-export const renewOptions = [
-  { days: 7, label: "7 ngày", price: "99.000 đ", helper: "Phù hợp tin sắp hết hạn" },
-  { days: 15, label: "15 ngày", price: "169.000 đ", helper: "Tiết kiệm hơn 15%" },
-  { days: 30, label: "30 ngày", price: "299.000 đ", helper: "Hiển thị lâu hơn" },
-] as const;
+export type PushType = "pushed" | "vip_pushed";
 
-interface RenewDialogProps {
+interface BoostDialogProps {
   listing: Listing;
   onClose: () => void;
-  selectedRenewDays: 7 | 15 | 30;
-  setSelectedRenewDays: (days: 7 | 15 | 30) => void;
-  renewSuccessMessage: string;
-  setRenewSuccessMessage: (msg: string) => void;
-  isRenewSubmitting: boolean;
+  selectedPushType: PushType;
+  setSelectedPushType: (pushType: PushType) => void;
+  boostSuccessMessage: string;
+  setBoostSuccessMessage: (msg: string) => void;
+  isBoostSubmitting: boolean;
   onConfirm: () => void;
+  pricing?: PricingInfo | null;
 }
 
-export function RenewDialog({
+export function BoostDialog({
   listing,
   onClose,
-  selectedRenewDays,
-  setSelectedRenewDays,
-  renewSuccessMessage,
-  setRenewSuccessMessage,
-  isRenewSubmitting,
+  selectedPushType,
+  setSelectedPushType,
+  boostSuccessMessage,
+  setBoostSuccessMessage,
+  isBoostSubmitting,
   onConfirm,
-}: RenewDialogProps) {
+  pricing,
+}: BoostDialogProps) {
+  const formatPrice = (value?: number) => {
+    if (value === undefined || value === null) return "-- đ";
+    return `${value.toLocaleString("vi-VN")} đ`;
+  };
+
+  const boostOptions = [
+    { 
+      id: "pushed" as PushType, 
+      label: "Đẩy tin thường", 
+      helper: "Tin được đẩy lên đầu trang, tự động ghim trong 30 ngày.", 
+      price: formatPrice(pricing?.boostBasePrice) 
+    },
+    { 
+      id: "vip_pushed" as PushType, 
+      label: "Đẩy tin VIP", 
+      helper: "Nổi bật hơn tin thường, ưu tiên hiển thị đầu, ghim trong 30 ngày.", 
+      price: formatPrice(pricing?.boostVipPrice) 
+    },
+  ];
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 sm:items-center sm:p-6 animate-in fade-in duration-200">
       <button
         type="button"
-        aria-label="Đóng gia hạn tin"
+        aria-label="Đóng đẩy tin"
         className="absolute inset-0 cursor-default"
         onClick={onClose}
       />
       <div className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px] animate-in slide-in-from-bottom-4 duration-300">
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
           <div>
-            <div className="text-[22px] font-extrabold text-gray-900">Gia hạn tin</div>
+            <div className="text-[22px] font-extrabold text-gray-900">Đẩy tin</div>
             <p className="mt-1 text-sm text-gray-500 font-medium">Mã tin {listing.code}</p>
           </div>
           <button
@@ -58,15 +77,15 @@ export function RenewDialog({
             </div>
             <div className="mt-3 flex flex-wrap gap-3 text-sm text-gray-500">
               <span>
-                Gói hiện tại:{" "}
+                Trạng thái:{" "}
                 <span className="font-bold text-gray-800">
-                  {listing.packageName}
+                  {listing.status}
                 </span>
               </span>
               <span>
-                Hết hạn:{" "}
+                Cấp độ VIP:{" "}
                 <span className="font-bold text-gray-800">
-                  {listing.expiresAt}
+                  {listing.packageName}
                 </span>
               </span>
             </div>
@@ -74,19 +93,19 @@ export function RenewDialog({
 
           <div>
             <div className="mb-3 text-sm font-extrabold uppercase tracking-[0.16em] text-gray-400">
-              Chọn thời hạn gia hạn
+              Chọn loại đẩy tin
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {renewOptions.map((option) => {
-                const isActive = selectedRenewDays === option.days;
+            <div className="grid gap-3 sm:grid-cols-2">
+              {boostOptions.map((option) => {
+                const isActive = selectedPushType === option.id;
 
                 return (
                   <button
-                    key={option.days}
+                    key={option.id}
                     type="button"
                     onClick={() => {
-                      setSelectedRenewDays(option.days);
-                      setRenewSuccessMessage("");
+                      setSelectedPushType(option.id);
+                      setBoostSuccessMessage("");
                     }}
                     className={`rounded-2xl border p-4 text-left transition-colors ${
                       isActive
@@ -94,8 +113,10 @@ export function RenewDialog({
                         : "border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
                     }`}
                   >
-                    <div className="text-lg font-extrabold">{option.label}</div>
-                    <div className="mt-1 text-sm font-bold">{option.price}</div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-extrabold">{option.label}</div>
+                      <div className="text-sm font-bold text-primary">{option.price}</div>
+                    </div>
                     <div
                       className={`mt-2 text-xs font-medium ${
                         isActive ? "text-red-500" : "text-gray-500"
@@ -110,12 +131,12 @@ export function RenewDialog({
           </div>
 
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-            Khi xác nhận, hệ thống gọi API thanh toán ví để trừ tiền gia hạn tin.
+            Khi xác nhận, hệ thống gọi API để trừ lượt đẩy tin (nếu là VIP) hoặc trừ tiền ví và đẩy tin của bạn lên đầu trang trong 30 ngày.
           </div>
 
-          {renewSuccessMessage ? (
+          {boostSuccessMessage ? (
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-700">
-              {renewSuccessMessage}
+              {boostSuccessMessage}
             </div>
           ) : null}
         </div>
@@ -131,13 +152,14 @@ export function RenewDialog({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={isRenewSubmitting}
+            disabled={isBoostSubmitting}
             className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isRenewSubmitting ? "Đang thanh toán..." : "Xác nhận gia hạn"}
+            {isBoostSubmitting ? "Đang xử lý..." : "Xác nhận đẩy tin"}
           </button>
         </div>
       </div>
     </div>
   );
 }
+

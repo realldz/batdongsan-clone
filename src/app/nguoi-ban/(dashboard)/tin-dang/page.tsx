@@ -9,17 +9,18 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { SellerHeader } from "../../_components/SellerHeader";
 import { SellerPagination } from "../../_components/SellerPagination";
 import { SummaryCard, EmptyState } from "../../_components/atoms";
 import { ListingCard, type Listing, type ListingStatus } from "../../_components/molecules";
-import { FilterDialog, RenewDialog, renewOptions } from "../../_components/organisms";
+import { FilterDialog, BoostDialog, type PushType } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
-import { deleteProperty, getMyProperties, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
-import { payWallet } from "@/services/wallet";
+import { deleteProperty, getMyProperties, boostProperty, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
+import { getPricing, type PricingInfo } from "@/services/pricing";
 
 const PAGE_SIZE = 10;
 
@@ -84,10 +85,6 @@ function propertyToSellerListing(property: Property): Listing {
   };
 }
 
-function parseVnd(value: string): number {
-  return Number(value.replace(/[^\d]/g, ""));
-}
-
 export default function RechargePage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [total, setTotal] = useState(0);
@@ -99,15 +96,22 @@ export default function RechargePage() {
   const [draftOnly, setDraftOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-  const [renewListing, setRenewListing] = useState<Listing | null>(null);
-  const [selectedRenewDays, setSelectedRenewDays] = useState<(typeof renewOptions)[number]["days"]>(15);
-  const [renewSuccessMessage, setRenewSuccessMessage] = useState("");
-  const [isRenewSubmitting, setIsRenewSubmitting] = useState(false);
+  const [boostListing, setBoostListing] = useState<Listing | null>(null);
+  const [selectedPushType, setSelectedPushType] = useState<PushType>("pushed");
+  const [boostSuccessMessage, setBoostSuccessMessage] = useState("");
+  const [isBoostSubmitting, setIsBoostSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [pricing, setPricing] = useState<PricingInfo | null>(null);
   const wallet = useWalletBalance();
   const refreshWallet = useRefreshWallet();
 
-  const isAnyDialogOpen = isFilterDialogOpen || renewListing !== null;
+  const isAnyDialogOpen = isFilterDialogOpen || boostListing !== null;
+
+  useEffect(() => {
+    getPricing()
+      .then(setPricing)
+      .catch((err) => console.error("Failed to load pricing", err));
+  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -174,7 +178,7 @@ export default function RechargePage() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsFilterDialogOpen(false);
-        setRenewListing(null);
+        setBoostListing(null);
       }
     };
 
@@ -219,41 +223,29 @@ export default function RechargePage() {
     setCurrentPage(1);
   };
 
-  const openRenewDialog = (listing: Listing) => {
-    setRenewSuccessMessage("");
-    setSelectedRenewDays(15);
-    setRenewListing(listing);
+  const openBoostDialog = (listing: Listing) => {
+    setBoostSuccessMessage("");
+    setSelectedPushType("pushed");
+    setBoostListing(listing);
   };
 
-  const selectedRenewOption = renewOptions.find((option) => option.days === selectedRenewDays) ?? renewOptions[1];
-
-  const confirmRenewListing = async () => {
-    if (!renewListing) {
+  const confirmBoostListing = async () => {
+    if (!boostListing) {
       return;
     }
 
-    const amount = parseVnd(selectedRenewOption.price);
-    const mainBalance = Number(wallet.main.replace(/[^\d]/g, ""));
-    if (mainBalance < amount) {
-      setRenewSuccessMessage("Số dư không đủ, vui lòng nạp thêm tiền vào ví.");
-      return;
-    }
-
-    setIsRenewSubmitting(true);
-    setRenewSuccessMessage("");
+    setIsBoostSubmitting(true);
+    setBoostSuccessMessage("");
 
     try {
-      await payWallet({
-        amount,
-        propertyId: renewListing.id,
-        description: `Gia hạn ${selectedRenewOption.label} cho mã tin ${renewListing.code}`,
-      });
-      setRenewSuccessMessage(`Đã thanh toán gia hạn ${selectedRenewOption.label} cho mã tin ${renewListing.code}.`);
+      await boostProperty(boostListing.id, selectedPushType);
+      toast.success(`Đã đẩy tin ${boostListing.code} thành công.`);
       refreshWallet();
+      setBoostListing(null); // Đóng modal ngay khi thành công
     } catch {
-      setRenewSuccessMessage("Chưa thể thanh toán gia hạn, vui lòng kiểm tra số dư hoặc thử lại sau.");
+      setBoostSuccessMessage("Chưa thể đẩy tin, vui lòng kiểm tra số dư hoặc thử lại sau.");
     } finally {
-      setIsRenewSubmitting(false);
+      setIsBoostSubmitting(false);
     }
   };
 
@@ -404,7 +396,7 @@ export default function RechargePage() {
                   <ListingCard 
                     key={listing.id} 
                     listing={listing} 
-                    onRenew={() => openRenewDialog(listing)} 
+                    onBoost={() => openBoostDialog(listing)} 
                     onDelete={async () => {
                       if (!window.confirm("Bạn có chắc chắn muốn xóa tin này không?")) return;
                       try {
@@ -450,16 +442,17 @@ export default function RechargePage() {
         onReset={resetFilters}
       />
 
-      {renewListing && (
-        <RenewDialog
-          listing={renewListing}
-          onClose={() => setRenewListing(null)}
-          selectedRenewDays={selectedRenewDays}
-          setSelectedRenewDays={setSelectedRenewDays}
-          renewSuccessMessage={renewSuccessMessage}
-          setRenewSuccessMessage={setRenewSuccessMessage}
-          isRenewSubmitting={isRenewSubmitting}
-          onConfirm={confirmRenewListing}
+      {boostListing && (
+        <BoostDialog
+          listing={boostListing}
+          onClose={() => setBoostListing(null)}
+          selectedPushType={selectedPushType}
+          setSelectedPushType={setSelectedPushType}
+          boostSuccessMessage={boostSuccessMessage}
+          setBoostSuccessMessage={setBoostSuccessMessage}
+          isBoostSubmitting={isBoostSubmitting}
+          onConfirm={confirmBoostListing}
+          pricing={pricing}
         />
       )}
 

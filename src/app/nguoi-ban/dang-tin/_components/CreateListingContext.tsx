@@ -7,9 +7,7 @@ import { useAuth } from "@/lib/auth-store";
 import { useRefreshWallet } from "@/lib/use-wallet-balance";
 import { getPropertyById, createProperty, updateProperty, type Property } from "@/services/properties";
 import { uploadPropertyImage } from "@/services/upload";
-import { payWallet } from "@/services/wallet";
 import { useGeographyState } from "./useGeographyState";
-import { PACKAGE_PRICES, type PackageId, type DurationDays } from "./Step3";
 import {
   type CreateListingContextType,
   formatPriceSummary,
@@ -191,7 +189,7 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     }
   }, [user]);
 
-  const handleSubmitListing = async (packageId: PackageId, durationDays: DurationDays) => {
+  const handleSubmitListing = async () => {
     const parsedArea = Number(area.replace(/[^\d.]/g, ""));
     const parsedPrice = priceUnit === "Thỏa thuận" ? 0 : Number(price.replace(/[^\d]/g, ""));
 
@@ -210,14 +208,6 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     setSubmitMessage("");
 
     try {
-      const total = PACKAGE_PRICES[packageId] * durationDays;
-      const label = demand === "rent" ? "Cho thuê" : "Bán";
-
-      await payWallet({
-        amount: total,
-        description: `Đăng tin ${label} - ${title.trim().slice(0, 50)}`,
-      });
-
       const propertyPayload = {
         title: title.trim(),
         description: description.trim(),

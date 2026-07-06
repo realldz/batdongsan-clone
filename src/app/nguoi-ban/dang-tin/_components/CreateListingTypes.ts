@@ -1,7 +1,6 @@
 import React from "react";
 import { type Property } from "@/services/properties";
 import { type GeographyDivision } from "@/services/geography";
-import { type PackageId, type DurationDays } from "./Step3";
 
 export interface AddressInfo {
   label: string;
@@ -126,7 +125,7 @@ export interface CreateListingContextType {
   setSubmitMessage: React.Dispatch<React.SetStateAction<string>>;
   priceSummary: string;
   displayAddress: string;
-  handleSubmitListing: (packageId: PackageId, durationDays: DurationDays) => Promise<void>;
+  handleSubmitListing: () => Promise<void>;
 
   // Validation
   errors: Record<string, string>;
