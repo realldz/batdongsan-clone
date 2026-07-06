@@ -107,7 +107,27 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   const contentType = res.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
-    return res.json();
+    const data = await res.json();
+    if (data && typeof data === "object") {
+      const getNum = (name: string): number => {
+        const v = res.headers.get(name);
+        return v ? Number(v) || 0 : 0;
+      };
+      
+      const totalCount = getNum("x-total-count");
+      if (totalCount > 0) {
+        Object.defineProperty(data, 'meta', {
+          value: {
+            page: getNum("x-page") || 1,
+            total: totalCount,
+            totalPages: getNum("x-pages-count"),
+            perPage: getNum("x-per-page") || 20,
+          },
+          enumerable: false
+        });
+      }
+    }
+    return data;
   }
 
   return res.text() as T;

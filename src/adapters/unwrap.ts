@@ -15,6 +15,15 @@ export function unwrapArray<T>(value: unknown): T[] {
 
 export function unwrapPaginated<T>(value: unknown, fallbackPerPage = 10): PaginatedResult<T> {
   if (Array.isArray(value)) {
+    const record = value as unknown as Record<string, unknown>;
+    if (record.meta && typeof record.meta === "object") {
+      const meta = record.meta as Record<string, unknown>;
+      const total = typeof meta.total === "number" ? meta.total : (value as T[]).length;
+      const page = typeof meta.page === "number" ? meta.page : 1;
+      const perPage = typeof meta.perPage === "number" ? meta.perPage : typeof meta.per_page === "number" ? meta.per_page : fallbackPerPage;
+      const totalPages = typeof meta.totalPages === "number" ? meta.totalPages : perPage > 0 ? Math.ceil(total / perPage) : 1;
+      return { data: value as T[], pagination: { page, totalPages, total, perPage } };
+    }
     return { data: value as T[], pagination: { page: 1, totalPages: 1, total: (value as T[]).length, perPage: (value as T[]).length } };
   }
 
