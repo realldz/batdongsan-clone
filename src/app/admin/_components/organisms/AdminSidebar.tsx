@@ -14,6 +14,7 @@ import {
   UserRoundCheck,
   Users,
   Banknote,
+  Ticket,
 } from "lucide-react";
 
 const navItems = [
@@ -25,6 +26,7 @@ const navItems = [
   { name: "Doanh nghiệp", href: "/admin/doanh-nghiep", icon: BriefcaseBusiness },
   { name: "Tin tức", href: "/admin/tin-tuc", icon: Newspaper },
   { name: "Liên hệ", href: "/admin/leads", icon: PhoneCall },
+  { name: "Khuyến mãi", href: "/admin/khuyen-mai", icon: Ticket },
   { name: "Gói cước", href: "/admin/goi-cuoc", icon: Banknote },
   { name: "Cấu hình", href: "/admin/cau-hinh", icon: Settings },
 ] as const;

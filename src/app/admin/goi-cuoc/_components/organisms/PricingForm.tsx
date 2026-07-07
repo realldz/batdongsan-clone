@@ -1,4 +1,4 @@
-import { Banknote, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { TableShell } from "../../../_components/molecules/TableShell";
 
 export interface PricingData {
@@ -21,7 +21,6 @@ export function PricingForm({ data, onChange }: PricingFormProps) {
         <TableShell
           title="Giá trị gói cước"
           description="Thiết lập chi phí cho các loại gói VIP và dịch vụ đẩy tin."
-          icon={<Banknote className="w-5 h-5 text-gray-500" />}
         >
           <div className="p-6 space-y-6">
             {/* Dịch vụ đẩy tin */}
