@@ -115,6 +115,10 @@ export async function updateLeadStatus(id: string, status: LeadStatus): Promise<
   return api.patch<Lead>(`/leads/${id}/status`, { status });
 }
 
+export async function updateLeadNotes(id: string, notes: string): Promise<Lead> {
+  return api.patch<Lead>(`/leads/${id}/notes`, { notes });
+}
+
 export async function assignLead(id: string, assignedToId: string): Promise<Lead> {
   return api.patch<Lead>(`/leads/${id}/assign`, { assignedToId });
 }

@@ -4,12 +4,15 @@ import Link from "next/link";
 import { useWalletBalance } from "@/lib/use-wallet-balance";
 import { SellerProfileMenu } from "./SellerProfileMenu";
 
-export function SellerHeader({ title }: { title: string }) {
+export function SellerHeader({ title, subtitle }: { title: string, subtitle?: React.ReactNode }) {
   const wallet = useWalletBalance();
 
   return (
-    <header className="flex items-center justify-between px-6 h-[72px] bg-white border-b border-gray-200 flex-shrink-0 z-50">
-      <h1 className="text-[22px] font-bold text-gray-900 tracking-tight">{title}</h1>
+    <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 flex-shrink-0 z-50 min-h-[72px]">
+      <div>
+        <h1 className="text-[22px] font-bold text-gray-900 tracking-tight leading-none">{title}</h1>
+        {subtitle && <div className="mt-1.5">{subtitle}</div>}
+      </div>
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 cursor-pointer px-4 py-2 rounded-full text-sm font-bold transition-colors border border-gray-200 shadow-sm">
           <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold leading-none pb-px shadow-inner">

@@ -17,4 +17,5 @@ export interface LeadView {
   createdAt: string;
   createdDate: string;
   createdTime: string;
+  notes?: string;
 }

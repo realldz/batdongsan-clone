@@ -33,6 +33,7 @@ export function apiLeadToView(lead: Lead): LeadView {
     createdAt: lead.createdAt,
     createdDate: formatDate(lead.createdAt),
     createdTime: formatRelativeTime(lead.createdAt),
+    notes: lead.notes,
   };
 }
 
