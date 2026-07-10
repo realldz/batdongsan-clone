@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-store";
 import { useRefreshWallet } from "@/lib/use-wallet-balance";
+import { api } from "@/lib/api";
 import { getPropertyById, createProperty, updateProperty, type Property } from "@/services/properties";
 import { uploadPropertyImage } from "@/services/upload";
 import { useGeographyState } from "./useGeographyState";
@@ -48,6 +49,13 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  // Step 3 states
+  const [postTier, setPostTier] = useState<number>(0);
+  const [postDuration, setPostDuration] = useState<number>(15);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [couponDiscount, setCouponDiscount] = useState<number>(0);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Additional Step 1 states
@@ -142,6 +150,8 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
           if (property.interior) setInterior(property.interior);
           if (property.balconyDirection) setBalconyDirection(property.balconyDirection);
           if (property.amenities) setAmenities(property.amenities);
+          if (property.tier !== undefined) setPostTier(property.tier);
+          if (property.boostedAt) setStartDate(new Date(property.boostedAt));
           
           if (property.rentDetails) {
             if (property.rentDetails.moveInTime) setMoveInTime(property.rentDetails.moveInTime);
@@ -208,7 +218,7 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     setSubmitMessage("");
 
     try {
-      const propertyPayload = {
+      const propertyPayload: any = {
         title: title.trim(),
         description: description.trim(),
         type: demand,
@@ -242,6 +252,10 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
         } : null,
       };
 
+      if (isEditMode && editProperty?.status === "pending") {
+        propertyPayload.startDate = startDate?.toISOString() || new Date().toISOString();
+      }
+
       const property =
         isEditMode && editProperty
           ? await updateProperty(editProperty.id, propertyPayload)
@@ -262,6 +276,16 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
 
       if (finalImages.length > 0) {
         await updateProperty(property.id, { images: finalImages });
+      }
+
+      if (!isEditMode || (editProperty && ["expired", "rejected", "draft"].includes(editProperty.status || ""))) {
+        // Thanh toán và publish tin nếu tạo mới hoặc tin đã hết hạn/bị từ chối/nháp
+        await api.post(`/properties/${property.id}/publish`, {
+          tier: postTier,
+          durationDays: postDuration,
+          startDate: startDate?.toISOString() || new Date().toISOString(),
+          couponCode: couponCode || undefined,
+        });
       }
 
       refreshWallet();
@@ -358,6 +382,16 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
         setImageFiles,
         imageUrls,
         setImageUrls,
+        postTier,
+        setPostTier,
+        postDuration,
+        setPostDuration,
+        startDate,
+        setStartDate,
+        couponCode,
+        setCouponCode,
+        couponDiscount,
+        setCouponDiscount,
         isSubmitting,
         submitMessage,
         setSubmitMessage,

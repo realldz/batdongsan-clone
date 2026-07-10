@@ -105,9 +105,9 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               </div>
             </div>
 
-            <div className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-6">
+            {/* <div className="text-[11px] text-gray-400 leading-relaxed border-t border-gray-100 pt-6">
               Quý vị đang xem nội dung tin rao &quot;{property.title}&quot; - Mã tin {property.code}. Mọi thông tin, nội dung liên quan tới tin rao này là do người đăng tin tự đăng tải và chịu trách nhiệm. Batdongsan.com.vn luôn cố gắng để các thông tin được hữu ích nhất cho quý vị...
-            </div>
+            </div> */}
           </div>
         </div>
 

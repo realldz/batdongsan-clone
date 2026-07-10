@@ -53,6 +53,9 @@ export interface Property {
   contactEmail?: string;
   amenities?: PropertyAmenities | null;
   rentDetails?: PropertyRentDetails | null;
+  tier?: number;
+  boostedAt?: string | Date;
+  expiresAt?: string | Date;
 }
 
 export interface PropertyOwner {
@@ -109,7 +112,7 @@ export interface CreatePropertyRequest {
   rentDetails?: PropertyRentDetails | null;
 }
 
-export type UpdatePropertyRequest = Partial<CreatePropertyRequest>;
+export type UpdatePropertyRequest = Partial<CreatePropertyRequest> & { startDate?: Date | string };
 
 function buildQuery(params: object) {
   const query = new URLSearchParams();

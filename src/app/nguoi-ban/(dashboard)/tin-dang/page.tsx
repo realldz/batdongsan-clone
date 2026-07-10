@@ -18,7 +18,7 @@ import { ListingCard, type Listing, type ListingStatus } from "../../_components
 import { FilterDialog, BoostDialog, type PushType } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
-import { deleteProperty, getMyProperties, boostProperty, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
+import { deleteProperty, getMyProperties, boostProperty, updatePropertyStatus, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 import { getPricing, type PricingInfo } from "@/services/pricing";
 
@@ -405,6 +405,16 @@ export default function RechargePage() {
                         setTotal((prev) => Math.max(0, prev - 1));
                       } catch {
                         alert("Xóa tin thất bại, vui lòng thử lại sau.");
+                      }
+                    }}
+                    onHide={async () => {
+                      if (!window.confirm("Bạn có chắc chắn muốn hạ tin này không? Tin sẽ bị ẩn khỏi kết quả tìm kiếm.")) return;
+                      try {
+                        await updatePropertyStatus(listing.id, "hidden");
+                        setListings((prev) => prev.map((l) => l.id === listing.id ? { ...l, status: "Đã hạ" } : l));
+                        toast.success("Đã hạ tin thành công.");
+                      } catch {
+                        toast.error("Hạ tin thất bại, vui lòng thử lại sau.");
                       }
                     }}
                   />

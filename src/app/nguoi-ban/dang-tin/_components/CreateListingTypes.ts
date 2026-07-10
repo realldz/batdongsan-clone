@@ -120,6 +120,19 @@ export interface CreateListingContextType {
   setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
   imageUrls: string[];
   setImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
+
+  // Step 3 - Payment and Config
+  postTier: number;
+  setPostTier: React.Dispatch<React.SetStateAction<number>>;
+  postDuration: number;
+  setPostDuration: React.Dispatch<React.SetStateAction<number>>;
+  startDate: Date | null;
+  setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  couponCode: string;
+  setCouponCode: React.Dispatch<React.SetStateAction<string>>;
+  couponDiscount: number;
+  setCouponDiscount: React.Dispatch<React.SetStateAction<number>>;
+
   isSubmitting: boolean;
   submitMessage: string;
   setSubmitMessage: React.Dispatch<React.SetStateAction<string>>;

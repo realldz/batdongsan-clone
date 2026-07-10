@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { CircleDollarSign, MapPin, Calendar, ChevronDown, Trash2 } from "lucide-react";
+import { CircleDollarSign, MapPin, Calendar, ChevronDown, Trash2, EyeOff } from "lucide-react";
 import { MetricCard } from "../atoms/MetricCard";
 
 export type ListingStatus =
@@ -46,9 +46,10 @@ interface ListingCardProps {
   listing: Listing;
   onBoost: () => void;
   onDelete?: () => void;
+  onHide?: () => void;
 }
 
-export function ListingCard({ listing, onBoost, onDelete }: ListingCardProps) {
+export function ListingCard({ listing, onBoost, onDelete, onHide }: ListingCardProps) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
@@ -131,33 +132,44 @@ export function ListingCard({ listing, onBoost, onDelete }: ListingCardProps) {
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-end gap-2 xl:gap-3 mt-4 lg:mt-0">
               <Link
                 href={`/properties/${listing.id}`}
-                className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
+                className="rounded-full border border-gray-300 px-3 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
               >
-                Xem chi tiết
+                Xem
               </Link>
               <Link
                 href={`/nguoi-ban/dang-tin?edit=${listing.id}`}
-                className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
+                className="rounded-full border border-gray-300 px-3 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
               >
-                Chỉnh sửa
+                Sửa
               </Link>
+              {listing.status !== "Đã hạ" && onHide && (
+                <button
+                  type="button"
+                  onClick={onHide}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
+                >
+                  <EyeOff className="h-4 w-4" /> Hạ
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onDelete}
-                className="inline-flex items-center gap-2 rounded-full border border-red-200 px-4 py-2.5 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+                className="inline-flex items-center gap-1.5 rounded-full border border-red-200 px-3 py-2 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
               >
                 <Trash2 className="h-4 w-4" /> Xóa
               </button>
-              <button
-                type="button"
-                onClick={onBoost}
-                className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-black"
-              >
-                Đẩy tin <ChevronDown className="h-4 w-4" />
-              </button>
+              {listing.status === "Đang hiển thị" && (
+                <button
+                  type="button"
+                  onClick={onBoost}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-black"
+                >
+                  Đẩy tin <ChevronDown className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>
