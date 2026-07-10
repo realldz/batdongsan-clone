@@ -66,6 +66,13 @@ function formatDate(value: string | undefined): string {
 }
 
 function propertyToSellerListing(property: Property): Listing {
+  let packageName: ListingPackage = "Tin thường";
+  if (property.pushLevel === "vip_pushed" || property.pushLevel === "vip") {
+    packageName = "Tin VIP";
+  } else if (property.pushLevel === "pushed") {
+    packageName = "Tin nổi bật";
+  }
+
   return {
     id: property.id,
     code: property.id.slice(0, 8).toUpperCase(),
@@ -76,11 +83,12 @@ function propertyToSellerListing(property: Property): Listing {
     price: formatCurrency(property.price, property.type),
     area: formatArea(property.area),
     postedAt: formatDate(property.createdAt),
-    expiresAt: "--",
+    expiresAt: formatDate(property.expiresAt) || "--",
     status: mapPropertyStatusToListingStatus(property.status),
-    packageName: "Tin thường",
+    packageName,
+    pushLevel: property.pushLevel,
     inquiries: 0,
-    views: 0,
+    views: property.viewCount || 0,
     image: property.images?.[0] ?? "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
   };
 }
@@ -98,7 +106,7 @@ export default function RechargePage() {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [boostListing, setBoostListing] = useState<Listing | null>(null);
   const [selectedPushType, setSelectedPushType] = useState<PushType>("pushed");
-  const [boostSuccessMessage, setBoostSuccessMessage] = useState("");
+  const [boostErrorMessage, setBoostErrorMessage] = useState("");
   const [isBoostSubmitting, setIsBoostSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [pricing, setPricing] = useState<PricingInfo | null>(null);
@@ -224,7 +232,7 @@ export default function RechargePage() {
   };
 
   const openBoostDialog = (listing: Listing) => {
-    setBoostSuccessMessage("");
+    setBoostErrorMessage("");
     setSelectedPushType("pushed");
     setBoostListing(listing);
   };
@@ -235,15 +243,23 @@ export default function RechargePage() {
     }
 
     setIsBoostSubmitting(true);
-    setBoostSuccessMessage("");
+    setBoostErrorMessage("");
 
     try {
-      await boostProperty(boostListing.id, selectedPushType);
+      const updatedProperty = await boostProperty(boostListing.id, selectedPushType);
       toast.success(`Đã đẩy tin ${boostListing.code} thành công.`);
       refreshWallet();
+
+      // Cập nhật lại tin trong danh sách
+      setListings((prev) =>
+        prev.map((l) =>
+          l.id === updatedProperty.id ? propertyToSellerListing(updatedProperty) : l
+        )
+      );
+
       setBoostListing(null); // Đóng modal ngay khi thành công
     } catch {
-      setBoostSuccessMessage("Chưa thể đẩy tin, vui lòng kiểm tra số dư hoặc thử lại sau.");
+      setBoostErrorMessage("Chưa thể đẩy tin, vui lòng kiểm tra số dư hoặc thử lại sau.");
     } finally {
       setIsBoostSubmitting(false);
     }
@@ -273,8 +289,8 @@ export default function RechargePage() {
               type="button"
               onClick={() => setIsFilterDialogOpen(true)}
               className={`flex items-center gap-2.5 px-5 py-2.5 border rounded-full text-[14px] font-bold transition-colors shadow-sm bg-white shrink-0 ${hasActiveFilters
-                  ? "border-primary text-primary hover:bg-red-50"
-                  : "border-gray-300 hover:bg-gray-50 text-gray-800"
+                ? "border-primary text-primary hover:bg-red-50"
+                : "border-gray-300 hover:bg-gray-50 text-gray-800"
                 }`}
             >
               <Filter className="w-[18px] h-[18px] stroke-[2.5]" /> Lọc
@@ -291,8 +307,8 @@ export default function RechargePage() {
                 setCurrentPage(1);
               }}
               className={`flex items-center gap-2.5 px-5 py-2.5 border rounded-full text-[14px] font-bold transition-colors shadow-sm bg-white ${draftOnly
-                  ? "border-primary text-primary hover:bg-red-50"
-                  : "border-gray-300 hover:bg-gray-50 text-gray-800"
+                ? "border-primary text-primary hover:bg-red-50"
+                : "border-gray-300 hover:bg-gray-50 text-gray-800"
                 }`}
             >
               <FileText className="w-[18px] h-[18px] stroke-[2.5]" /> Tin nháp
@@ -314,8 +330,8 @@ export default function RechargePage() {
                     setCurrentPage(1);
                   }}
                   className={`whitespace-nowrap px-5 py-2 rounded-full font-bold border ${isActive
-                      ? "bg-gray-900 text-white border-gray-900 shadow-sm"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    ? "bg-gray-900 text-white border-gray-900 shadow-sm"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                     } transition-colors`}
                 >
                   {tab.name} ({tab.count})
@@ -393,10 +409,10 @@ export default function RechargePage() {
                 <div className="p-10 text-center text-gray-500">Đang tải...</div>
               ) : paginatedListings.length > 0 ? (
                 paginatedListings.map((listing) => (
-                  <ListingCard 
-                    key={listing.id} 
-                    listing={listing} 
-                    onBoost={() => openBoostDialog(listing)} 
+                  <ListingCard
+                    key={listing.id}
+                    listing={listing}
+                    onBoost={() => openBoostDialog(listing)}
                     onDelete={async () => {
                       if (!window.confirm("Bạn có chắc chắn muốn xóa tin này không?")) return;
                       try {
@@ -415,6 +431,24 @@ export default function RechargePage() {
                         toast.success("Đã hạ tin thành công.");
                       } catch {
                         toast.error("Hạ tin thất bại, vui lòng thử lại sau.");
+                      }
+                    }}
+                    onShow={async () => {
+                      if (!window.confirm("Bạn có muốn hiển thị lại tin này không?")) return;
+                      try {
+                        const response = await updatePropertyStatus(listing.id, "active");
+                        const updatedProperty = (response as any).data ?? response;
+                        const newStatus = mapPropertyStatusToListingStatus(updatedProperty.status);
+                        
+                        setListings((prev) => prev.map((l) => l.id === listing.id ? { ...l, status: newStatus } : l));
+                        
+                        if (newStatus === "Chờ duyệt") {
+                          toast.success("Đã gửi yêu cầu mở lại, tin đang chờ duyệt.");
+                        } else {
+                          toast.success("Đã hiển thị lại tin thành công.");
+                        }
+                      } catch {
+                        toast.error("Hiện tin thất bại, vui lòng thử lại sau.");
                       }
                     }}
                   />
@@ -458,8 +492,8 @@ export default function RechargePage() {
           onClose={() => setBoostListing(null)}
           selectedPushType={selectedPushType}
           setSelectedPushType={setSelectedPushType}
-          boostSuccessMessage={boostSuccessMessage}
-          setBoostSuccessMessage={setBoostSuccessMessage}
+          boostErrorMessage={boostErrorMessage}
+          setBoostErrorMessage={setBoostErrorMessage}
           isBoostSubmitting={isBoostSubmitting}
           onConfirm={confirmBoostListing}
           pricing={pricing}

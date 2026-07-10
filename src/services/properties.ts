@@ -56,6 +56,9 @@ export interface Property {
   tier?: number;
   boostedAt?: string | Date;
   expiresAt?: string | Date;
+  pushLevel?: "normal" | "pushed" | "vip" | "vip_pushed";
+  pushExpiredAt?: string | Date;
+  viewCount?: number;
 }
 
 export interface PropertyOwner {

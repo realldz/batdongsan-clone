@@ -31,6 +31,7 @@ export type Listing = {
   views: number;
   image: string;
   badge?: string;
+  pushLevel?: string;
 };
 
 export const statusTone: Record<ListingStatus, string> = {
@@ -47,9 +48,10 @@ interface ListingCardProps {
   onBoost: () => void;
   onDelete?: () => void;
   onHide?: () => void;
+  onShow?: () => void;
 }
 
-export function ListingCard({ listing, onBoost, onDelete, onHide }: ListingCardProps) {
+export function ListingCard({ listing, onBoost, onDelete, onHide, onShow }: ListingCardProps) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
@@ -76,13 +78,20 @@ export function ListingCard({ listing, onBoost, onDelete, onHide }: ListingCardP
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`rounded-full border px-3 py-1 text-xs font-bold ${
-                    statusTone[listing.status]
-                  }`}
+                  className={`rounded-full border px-3 py-1 text-xs font-bold ${statusTone[listing.status]
+                    }`}
                 >
                   {listing.status}
                 </span>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-bold shadow-sm flex items-center gap-1 ${listing.packageName === "Tin VIP"
+                      ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-amber-950 font-extrabold border border-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.5)]"
+                      : listing.packageName === "Tin nổi bật"
+                        ? "bg-rose-100 text-rose-700 border border-rose-200"
+                        : "bg-gray-100 text-gray-700 border border-transparent"
+                    }`}
+                >
+                  {listing.packageName === "Tin VIP" && <span className="animate-pulse">✨</span>}
                   {listing.packageName}
                 </span>
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-400">
@@ -154,6 +163,15 @@ export function ListingCard({ listing, onBoost, onDelete, onHide }: ListingCardP
                   <EyeOff className="h-4 w-4" /> Hạ
                 </button>
               )}
+              {listing.status === "Đã hạ" && onShow && (
+                <button
+                  type="button"
+                  onClick={onShow}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 transition-colors hover:bg-emerald-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Hiện
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onDelete}
@@ -167,7 +185,8 @@ export function ListingCard({ listing, onBoost, onDelete, onHide }: ListingCardP
                   onClick={onBoost}
                   className="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-black"
                 >
-                  Đẩy tin <ChevronDown className="h-4 w-4" />
+                  {listing.pushLevel === "pushed" ? "Gia hạn / Nâng cấp" : listing.pushLevel === "vip_pushed" || listing.pushLevel === "vip" ? "Gia hạn / Đổi gói" : "Đẩy tin"}
+                  <ChevronDown className="h-4 w-4" />
                 </button>
               )}
             </div>

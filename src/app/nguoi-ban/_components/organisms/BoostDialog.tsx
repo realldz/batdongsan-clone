@@ -9,8 +9,8 @@ interface BoostDialogProps {
   onClose: () => void;
   selectedPushType: PushType;
   setSelectedPushType: (pushType: PushType) => void;
-  boostSuccessMessage: string;
-  setBoostSuccessMessage: (msg: string) => void;
+  boostErrorMessage: string;
+  setBoostErrorMessage: (msg: string) => void;
   isBoostSubmitting: boolean;
   onConfirm: () => void;
   pricing?: PricingInfo | null;
@@ -21,8 +21,8 @@ export function BoostDialog({
   onClose,
   selectedPushType,
   setSelectedPushType,
-  boostSuccessMessage,
-  setBoostSuccessMessage,
+  boostErrorMessage,
+  setBoostErrorMessage,
   isBoostSubmitting,
   onConfirm,
   pricing,
@@ -32,18 +32,22 @@ export function BoostDialog({
     return `${value.toLocaleString("vi-VN")} đ`;
   };
 
+  const upgradePrice = pricing?.boostVipPrice && pricing?.boostBasePrice
+    ? pricing.boostVipPrice - pricing.boostBasePrice
+    : undefined;
+
   const boostOptions = [
     { 
       id: "pushed" as PushType, 
-      label: "Đẩy tin thường", 
+      label: listing.pushLevel === "pushed" ? "Gia hạn Đẩy tin thường" : "Đẩy tin thường", 
       helper: "Tin được đẩy lên đầu trang, tự động ghim trong 30 ngày.", 
       price: formatPrice(pricing?.boostBasePrice) 
     },
     { 
       id: "vip_pushed" as PushType, 
-      label: "Đẩy tin VIP", 
+      label: listing.pushLevel === "pushed" ? "Nâng cấp lên Đẩy tin VIP" : listing.pushLevel === "vip_pushed" ? "Gia hạn Đẩy tin VIP" : "Đẩy tin VIP", 
       helper: "Nổi bật hơn tin thường, ưu tiên hiển thị đầu, ghim trong 30 ngày.", 
-      price: formatPrice(pricing?.boostVipPrice) 
+      price: listing.pushLevel === "pushed" ? formatPrice(upgradePrice) : formatPrice(pricing?.boostVipPrice) 
     },
   ];
 
@@ -105,7 +109,7 @@ export function BoostDialog({
                     type="button"
                     onClick={() => {
                       setSelectedPushType(option.id);
-                      setBoostSuccessMessage("");
+                      setBoostErrorMessage("");
                     }}
                     className={`rounded-2xl border p-4 text-left transition-colors ${
                       isActive
@@ -131,12 +135,14 @@ export function BoostDialog({
           </div>
 
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-            Khi xác nhận, hệ thống gọi API để trừ lượt đẩy tin (nếu là VIP) hoặc trừ tiền ví và đẩy tin của bạn lên đầu trang trong 30 ngày.
+            {listing.pushLevel === "pushed" && selectedPushType === "vip_pushed" 
+              ? "Khi xác nhận, hệ thống sẽ tính phí chênh lệch và nâng cấp tin của bạn lên VIP, ghim trên đầu trong 30 ngày mới."
+              : "Khi xác nhận, hệ thống gọi API để trừ lượt đẩy tin (nếu là VIP) hoặc trừ tiền ví và đẩy tin của bạn lên đầu trang trong 30 ngày."}
           </div>
 
-          {boostSuccessMessage ? (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-700">
-              {boostSuccessMessage}
+          {boostErrorMessage ? (
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold text-rose-700">
+              {boostErrorMessage}
             </div>
           ) : null}
         </div>
@@ -155,7 +161,7 @@ export function BoostDialog({
             disabled={isBoostSubmitting}
             className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isBoostSubmitting ? "Đang xử lý..." : "Xác nhận đẩy tin"}
+            {isBoostSubmitting ? "Đang xử lý..." : listing.pushLevel === "pushed" && selectedPushType === "vip_pushed" ? "Xác nhận nâng cấp" : "Xác nhận đẩy tin"}
           </button>
         </div>
       </div>
