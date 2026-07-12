@@ -9,6 +9,8 @@ interface MembershipCardProps {
   features: string[];
   vouchers: string[];
   isPopular?: boolean;
+  isCurrent?: boolean;
+  buyLabel?: string;
   onBuy: () => void;
   icon?: React.ReactNode;
 }
@@ -22,6 +24,8 @@ export function MembershipCard({
   features,
   vouchers,
   isPopular,
+  isCurrent,
+  buyLabel = "Mua gói 1 tháng",
   onBuy,
   icon,
 }: MembershipCardProps) {
@@ -35,11 +39,15 @@ export function MembershipCard({
 
   return (
     <div className={`relative flex flex-col bg-white rounded-xl border ${isPopular ? "border-[#ff9800] shadow-md z-10" : "border-gray-200 shadow-sm"}`}>
-      {isPopular && (
+      {isCurrent ? (
+        <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#00b2a9] text-white text-[11px] font-extrabold px-3 py-1 rounded-sm shadow-sm">
+          Gói hiện tại
+        </div>
+      ) : isPopular ? (
         <div className="absolute top-0 left-4 -translate-y-1/2 bg-[#ffb700] text-gray-900 text-[11px] font-extrabold px-3 py-1 rounded-sm shadow-sm">
           Bán chạy nhất
         </div>
-      )}
+      ) : null}
       
       <div className="p-6 pb-5 flex-1">
         <div className="flex justify-between items-start mb-2">
@@ -66,18 +74,17 @@ export function MembershipCard({
           )}
         </div>
         
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <button 
+        <div className="mb-6">
+          <button
             onClick={onBuy}
-            className="col-span-1 py-2 rounded-lg border border-[#e03c31] bg-[#e03c31] text-white text-[13px] font-bold hover:bg-[#c9362c] transition-colors text-center"
+            disabled={isCurrent}
+            className={`w-full py-2.5 rounded-lg text-[13px] font-bold transition-colors text-center ${
+              isCurrent
+                ? "border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "border border-[#e03c31] bg-[#e03c31] text-white hover:bg-[#c9362c]"
+            }`}
           >
-            Mua gói 1 tháng
-          </button>
-          <button 
-            onClick={onBuy}
-            className="col-span-1 py-2 rounded-lg border border-gray-300 bg-white text-[#e03c31] text-[13px] font-bold hover:bg-red-50 transition-colors text-center"
-          >
-            Mua ngay
+            {isCurrent ? "Đang sử dụng" : buyLabel}
           </button>
         </div>
         
