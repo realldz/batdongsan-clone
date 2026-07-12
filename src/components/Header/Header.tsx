@@ -3,10 +3,10 @@ import React from "react";
 
 import { HeaderAuthActions } from "./HeaderAuthActions";
 import { NotificationBell } from "./NotificationBell";
-import { getNavLinks } from "@/config/navigation";
+import { getNavigation } from "@/services/navigation";
 
-export const Header = () => {
-  const navLinks = getNavLinks();
+export const Header = async () => {
+  const navLinks = await getNavigation();
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-[1240px] mx-auto px-4 lg:px-0 h-16 flex items-center justify-between">

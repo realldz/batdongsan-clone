@@ -17,6 +17,7 @@ import {
   Banknote,
   BarChart3,
   Ticket,
+  Menu,
 } from "lucide-react";
 
 const navItems = [
@@ -32,6 +33,7 @@ const navItems = [
   { name: "Khuyến mãi", href: "/admin/khuyen-mai", icon: Ticket },
   { name: "Gói cước", href: "/admin/goi-cuoc", icon: Banknote },
   { name: "SEO", href: "/admin/seo", icon: Search },
+  { name: "Điều hướng", href: "/admin/dieu-huong", icon: Menu },
   { name: "Cấu hình", href: "/admin/cau-hinh", icon: Settings },
 ] as const;
 
