@@ -146,6 +146,14 @@ export async function createProperty(data: CreatePropertyRequest) {
   return api.post<Property>("/properties", data);
 }
 
+export async function saveDraft(data: Partial<CreatePropertyRequest>) {
+  return api.post<Property>("/properties/draft", data);
+}
+
+export async function updateDraft(id: string, data: Partial<CreatePropertyRequest>) {
+  return api.patch<Property>(`/properties/${id}/draft`, data);
+}
+
 export async function updateProperty(id: string, data: UpdatePropertyRequest) {
   return api.patch<Property>(`/properties/${id}`, data);
 }

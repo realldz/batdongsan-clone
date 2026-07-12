@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Eye, Cloud } from "lucide-react";
+import { Eye, Cloud, Loader2 } from "lucide-react";
 import { useCreateListing } from "./CreateListingContext";
+import { PropertyPreviewModal } from "@/app/admin/_components/organisms/PropertyPreviewModal";
 
 export function CreateListingHeader() {
-  const { isEditMode, isAddressConfirmed, currentStep } = useCreateListing();
+  const {
+    isEditMode,
+    currentStep,
+    lastSavedAt,
+    isSavingDraft,
+    isFormComplete,
+    isPreparingPreview,
+    flushDraftForPreview,
+  } = useCreateListing();
+
+  const [previewId, setPreviewId] = useState<string | null>(null);
+
+  const handlePreview = async () => {
+    const id = await flushDraftForPreview();
+    if (id) setPreviewId(id);
+  };
+
+  const previewDisabled = !isFormComplete || isPreparingPreview;
 
   return (
     <header className="bg-white sticky top-0 z-20">
@@ -14,9 +32,9 @@ export function CreateListingHeader() {
             <h1 className="text-xl font-bold text-[#2c2c2c]">
               {isEditMode ? "Chỉnh sửa tin đăng" : "Tạo tin đăng"}
             </h1>
-            {isAddressConfirmed && (
+            {(isSavingDraft || lastSavedAt) && (
               <div className="flex items-center gap-1.5 text-gray-500 text-[13px] ml-2">
-                <Cloud size={16} /> Đã lưu nháp
+                <Cloud size={16} /> {isSavingDraft ? "Đang lưu nháp..." : "Đã lưu nháp"}
               </div>
             )}
           </div>
@@ -24,10 +42,21 @@ export function CreateListingHeader() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="flex items-center gap-2 px-4 py-1.5 border border-gray-200 rounded-full text-gray-400 cursor-not-allowed bg-white"
+            onClick={handlePreview}
+            disabled={previewDisabled}
+            title={
+              isFormComplete
+                ? "Xem trước tin đăng"
+                : "Điền đủ thông tin bước 1 và 2 (tối thiểu 3 ảnh) để xem trước"
+            }
+            className={`flex items-center gap-2 px-4 py-1.5 border rounded-full font-medium text-[13px] bg-white transition-colors ${
+              previewDisabled
+                ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                : "border-gray-300 text-[#2c2c2c] font-bold hover:bg-gray-50"
+            }`}
           >
-            <Eye size={16} />
-            <span className="font-medium text-[13px]">Xem trước</span>
+            {isPreparingPreview ? <Loader2 size={16} className="animate-spin" /> : <Eye size={16} />}
+            <span>{isPreparingPreview ? "Đang chuẩn bị..." : "Xem trước"}</span>
           </button>
           <Link
             href="/nguoi-ban/tin-dang"
@@ -37,6 +66,9 @@ export function CreateListingHeader() {
           </Link>
         </div>
       </div>
+
+      <PropertyPreviewModal propertyId={previewId} onClose={() => setPreviewId(null)} />
+
       {/* Progress bar area */}
       <div className="w-full flex bg-white">
         <div

@@ -140,6 +140,16 @@ export interface CreateListingContextType {
   displayAddress: string;
   handleSubmitListing: () => Promise<void>;
 
+  // Draft autosave & preview
+  draftId: string | null;
+  isSavingDraft: boolean;
+  lastSavedAt: Date | null;
+  isStep1Valid: boolean;
+  isStep2Valid: boolean;
+  isFormComplete: boolean;
+  isPreparingPreview: boolean;
+  flushDraftForPreview: () => Promise<string | null>;
+
   // Validation
   errors: Record<string, string>;
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
