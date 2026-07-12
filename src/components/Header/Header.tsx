@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 import { HeaderAuthActions } from "./HeaderAuthActions";
+import { NotificationBell } from "./NotificationBell";
 import { getNavLinks } from "@/config/navigation";
 
 export const Header = () => {
@@ -57,6 +58,7 @@ export const Header = () => {
 
         {/* User Actions */}
         <div className="flex items-center gap-4">
+          <NotificationBell />
           <HeaderAuthActions />
           {/* <button className="px-4 py-2 border border-primary text-primary font-medium text-sm rounded hover:bg-red-50 transition-colors hidden sm:block">
             Đổi giao diện

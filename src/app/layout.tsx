@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { Toaster } from "sonner";
 import { AuthProvider } from "@/lib/auth-store";
 import { FavoritesProvider } from "@/lib/favorites-store";
+import { NotificationsProvider } from "@/lib/notifications-store";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,7 +28,12 @@ export default function RootLayout({
         className={`${roboto.variable} antialiased selection:bg-primary selection:text-white`}
       >
         <AuthProvider>
-          <FavoritesProvider>{children}</FavoritesProvider>
+          <FavoritesProvider>
+            <NotificationsProvider>
+              {children}
+              <Toaster position="top-center" richColors />
+            </NotificationsProvider>
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>

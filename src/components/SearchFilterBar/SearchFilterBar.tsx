@@ -5,6 +5,7 @@ import { useSearchParams, usePathname } from "next/navigation";
 import { CATEGORIES_BY_SLUG } from "@/config/categories";
 import { Icon, Button, Select } from "@/components/atoms";
 import { Dropdown, Modal } from "@/components/molecules";
+import { SaveSearchButton } from "./SaveSearchButton";
 
 const propertyTypeOptions: { label: string; value: string }[] = [
   { label: "Bán", value: "sale" },
@@ -396,6 +397,8 @@ export const SearchFilterBar = () => {
                 </button>
               ))}
             </Dropdown>
+
+            <SaveSearchButton />
           </div>
         </div>
       </div>

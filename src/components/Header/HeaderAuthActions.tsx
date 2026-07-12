@@ -187,6 +187,16 @@ export function HeaderAuthActions() {
 
               <li>
                 <Link
+                  href="/tim-kiem-da-luu"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <Icon name="Search" size={16} className="text-gray-400" />
+                  Tìm kiếm đã lưu
+                </Link>
+              </li>
+
+              <li>
+                <Link
                   href="/nguoi-ban/tai-khoan"
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
