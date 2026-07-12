@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Banknote, CircleDollarSign, TrendingUp } from "lucide-react";
+import { AlertTriangle, Banknote, CircleDollarSign, ReceiptText } from "lucide-react";
+import { toast } from "sonner";
 import { getAdminStatistics, getAdminUsers, getPendingProperties, type AdminStatistics, type ApiUser } from "@/services/admin";
+import { getRevenue } from "@/services/analytics";
 import type { Property } from "@/services/properties";
 import { propertyToAdminListing, unwrapArray, apiUserToAdminUser } from "@/lib/api-adapters";
 
-import { adminActivities } from "./_data/mock";
 import { type AdminListing, type AdminUser } from "./_data/types";
 
 import { AdminHeader } from "./_components/organisms/AdminHeader";
@@ -19,28 +20,41 @@ export default function AdminDashboardPage() {
   const [dashboardListings, setDashboardListings] = useState<AdminListing[]>([]);
   const [dashboardUsers, setDashboardUsers] = useState<AdminUser[]>([]);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
+  const [monthRevenue, setMonthRevenue] = useState<number | null>(null);
 
   useEffect(() => {
     let ignore = false;
 
     async function loadDashboard() {
-      try {
-        const [statsResponse, pendingResponse, usersResponse] = await Promise.all([
-          getAdminStatistics(),
-          getPendingProperties({ page: 1, perPage: 20 }),
-          getAdminUsers({ page: 1, perPage: 20 }),
-        ]);
+      const [statsResult, pendingResult, usersResult, revenueResult] = await Promise.allSettled([
+        getAdminStatistics(),
+        getPendingProperties({ page: 1, perPage: 20 }),
+        getAdminUsers({ page: 1, perPage: 20 }),
+        getRevenue(1),
+      ]);
 
-        if (ignore) return;
+      if (ignore) return;
 
-        const pending = unwrapArray<Property>(pendingResponse).map(propertyToAdminListing);
-        const apiUsers = unwrapArray<ApiUser>(usersResponse).map(apiUserToAdminUser);
+      if (statsResult.status === "fulfilled") {
+        setStatistics(statsResult.value);
+      } else {
+        toast.error("Lỗi khi tải thống kê tổng quan");
+      }
 
-        setStatistics(statsResponse);
+      if (pendingResult.status === "fulfilled") {
+        const pending = unwrapArray<Property>(pendingResult.value).map(propertyToAdminListing);
         if (pending.length > 0) setDashboardListings(pending);
+      }
+
+      if (usersResult.status === "fulfilled") {
+        const apiUsers = unwrapArray<ApiUser>(usersResult.value).map(apiUserToAdminUser);
         if (apiUsers.length > 0) setDashboardUsers(apiUsers);
-      } catch {
-        // failed to fetch data
+      }
+
+      if (revenueResult.status === "fulfilled") {
+        setMonthRevenue(revenueResult.value[0]?.revenue ?? null);
+      } else {
+        toast.error("Lỗi khi tải dữ liệu doanh thu tháng");
       }
     }
 
@@ -54,11 +68,9 @@ export default function AdminDashboardPage() {
   const pendingListings = useMemo(() => dashboardListings.filter((listing) => listing.status === "Chờ duyệt"), [dashboardListings]);
   const activeListings = useMemo(() => dashboardListings.filter((listing) => listing.status === "Đang hiển thị" || listing.status === "Đã duyệt"), [dashboardListings]);
   const lockedUsers = useMemo(() => dashboardUsers.filter((user) => user.status === "Tạm khóa"), [dashboardUsers]);
-  const totalViews = statistics?.totalViews ?? dashboardListings.reduce((sum, listing) => sum + listing.views, 0);
-  const totalUsers = statistics?.totalUsers ?? statistics?.users ?? dashboardUsers.length;
+  const totalUsers = statistics?.totalUsers ?? dashboardUsers.length;
   const activeListingCount = statistics?.activeProperties ?? activeListings.length;
   const pendingListingCount = statistics?.pendingProperties ?? pendingListings.length;
-  const totalRevenue = statistics?.totalRevenue ?? statistics?.revenue;
 
   const header = (
     <AdminHeader
@@ -74,7 +86,7 @@ export default function AdminDashboardPage() {
         pendingListingCount={pendingListingCount}
         totalUsers={totalUsers}
         lockedUsersCount={lockedUsers.length}
-        totalViews={totalViews}
+        soldProperties={statistics?.soldProperties ?? 0}
       />
 
       <section className="grid grid-cols-1 xl:grid-cols-[1fr_0.8fr] gap-6">
@@ -83,37 +95,35 @@ export default function AdminDashboardPage() {
             <div>
               <h2 className="text-lg font-extrabold text-gray-900">Tổng quan doanh thu</h2>
               <p className="text-xs font-medium text-gray-500 mt-1">
-                {totalRevenue != null ? "Dữ liệu từ API thống kê" : "Chưa có dữ liệu doanh thu từ API"}
+                {monthRevenue != null ? "Dữ liệu từ API thống kê" : "Chưa có dữ liệu doanh thu từ API"}
               </p>
             </div>
-            <StatusBadge tone={totalRevenue != null ? "green" : "gray"}>
-              {totalRevenue != null ? "Đã kết nối" : "Đang cập nhật"}
+            <StatusBadge tone={monthRevenue != null ? "green" : "gray"}>
+              {monthRevenue != null ? "Đã kết nối" : "Đang cập nhật"}
             </StatusBadge>
           </div>
-          {totalRevenue != null ? (
+          {monthRevenue != null ? (
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl bg-gradient-to-br from-red-50 to-red-100/50 p-5 border border-red-100">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e03c31] text-white">
                     <CircleDollarSign className="h-5 w-5" />
                   </div>
-                  <span className="text-sm font-bold text-gray-600">Tổng doanh thu</span>
+                  <span className="text-sm font-bold text-gray-600">Doanh thu tháng này</span>
                 </div>
                 <div className="text-2xl font-extrabold text-[#e03c31]">
-                  {typeof totalRevenue === "number"
-                    ? `${new Intl.NumberFormat("vi-VN").format(totalRevenue)} đ`
-                    : String(totalRevenue)}
+                  {`${new Intl.NumberFormat("vi-VN").format(monthRevenue)} đ`}
                 </div>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-5 border border-emerald-100">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
-                    <TrendingUp className="h-5 w-5" />
+                    <ReceiptText className="h-5 w-5" />
                   </div>
-                  <span className="text-sm font-bold text-gray-600">Người dùng hoạt động</span>
+                  <span className="text-sm font-bold text-gray-600">Tổng giao dịch</span>
                 </div>
                 <div className="text-2xl font-extrabold text-emerald-700">
-                  {statistics?.activeUsers ?? "--"}
+                  {statistics?.totalTransactions ?? "--"}
                 </div>
               </div>
             </div>
@@ -125,21 +135,27 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-          <h2 className="text-lg font-extrabold text-gray-900 mb-1">Hoạt động gần đây</h2>
-          <p className="text-xs font-medium text-gray-500 mb-4">Các thao tác vận hành mới nhất</p>
+          <h2 className="text-lg font-extrabold text-gray-900 mb-1">Tin chờ xử lý gần đây</h2>
+          <p className="text-xs font-medium text-gray-500 mb-4">Các tin đăng mới nhất đang chờ duyệt</p>
           <div className="space-y-3">
-            {adminActivities.map((activity) => (
-              <div key={activity.id} className="flex gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3">
-                <div className="w-9 h-9 rounded-full bg-red-50 text-[#e03c31] flex items-center justify-center shrink-0">
-                  <Banknote className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-extrabold text-gray-900">{activity.action}</div>
-                  <div className="text-xs font-medium text-gray-500 truncate">{activity.actor} · {activity.target}</div>
-                  <div className="text-[11px] font-bold text-gray-400 mt-1">{activity.time}</div>
-                </div>
+            {pendingListings.length === 0 ? (
+              <div className="h-[80px] flex items-center justify-center text-sm font-medium text-gray-400">
+                Không có tin nào đang chờ duyệt.
               </div>
-            ))}
+            ) : (
+              pendingListings.slice(0, 5).map((listing) => (
+                <div key={listing.id} className="flex gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3">
+                  <div className="w-9 h-9 rounded-full bg-red-50 text-[#e03c31] flex items-center justify-center shrink-0">
+                    <Banknote className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-extrabold text-gray-900 truncate">{listing.title}</div>
+                    <div className="text-xs font-medium text-gray-500 truncate">{listing.owner}</div>
+                    <div className="text-[11px] font-bold text-gray-400 mt-1">{listing.submittedAt}</div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>

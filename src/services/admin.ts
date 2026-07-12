@@ -37,17 +37,12 @@ export interface AdminCreateUserRequest {
 }
 
 export interface AdminStatistics {
-  totalUsers?: number;
-  users?: number;
-  activeUsers?: number;
-  lockedUsers?: number;
-  totalProperties?: number;
-  activeProperties?: number;
-  pendingProperties?: number;
-  totalViews?: number;
-  totalRevenue?: number | string;
-  revenue?: number | string;
-  [key: string]: unknown;
+  totalUsers: number;
+  totalProperties: number;
+  pendingProperties: number;
+  activeProperties: number;
+  soldProperties: number;
+  totalTransactions: number;
 }
 
 function buildQuery(params: object) {

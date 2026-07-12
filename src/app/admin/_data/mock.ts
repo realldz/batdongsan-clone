@@ -5,7 +5,6 @@ import {
   AdminEnterprise,
   AdminArticle,
   AdminSetting,
-  AdminActivity,
 } from "./types";
 
 
@@ -178,19 +177,3 @@ export const adminSettings: AdminSetting[] = [
   { id: "setting-4", group: "Nội dung", name: "Tự động ẩn bài hết hạn", value: "Bật", updatedAt: "02/05/2026", status: "Đang áp dụng" },
 ];
 
-export const adminActivities: AdminActivity[] = [
-  { id: "activity-1", action: "Duyệt tin", actor: "Admin Linh", target: "BDS-39624527", time: "10 phút trước" },
-  { id: "activity-2", action: "Khóa tài khoản", actor: "Admin Long", target: "Lê Hải Nam", time: "38 phút trước" },
-  { id: "activity-3", action: "Cập nhật cấu hình", actor: "Admin Linh", target: "Giá tin VIP", time: "1 giờ trước" },
-  { id: "activity-4", action: "Từ chối tin", actor: "Admin Minh", target: "BDS-39624615", time: "2 giờ trước" },
-];
-
-export const adminRevenue = [
-  { label: "T2", value: 28 },
-  { label: "T3", value: 36 },
-  { label: "T4", value: 44 },
-  { label: "T5", value: 58 },
-  { label: "T6", value: 52 },
-  { label: "T7", value: 69 },
-  { label: "T8", value: 76 },
-] as const;

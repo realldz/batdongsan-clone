@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, FileCheck2, Users, Eye } from "lucide-react";
+import { Building2, FileCheck2, Users, BadgeCheck } from "lucide-react";
 import { StatsGrid } from "../molecules/StatsGrid";
 import { StatCard } from "../atoms/StatCard";
 
@@ -9,7 +9,7 @@ export interface DashboardStatsGridProps {
   pendingListingCount: number;
   totalUsers: number;
   lockedUsersCount: number;
-  totalViews: number;
+  soldProperties: number;
 }
 
 export function DashboardStatsGrid({
@@ -17,7 +17,7 @@ export function DashboardStatsGrid({
   pendingListingCount,
   totalUsers,
   lockedUsersCount,
-  totalViews,
+  soldProperties,
 }: DashboardStatsGridProps) {
   return (
     <StatsGrid cols={4}>
@@ -43,11 +43,11 @@ export function DashboardStatsGrid({
         icon={<Users className="w-5 h-5" />}
       />
       <StatCard
-        title="Lượt xem"
-        value={totalViews.toLocaleString("vi-VN")}
-        helper="Tổng lượt xem các tin"
+        title="Giao dịch hoàn tất"
+        value={soldProperties.toLocaleString("vi-VN")}
+        helper="Tổng giao dịch đã bán"
         tone="red"
-        icon={<Eye className="w-5 h-5" />}
+        icon={<BadgeCheck className="w-5 h-5" />}
       />
     </StatsGrid>
   );

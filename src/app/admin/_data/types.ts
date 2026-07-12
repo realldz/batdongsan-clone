@@ -98,11 +98,3 @@ export type AdminSetting = {
   updatedAt: string;
   status: "Đang áp dụng" | "Cần kiểm tra";
 };
-
-export type AdminActivity = {
-  id: string;
-  action: string;
-  actor: string;
-  target: string;
-  time: string;
-};

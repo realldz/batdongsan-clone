@@ -9,16 +9,19 @@ import {
   LayoutDashboard,
   Newspaper,
   PhoneCall,
+  Search,
   Settings,
   ShieldCheck,
   UserRoundCheck,
   Users,
   Banknote,
+  BarChart3,
   Ticket,
 } from "lucide-react";
 
 const navItems = [
   { name: "Tổng quan", href: "/admin", icon: LayoutDashboard },
+  { name: "Thống kê", href: "/admin/analytics", icon: BarChart3 },
   { name: "Tin đăng", href: "/admin/tin-dang", icon: Building2 },
   { name: "Duyệt tin", href: "/admin/duyet-tin", icon: ShieldCheck },
   { name: "Người dùng", href: "/admin/nguoi-dung", icon: Users },
@@ -28,6 +31,7 @@ const navItems = [
   { name: "Liên hệ", href: "/admin/leads", icon: PhoneCall },
   { name: "Khuyến mãi", href: "/admin/khuyen-mai", icon: Ticket },
   { name: "Gói cước", href: "/admin/goi-cuoc", icon: Banknote },
+  { name: "SEO", href: "/admin/seo", icon: Search },
   { name: "Cấu hình", href: "/admin/cau-hinh", icon: Settings },
 ] as const;
 
