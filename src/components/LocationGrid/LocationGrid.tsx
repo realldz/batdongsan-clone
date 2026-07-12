@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const locations = [
-  { id: 1, name: "TP. Hồ Chí Minh", count: "482.352", image: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&q=80&w=2070" },
-  { id: 2, name: "Hà Nội", count: "365.120", image: "https://images.unsplash.com/photo-1599708153386-62bf2adcf934?auto=format&fit=crop&q=80&w=2070" },
-  { id: 3, name: "Đà Nẵng", count: "128.940", image: "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&q=80&w=2128" },
-  { id: 4, name: "Bình Dương", count: "98.430", image: "https://images.unsplash.com/photo-1624923686627-514bfc3f886f?auto=format&fit=crop&q=80&w=2000" },
-  { id: 5, name: "Đồng Nai", count: "85.200", image: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?auto=format&fit=crop&q=80&w=2036" },
+  { id: 1, name: "TP. Hồ Chí Minh", province: "TP.HCM", count: "482.352", image: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&q=80&w=2070" },
+  { id: 2, name: "Hà Nội", province: "Hà Nội", count: "365.120", image: "https://images.unsplash.com/photo-1509030450996-dd1a26dda07a?auto=format&fit=crop&q=80&w=2070" },
+  { id: 3, name: "Đà Nẵng", province: "Đà Nẵng", count: "128.940", image: "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&q=80&w=2128" },
+  { id: 4, name: "Bình Dương", province: "Bình Dương", count: "98.430", image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=2070" },
+  { id: 5, name: "Đồng Nai", province: "Đồng Nai", count: "85.200", image: "https://images.unsplash.com/photo-1580835239846-5bb9ce03c8c3?auto=format&fit=crop&q=80&w=2036" },
 ];
 
 export const LocationGrid = () => {
@@ -17,9 +17,9 @@ export const LocationGrid = () => {
       
       <div className="flex flex-nowrap md:flex-wrap gap-4 overflow-x-auto pb-4 hide-scrollbar">
         {locations.map((loc, index) => (
-          <Link 
-            href="#" 
-            key={loc.id} 
+          <Link
+            href={`/nha-dat?province=${encodeURIComponent(loc.province)}&page=1`}
+            key={loc.id}
             className={`group relative rounded-xl overflow-hidden flex-shrink-0 md:flex-shrink ${
               index < 2 ? 'w-[280px] md:w-[calc(50%-8px)] h-[240px]' : 'w-[220px] md:w-[calc(33.333%-11px)] h-[200px]'
             }`}
