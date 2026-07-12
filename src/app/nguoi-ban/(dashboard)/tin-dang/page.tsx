@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { SellerHeader } from "../../_components/SellerHeader";
 import { SellerPagination } from "../../_components/SellerPagination";
 import { SummaryCard, EmptyState } from "../../_components/atoms";
-import { ListingCard, type Listing, type ListingStatus } from "../../_components/molecules";
+import { ListingCard, type Listing, type ListingStatus, type ListingPackage } from "../../_components/molecules";
 import { FilterDialog, BoostDialog, type PushType } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
@@ -56,11 +56,11 @@ function mapListingStatusToPropertyStatus(status: ListingStatus): PropertyStatus
   return undefined;
 }
 
-function formatDate(value: string | undefined): string {
+function formatDate(value: string | Date | undefined): string {
   if (!value) return "--";
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return typeof value === "string" ? value : "--";
 
   return new Intl.DateTimeFormat("vi-VN").format(date);
 }

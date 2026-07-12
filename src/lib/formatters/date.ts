@@ -1,8 +1,8 @@
-export function formatDate(value: string | undefined): string {
+export function formatDate(value: string | Date | undefined): string {
   if (!value) return "--";
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return typeof value === "string" ? value : "--";
 
   return new Intl.DateTimeFormat("vi-VN").format(date);
 }
