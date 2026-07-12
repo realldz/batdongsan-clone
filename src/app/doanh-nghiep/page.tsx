@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { EnterpriseSearchBox } from "@/components/Directory/EnterpriseSearchBox";
 import { EnterpriseCard, EnterpriseData } from "@/components/Directory/EnterpriseCard";
 import React from "react";
@@ -5,6 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Pagination } from "@/components/molecules";
 import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
+import { getSeoConfig } from "@/services/seo";
+import { seoConfigToMetadata } from "@/lib/seo-metadata";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cfg = await getSeoConfig("enterprises");
+  return seoConfigToMetadata(cfg, {
+    title: "Doanh nghiệp - Batdongsan.com.vn",
+    description: "Danh bạ doanh nghiệp bất động sản uy tín.",
+  });
+}
 
 const mockEnterprises: EnterpriseData[] = [
   { id: "1", name: "CÔNG TY CỔ PHẦN VINHOMES", logo: "https://images.unsplash.com/photo-1560179707-11c0f496199a?auto=format&fit=crop&q=80&w=200" },

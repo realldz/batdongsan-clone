@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import { AgentSearchBox } from "@/components/Directory/AgentSearchBox";
 import { AgentCard, AgentData } from "@/components/Directory/AgentCard";
 import { DirectorySidebar } from "@/components/Directory/DirectorySidebar";
 import React from "react";
 import { Pagination } from "@/components/molecules";
 import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
+import { getSeoConfig } from "@/services/seo";
+import { seoConfigToMetadata } from "@/lib/seo-metadata";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cfg = await getSeoConfig("agents");
+  return seoConfigToMetadata(cfg, {
+    title: "Nhà môi giới - Batdongsan.com.vn",
+    description: "Danh bạ nhà môi giới bất động sản uy tín.",
+  });
+}
 
 const mockAgents: AgentData[] = [
   {

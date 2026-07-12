@@ -1,18 +1,38 @@
+import type { Metadata } from "next";
 import { PropertyGallery } from "@/components/PropertyDetail/PropertyGallery";
 import { PropertyInfo } from "@/components/PropertyDetail/PropertyInfo";
 import { AuthorSidebar } from "@/components/PropertyDetail/AuthorSidebar";
-import { PropertyGrid } from "@/components/PropertyGrid/PropertyGrid";
+import { RecommendationSection } from "@/components/RecommendationSection/RecommendationSection";
 import type { PropertyData } from "@/components/PropertyCard/PropertyCard";
 import { propertyToDetailView, propertyToPropertyData, type PropertyDetailView, unwrapArray } from "@/lib/api-adapters";
-import { getPropertyById, searchProperties, type Property } from "@/services/properties";
+import { getPropertyById, searchProperties, type Property, type PropertyType } from "@/services/properties";
 import { notFound } from "next/navigation";
 import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
+import { truncateForDescription } from "@/lib/seo-metadata";
 
 async function getPropertyDetail(id: string): Promise<PropertyDetailView> {
   try {
     return propertyToDetailView(await getPropertyById(id));
   } catch {
     notFound();
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const view = propertyToDetailView(await getPropertyById(id));
+    return {
+      title: `${view.title} - ${view.address}`,
+      description: truncateForDescription(view.description ?? ""),
+      openGraph: view.images?.[0] ? { images: [view.images[0]] } : undefined,
+    };
+  } catch {
+    return { title: "Chi tiết bất động sản - Batdongsan.com.vn" };
   }
 }
 
@@ -76,11 +96,11 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
         <div className="mt-8">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <div className="-mx-4 lg:-mx-0">
-              <PropertyGrid title="Bất động sản dành cho bạn" properties={related} />
-            </div>
-
-            <div className="border-t border-gray-100 pt-8 mt-4 -mx-4 lg:-mx-0">
-              <PropertyGrid title="Tin đăng đã xem" properties={related.slice(0, 2)} />
+              <RecommendationSection
+                title="Bất động sản dành cho bạn"
+                type={property.type as PropertyType}
+                fallback={related}
+              />
             </div>
 
             {/* Keyword Tags */}

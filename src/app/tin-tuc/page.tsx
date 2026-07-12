@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { FocusNews } from "@/components/NewsPage/FocusNews";
 import { NewsList } from "@/components/NewsPage/NewsList";
 import { NewsSidebar } from "@/components/NewsPage/NewsSidebar";
@@ -7,9 +8,19 @@ import React from "react";
 import Link from "next/link";
 import { Icon } from "@/components/atoms";
 import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
+import { getSeoConfig } from "@/services/seo";
+import { seoConfigToMetadata } from "@/lib/seo-metadata";
 
 interface NewsPageProps {
   searchParams: Promise<{ page?: string; category?: string; keyword?: string }>;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cfg = await getSeoConfig("news");
+  return seoConfigToMetadata(cfg, {
+    title: "Tin tức bất động sản - Batdongsan.com.vn",
+    description: "Cập nhật tin tức, thị trường bất động sản mới nhất.",
+  });
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
