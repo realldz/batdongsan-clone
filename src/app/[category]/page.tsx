@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SearchFilterBar } from "@/components/SearchFilterBar/SearchFilterBar";
 import { ListingCard, type ListingData } from "@/components/ListingCard/ListingCard";
 import { SidebarFilters } from "@/components/SidebarFilters/SidebarFilters";
@@ -8,6 +9,9 @@ import { CATEGORIES_BY_SLUG } from "@/config/categories";
 import { Icon } from "@/components/atoms";
 import { Pagination } from "@/components/molecules";
 import { PublicPageLayout, TwoColumnLayout } from "@/components/templates";
+import { getSeoConfig } from "@/services/seo";
+import { seoConfigToMetadata } from "@/lib/seo-metadata";
+import { getTypeLabel, resolveCategoryMeta } from "./_lib/category-metadata";
 
 function parseSearchParams(raw: Record<string, string | string[] | undefined>): PropertySearchParams {
   const params: PropertySearchParams = {};
@@ -72,10 +76,20 @@ async function getListings(params: PropertySearchParams) {
   }
 }
 
-function getTypeLabel(type: string | undefined): { breadcrumb: string; title: string } {
-  if (type === "sale") return { breadcrumb: "Bán", title: "Mua bán" };
-  if (type === "rent") return { breadcrumb: "Cho thuê", title: "Cho thuê" };
-  return { breadcrumb: "Bán", title: "Mua bán" };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category } = await params;
+  const { categoryLabel, defaultType } = resolveCategoryMeta(category);
+  const { title: pageTitle } = getTypeLabel(defaultType);
+
+  const cfg = await getSeoConfig("listing");
+  return seoConfigToMetadata(cfg, {
+    title: `${pageTitle} ${categoryLabel} trên toàn quốc - Batdongsan.com.vn`,
+    description: `Danh sách ${categoryLabel.toLowerCase()} trên toàn quốc, cập nhật liên tục.`,
+  });
 }
 
 export default async function CategoryPage({
@@ -89,15 +103,7 @@ export default async function CategoryPage({
   const rawParams = await searchParams;
 
   const config = CATEGORIES_BY_SLUG[category] as (typeof CATEGORIES_BY_SLUG)[string] | undefined;
-  let defaultType: "sale" | "rent" = "sale";
-  let categoryLabel: string;
-
-  if (category === "nha-dat") {
-    categoryLabel = "Nhà đất";
-  } else {
-    defaultType = config?.type ?? (category.startsWith("ban-") ? "sale" : category.startsWith("thue-") ? "rent" : "sale");
-    categoryLabel = config?.label ?? category.replace(/^(ban|thue)-/, "").replace(/-/g, " ");
-  }
+  const { defaultType, categoryLabel } = resolveCategoryMeta(category);
 
   const filters = parseSearchParams(rawParams);
   if (!filters.type) {

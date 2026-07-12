@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { HeroSearch } from "@/components/HeroSearch/HeroSearch";
 import { PropertyGrid } from "@/components/PropertyGrid/PropertyGrid";
+import { RecommendationSection } from "@/components/RecommendationSection/RecommendationSection";
 import { LocationGrid } from "@/components/LocationGrid/LocationGrid";
 import { NewsSection } from "@/components/NewsSection/NewsSection";
 import { PropertyData } from "@/components/PropertyCard/PropertyCard";
@@ -7,6 +9,16 @@ import { searchArticles, type Article } from "@/services/articles";
 import { searchProperties, type Property } from "@/services/properties";
 import { apiArticleToPublicCard, propertyToPropertyData, unwrapArray, unwrapPaginated, type PublicArticleCard } from "@/lib/api-adapters";
 import { PublicPageLayout } from "@/components/templates";
+import { getSeoConfig } from "@/services/seo";
+import { seoConfigToMetadata } from "@/lib/seo-metadata";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cfg = await getSeoConfig("home");
+  return seoConfigToMetadata(cfg, {
+    title: "Batdongsan.com.vn",
+    description: "Kênh thông tin mua bán, cho thuê bất động sản.",
+  });
+}
 
 export default async function Home() {
   let featuredProperties: PropertyData[] = [];
@@ -37,9 +49,9 @@ export default async function Home() {
       <HeroSearch />
 
       <div className="mt-8 space-y-4">
-        <PropertyGrid
+        <RecommendationSection
           title="Bất động sản dành cho bạn"
-          properties={featuredProperties}
+          fallback={featuredProperties}
         />
 
         <LocationGrid />
