@@ -61,21 +61,11 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
 
               {/* Related Links Block */}
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="font-bold text-[#2c2c2c] mb-3 text-sm">Mua bán nhà đất tại Củ Chi</h3>
+                <h3 className="font-bold text-[#2c2c2c] mb-3 text-sm">Mua bán nhà đất tại {property.district || property.province || property.location}</h3>
                 <ul className="space-y-2.5 text-xs text-gray-600">
                   <li className="hover:text-primary cursor-pointer transition-colors flex justify-between">
-                    <span>Xã Tân Phú Trung</span> <span className="text-gray-400">(113)</span>
+                    <span>Xem các bất động sản cùng khu vực</span>
                   </li>
-                  <li className="hover:text-primary cursor-pointer transition-colors flex justify-between">
-                    <span>Xã Tân Thông Hội</span> <span className="text-gray-400">(90)</span>
-                  </li>
-                  <li className="hover:text-primary cursor-pointer transition-colors flex justify-between">
-                    <span>Xã Bình Mỹ</span> <span className="text-gray-400">(82)</span>
-                  </li>
-                  <li className="hover:text-primary cursor-pointer transition-colors flex justify-between">
-                    <span>Xã Thái Mỹ</span> <span className="text-gray-400">(70)</span>
-                  </li>
-                  <li className="text-primary cursor-pointer font-medium mt-1">Xem thêm v</li>
                 </ul>
               </div>
             </div>

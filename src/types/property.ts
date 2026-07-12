@@ -56,6 +56,8 @@ export interface PropertyDetailView {
   interior?: string;
   balconyDirection?: string;
   ward?: string;
+  district?: string;
+  province?: string;
   street?: string;
   contactName?: string;
   contactPhone?: string;
