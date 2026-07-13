@@ -61,6 +61,8 @@ export interface AdminStatistics {
   activeProperties: number;
   soldProperties: number;
   totalTransactions: number;
+  blockedUsers: number;
+  activeGrowthPct: number;
 }
 
 export interface ApiSettings {

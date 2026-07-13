@@ -67,8 +67,8 @@ export default function AdminDashboardPage() {
 
   const pendingListings = useMemo(() => dashboardListings.filter((listing) => listing.status === "Chờ duyệt"), [dashboardListings]);
   const activeListings = useMemo(() => dashboardListings.filter((listing) => listing.status === "Đang hiển thị" || listing.status === "Đã duyệt"), [dashboardListings]);
-  const lockedUsers = useMemo(() => dashboardUsers.filter((user) => user.status === "Tạm khóa"), [dashboardUsers]);
   const totalUsers = statistics?.totalUsers ?? dashboardUsers.length;
+  const lockedUsersCount = statistics?.blockedUsers ?? dashboardUsers.filter((user) => user.status === "Tạm khóa").length;
   const activeListingCount = statistics?.activeProperties ?? activeListings.length;
   const pendingListingCount = statistics?.pendingProperties ?? pendingListings.length;
 
@@ -85,8 +85,9 @@ export default function AdminDashboardPage() {
         activeListingCount={activeListingCount}
         pendingListingCount={pendingListingCount}
         totalUsers={totalUsers}
-        lockedUsersCount={lockedUsers.length}
+        lockedUsersCount={lockedUsersCount}
         soldProperties={statistics?.soldProperties ?? 0}
+        activeGrowthPct={statistics?.activeGrowthPct ?? null}
       />
 
       <section className="grid grid-cols-1 xl:grid-cols-[1fr_0.8fr] gap-6">

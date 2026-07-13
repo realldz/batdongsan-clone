@@ -10,6 +10,14 @@ export interface DashboardStatsGridProps {
   totalUsers: number;
   lockedUsersCount: number;
   soldProperties: number;
+  activeGrowthPct: number | null;
+}
+
+function growthHelper(pct: number | null): string {
+  if (pct == null) return "Chưa có dữ liệu so sánh tuần";
+  if (pct > 0) return `Tăng ${pct}% so với tuần trước`;
+  if (pct < 0) return `Giảm ${Math.abs(pct)}% so với tuần trước`;
+  return "Không đổi so với tuần trước";
 }
 
 export function DashboardStatsGrid({
@@ -18,13 +26,14 @@ export function DashboardStatsGrid({
   totalUsers,
   lockedUsersCount,
   soldProperties,
+  activeGrowthPct,
 }: DashboardStatsGridProps) {
   return (
     <StatsGrid cols={4}>
       <StatCard
         title="Tin đang hoạt động"
         value={`${activeListingCount} tin`}
-        helper="Tăng 12% so với tuần trước"
+        helper={growthHelper(activeGrowthPct)}
         tone="green"
         icon={<Building2 className="w-5 h-5" />}
       />
