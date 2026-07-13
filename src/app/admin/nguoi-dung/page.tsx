@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpDown, Download, Lock, Pencil, Plus, Unlock } from "lucide-react";
 
 import { apiUserToAdminUser, unwrapPaginated } from "@/lib/api-adapters";
-import { createAdminUser, getAdminUsers, promoteToMerchant, restoreUser, softDeleteUser, updateUser, type ApiUser } from "@/services/admin";
+import { blockUser, createAdminUser, getAdminUsers, promoteToMerchant, unblockUser, updateUser, type ApiUser } from "@/services/admin";
 
 import { type AdminUser, type AdminUserRole, type AdminUserStatus } from "../_data/types";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
@@ -78,9 +78,9 @@ export default function AdminUsersPage() {
     setUsers((current) => current.map((user) => (user.id === userId ? { ...user, status: nextStatus } : user)));
     try {
       if (nextStatus === "Tạm khóa") {
-        await softDeleteUser(userId);
+        await blockUser(userId);
       } else {
-        await restoreUser(userId);
+        await unblockUser(userId);
       }
     } catch {
       setUsers((current) => current.map((user) => (user.id === userId ? currentUser : user)));
