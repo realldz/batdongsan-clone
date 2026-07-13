@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Star, UserRoundCheck, Building2, Eye } from "lucide-react";
+import { getAdminAgents } from "@/services/admin";
+import { apiUserToAdminAgent, unwrapPaginated } from "@/adapters";
 import { type AdminAgent } from "../_data/types";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
 import { StatusBadge } from "../_components/atoms/StatusBadge";
@@ -26,13 +28,18 @@ export default function AdminAgentsPage() {
     async function loadAgents() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/admin/agents?page=${currentPage}&perPage=${PAGE_SIZE}`);
-        const result = await res.json();
+        const response = await getAdminAgents({ page: currentPage, perPage: PAGE_SIZE });
+        const result = unwrapPaginated<Parameters<typeof apiUserToAdminAgent>[0]>(response);
+        const rows = result.data.map(apiUserToAdminAgent);
         if (!ignore) {
-          setAgents(result.data);
+          setAgents(rows);
           setTotal(result.pagination.total);
           setTotalPages(result.pagination.totalPages || 1);
-          setStats(result.stats);
+          setStats({
+            total: result.pagination.total,
+            verified: rows.filter((a) => a.verified).length,
+            totalListings: rows.reduce((sum, a) => sum + a.listings, 0),
+          });
         }
       } catch {
         if (!ignore) {

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { BriefcaseBusiness, Building2, Eye } from "lucide-react";
+import { getAdminEnterprises } from "@/services/admin";
+import { apiUserToAdminEnterprise, unwrapPaginated } from "@/adapters";
 import { type AdminEnterprise } from "../_data/types";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
 import { StatusBadge } from "../_components/atoms/StatusBadge";
@@ -26,13 +28,18 @@ export default function AdminEnterprisesPage() {
     async function loadEnterprises() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/admin/enterprises?page=${currentPage}&perPage=${PAGE_SIZE}`);
-        const result = await res.json();
+        const response = await getAdminEnterprises({ page: currentPage, perPage: PAGE_SIZE });
+        const result = unwrapPaginated<Parameters<typeof apiUserToAdminEnterprise>[0]>(response);
+        const rows = result.data.map(apiUserToAdminEnterprise);
         if (!ignore) {
-          setEnterprises(result.data);
+          setEnterprises(rows);
           setTotal(result.pagination.total);
           setTotalPages(result.pagination.totalPages || 1);
-          setStats(result.stats);
+          setStats({
+            total: result.pagination.total,
+            paidPlans: rows.filter((e) => e.plan !== "Cơ bản").length,
+            totalListings: rows.reduce((sum, e) => sum + e.listings, 0),
+          });
         }
       } catch {
         if (!ignore) {

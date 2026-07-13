@@ -1,10 +1,7 @@
 import {
   AdminListing,
   AdminUser,
-  AdminAgent,
-  AdminEnterprise,
   AdminArticle,
-  AdminSetting,
 } from "./types";
 
 
@@ -145,20 +142,6 @@ export const adminUsers: AdminUser[] = [
   { id: "user-5", role: "Doanh nghiệp", roleNumber: 3, status: "Đang hoạt động", isBlocked: false, name: "BĐS An Phú", phone: "028 3666 1111", email: "admin@anphu.vn", listings: 27, revenue: "21.100.000 đ", joinedAt: "21/09/2025", note: "Thanh toán đúng hạn" },
 ];
 
-export const adminAgents: AdminAgent[] = [
-  { id: "agent-1", name: "Nguyễn Minh Anh", area: "TP. Thủ Đức", company: "Vinhomes Partner", phone: "0901 234 567", verified: true, listings: 18, rating: 4.8, status: "Đang hoạt động" },
-  { id: "agent-2", name: "Lê Hải Nam", area: "Đồng Nai", company: "Nam Land", phone: "0935 711 222", verified: false, listings: 9, rating: 4.1, status: "Tạm khóa" },
-  { id: "agent-3", name: "Phạm Thùy Linh", area: "Quận 7", company: "Freelancer", phone: "0988 334 221", verified: true, listings: 12, rating: 4.6, status: "Đang hoạt động" },
-  { id: "agent-4", name: "Hoàng Đức Long", area: "Hà Nội", company: "Long Homes", phone: "0967 998 100", verified: false, listings: 5, rating: 3.9, status: "Chờ xác minh" },
-];
-
-export const adminEnterprises: AdminEnterprise[] = [
-  { id: "enterprise-1", name: "Sunrise Realty", taxCode: "0312456789", location: "Quận 7, TP.HCM", plan: "Doanh nghiệp", listings: 42, status: "Đang hoạt động", joinedAt: "03/11/2025" },
-  { id: "enterprise-2", name: "An Phú Homes", taxCode: "0318899001", location: "TP. Thủ Đức, TP.HCM", plan: "Chuyên nghiệp", listings: 27, status: "Đang hoạt động", joinedAt: "21/09/2025" },
-  { id: "enterprise-3", name: "Elite Property", taxCode: "0109922334", location: "Hà Nội", plan: "Cơ bản", listings: 7, status: "Chờ xác minh", joinedAt: "01/05/2026" },
-  { id: "enterprise-4", name: "Lakeview Group", taxCode: "0317722881", location: "Quận 2, TP.HCM", plan: "Chuyên nghiệp", listings: 19, status: "Tạm khóa", joinedAt: "14/12/2025" },
-];
-
 export const adminArticles: AdminArticle[] = [
   { id: "article-1", slug: "thi-truong-can-ho-tphcm-tang-nhiet-quy-ii", title: "Thị trường căn hộ TP.HCM tăng nhiệt trong quý II", content: "<p>Thị trường căn hộ TP.HCM đang có những dấu hiệu phục hồi mạnh mẽ trong quý II năm 2026. Theo số liệu từ các sàn giao dịch, lượng giao dịch thành công tăng 35% so với cùng kỳ năm trước.</p><p>Các chuyên gia nhận định, đây là kết quả của nhiều yếu tố tích cực: lãi suất cho vay ổn định, chính sách hỗ trợ từ chính phủ và tâm lý người mua đã trở lại sau thời gian dài chờ đợi.</p>", category: "Thị trường", author: "Ban biên tập", status: "Đã xuất bản", views: 12840, publishedAt: "09/05/2026", summary: "Phân tích chi tiết về sự phục hồi của thị trường căn hộ TP.HCM", thumbnail: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800", isFeatured: true },
   { id: "article-2", slug: "kinh-nghiem-kiem-tra-phap-ly-truoc-khi-mua-dat-nen", title: "Kinh nghiệm kiểm tra pháp lý trước khi mua đất nền", content: "<p>Khi mua đất nền, việc kiểm tra pháp lý là bước quan trọng nhất. Dưới đây là những kinh nghiệm giúp bạn tránh rủi ro:</p><ul><li>Kiểm tra sổ đỏ/sổ hồng chính chủ</li><li>Xác minh quy hoạch tại địa phương</li><li>Kiểm tra tình trạng tranh chấp</li><li>Xem xét lịch sử giao dịch của thửa đất</li></ul>", category: "Pháp lý", author: "Hoàng An", status: "Bản nháp", views: 0, publishedAt: "--", summary: "Hướng dẫn chi tiết kiểm tra tính pháp lý của đất nền", isFeatured: false },
@@ -168,12 +151,5 @@ export const adminArticles: AdminArticle[] = [
   { id: "article-6", slug: "du-an-vinhomes-grand-park-cap-nhat-tien-do", title: "Dự án Vinhomes Grand Park cập nhật tiến độ tháng 5", content: "<p>Dự án Vinhomes Grand Park tại TP. Thủ Đức đang đẩy nhanh tiến độ xây dựng trong tháng 5/2026. Đã có hơn 85% căn hộ được bàn giao, cơ sở hạ tầng và tiện ích nội khu đang dần hoàn thiện.</p>", category: "Dự án", author: "Minh Khang", status: "Đã xuất bản", views: 9810, publishedAt: "01/05/2026", summary: "Tiến độ xây dựng và bàn giao mới nhất", thumbnail: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", isFeatured: true },
   { id: "article-7", slug: "dat-nen-long-thanh-sau-quy-hoach-vanh-dai-3", title: "Đất nền Long Thành sau quy hoạch vành đai 3", content: "<p>Giá đất nền khu vực Long Thành, Đồng Nai đã có những biến động đáng kể sau khi quy hoạch vành đai 3 được phê duyệt. Nhiều nhà đầu tư đang đổ về khu vực này với kỳ vọng giá đất sẽ tiếp tục tăng.</p>", category: "Thị trường", author: "Ban biên tập", status: "Đã lưu trữ", views: 15400, publishedAt: "15/03/2026", summary: "Đánh giá biến động giá đất nền khu vực Long Thành", isFeatured: false },
   { id: "article-8", slug: "thu-tuc-vay-mua-nha-tra-gop-2026", title: "Thủ tục vay mua nhà trả góp năm 2026", content: "<p>Quy trình vay mua nhà trả góp năm 2026 có một số thay đổi đáng chú ý. Người mua cần chuẩn bị đầy đủ hồ sơ bao gồm: CMND/CCCD, sổ hộ khẩu, giấy đăng ký kết hôn (nếu có), hợp đồng lao động và sao kê lương 3-6 tháng gần nhất.</p>", category: "Tổng hợp", author: "Thu Hà", status: "Đã xuất bản", views: 6230, publishedAt: "28/04/2026", summary: "Quy trình và hồ sơ vay mua nhà mới nhất 2026", isFeatured: false },
-];
-
-export const adminSettings: AdminSetting[] = [
-  { id: "setting-1", group: "Tin đăng", name: "Thời gian duyệt tin SLA", value: "4 giờ", updatedAt: "08/05/2026", status: "Đang áp dụng" },
-  { id: "setting-2", group: "Gói dịch vụ", name: "Giá tin VIP mặc định", value: "169.000 đ", updatedAt: "07/05/2026", status: "Đang áp dụng" },
-  { id: "setting-3", group: "Người dùng", name: "Ngưỡng khóa tự động", value: "3 báo cáo", updatedAt: "04/05/2026", status: "Cần kiểm tra" },
-  { id: "setting-4", group: "Nội dung", name: "Tự động ẩn bài hết hạn", value: "Bật", updatedAt: "02/05/2026", status: "Đang áp dụng" },
 ];
 

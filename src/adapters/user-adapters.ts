@@ -1,4 +1,4 @@
-import type { AdminUser, AdminUserRole, AdminUserStatus } from "@/app/admin/_data/types";
+import type { AdminAgent, AdminEnterprise, AdminUser, AdminUserRole, AdminUserStatus } from "@/app/admin/_data/types";
 import type { ApiUser } from "@/services/admin";
 import { formatDate } from "@/lib/formatters/date";
 import { formatCompactNumber } from "@/lib/formatters/currency";
@@ -42,5 +42,38 @@ export function apiUserToAdminUser(user: ApiUser): AdminUser {
     revenue: String(revenue),
     joinedAt: formatDate(user.createdAt),
     note: "Dữ liệu từ API",
+  };
+}
+
+export function apiUserToAdminAgent(user: ApiUser): AdminAgent {
+  return {
+    id: user.id,
+    name: user.fullName ?? user.name ?? user.email ?? "Môi giới",
+    area: user.area ?? "--",
+    company: user.company ?? "--",
+    phone: user.phone ?? "--",
+    verified: !!user.verifiedAt,
+    listings: typeof user.listings === "number" ? user.listings : 0,
+    rating: typeof user.rating === "number" ? user.rating : 0,
+    status: mapUserStatus(user),
+  };
+}
+
+function mapEnterprisePlan(plan: string | undefined): AdminEnterprise["plan"] {
+  if (plan === "Chuyên nghiệp" || plan === "professional") return "Chuyên nghiệp";
+  if (plan === "Doanh nghiệp" || plan === "enterprise") return "Doanh nghiệp";
+  return "Cơ bản";
+}
+
+export function apiUserToAdminEnterprise(user: ApiUser): AdminEnterprise {
+  return {
+    id: user.id,
+    name: user.company ?? user.fullName ?? user.name ?? "Doanh nghiệp",
+    taxCode: user.taxCode ?? "--",
+    location: user.area ?? "--",
+    plan: mapEnterprisePlan(user.merchantPlan),
+    listings: typeof user.listings === "number" ? user.listings : 0,
+    status: mapUserStatus(user),
+    joinedAt: formatDate(user.createdAt),
   };
 }

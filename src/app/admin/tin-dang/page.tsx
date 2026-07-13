@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Download, EyeOff, Pencil, Trash2, Eye } from "lucide-react";
 
 import { mapAdminStatusToPropertyStatus, propertyToAdminListing, unwrapPaginated } from "@/lib/api-adapters";
-import { deleteProperty, searchProperties, updatePropertyStatus, type Property } from "@/services/properties";
+import { deleteProperty, updatePropertyStatus, type Property } from "@/services/properties";
+import { getAdminProperties, type AdminListingsParams } from "@/services/admin";
 
 import { type AdminListing, type AdminListingStatus } from "../_data/types";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
@@ -77,14 +78,14 @@ export default function AdminListingsPage() {
     async function loadListings() {
       setLoading(true);
       try {
-        const params: Record<string, string | number> = { page: currentPage, perPage: PAGE_SIZE };
-        if (search.trim()) params.title = search.trim();
+        const params: AdminListingsParams = { page: currentPage, perPage: PAGE_SIZE };
+        if (search.trim()) params.search = search.trim();
         const status = mapStatusFilterToApi(statusFilter);
-        if (status) params.status = status;
+        if (status) params.status = status as AdminListingsParams["status"];
         const type = mapTypeFilterToApi(typeFilter);
-        if (type) params.type = type;
+        if (type) params.type = type as AdminListingsParams["type"];
 
-        const response = await searchProperties(params as unknown as Parameters<typeof searchProperties>[0]);
+        const response = await getAdminProperties(params);
         const result = unwrapPaginated<Property>(response);
 
         if (!ignore) {

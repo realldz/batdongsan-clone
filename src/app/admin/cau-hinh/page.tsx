@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Settings, CheckCircle2, AlertCircle } from "lucide-react";
 import { type AdminSetting } from "../_data/types";
+import { getAdminSettings } from "@/services/admin";
+import { apiSettingsToRows } from "@/adapters";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
 import { StatusBadge } from "../_components/atoms/StatusBadge";
 import { TableShell } from "../_components/molecules/TableShell";
@@ -14,32 +16,19 @@ import { AdminPageTemplate } from "../_components/templates/AdminPageTemplate";
 const PAGE_SIZE = 2;
 
 export default function AdminSettingsPage() {
-  const [settings, setSettings] = useState<AdminSetting[]>([]);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
+  const [allRows, setAllRows] = useState<AdminSetting[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ total: 0, active: 0, checking: 0 });
 
   useEffect(() => {
     let ignore = false;
     async function loadSettings() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/admin/settings?page=${currentPage}&perPage=${PAGE_SIZE}`);
-        const result = await res.json();
-        if (!ignore) {
-          setSettings(result.data);
-          setTotal(result.pagination.total);
-          setTotalPages(result.pagination.totalPages || 1);
-          setStats(result.stats);
-        }
+        const config = await getAdminSettings();
+        if (!ignore) setAllRows(apiSettingsToRows(config));
       } catch {
-        if (!ignore) {
-          setSettings([]);
-          setTotal(0);
-          setTotalPages(1);
-        }
+        if (!ignore) setAllRows([]);
       } finally {
         if (!ignore) setLoading(false);
       }
@@ -48,7 +37,16 @@ export default function AdminSettingsPage() {
     return () => {
       ignore = true;
     };
-  }, [currentPage]);
+  }, []);
+
+  const total = allRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const settings = allRows.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const stats = {
+    total,
+    active: allRows.filter((s) => s.status === "Đang áp dụng").length,
+    checking: allRows.filter((s) => s.status === "Cần kiểm tra").length,
+  };
 
   const header = <AdminHeader title="Cấu hình hệ thống" description="Các thiết lập thiết lập cho duyệt tin, gói dịch vụ, người dùng và nội dung." />;
 
