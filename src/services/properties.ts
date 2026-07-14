@@ -41,7 +41,7 @@ export interface Property {
   direction?: string;
   legalInfo?: string;
   status?: PropertyStatus;
-  host?: string;
+  host?: string | PropertyOwner;
   owner?: PropertyOwner;
   user?: PropertyOwner;
   bedrooms?: number;

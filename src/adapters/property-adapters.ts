@@ -26,7 +26,10 @@ export function ensureImages(images: string[] | undefined, min = 3): string[] {
 }
 
 export function getOwner(property: Property): PropertyOwner | undefined {
-  return property.owner ?? property.user;
+  if (property.owner) return property.owner;
+  if (property.user) return property.user;
+  if (property.host && typeof property.host === "object") return property.host;
+  return undefined;
 }
 
 export function getOwnerName(property: Property): string {
@@ -144,7 +147,7 @@ export function propertyToDetailView(property: Property): PropertyDetailView {
     expiresAt: property.expiresAt ? formatDate(property.expiresAt) : "--",
     listingType: property.type === "rent" ? "Cho thuê" : "Tin bán",
     code: `BDS-${property.id.slice(0, 8).toUpperCase()}`,
-    hostId: property.host ?? (getOwner(property) as Record<string, unknown> | undefined)?.id as string ?? "",
+    hostId: (typeof property.host === "string" ? property.host : property.host?.id) ?? getOwner(property)?.id ?? "",
     owner: {
       name: getOwnerName(property),
       avatar: getOwnerAvatar(property),
