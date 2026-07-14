@@ -118,6 +118,14 @@ export async function rejectProperty(id: string) {
   return api.put<Property>(`/admin/properties/${id}/reject`);
 }
 
+export async function updateAdminPropertyStatus(id: string, status: PropertyStatus) {
+  return api.put<Property>(`/admin/properties/${id}/status`, { status });
+}
+
+export async function deleteAdminProperty(id: string) {
+  return api.delete<{ message?: string }>(`/admin/properties/${id}`);
+}
+
 export async function getAdminUsers(params: { page?: number; perPage?: number } = {}) {
   return api.get<ApiUser[]>(`/admin/users${buildQuery(params)}`, { cache: "no-store" });
 }

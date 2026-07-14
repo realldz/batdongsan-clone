@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Download, EyeOff, Pencil, Trash2, Eye } from "lucide-react";
 
 import { mapAdminStatusToPropertyStatus, propertyToAdminListing, unwrapPaginated } from "@/lib/api-adapters";
-import { deleteProperty, updatePropertyStatus, type Property } from "@/services/properties";
-import { getAdminProperties, type AdminListingsParams } from "@/services/admin";
+import { type Property } from "@/services/properties";
+import { getAdminProperties, updateAdminPropertyStatus, deleteAdminProperty, type AdminListingsParams } from "@/services/admin";
 
 import { type AdminListing, type AdminListingStatus } from "../_data/types";
 import { AdminHeader } from "../_components/organisms/AdminHeader";
@@ -111,7 +111,7 @@ export default function AdminListingsPage() {
 
   const saveEdit = async (data: { status: AdminListingStatus; packageName: AdminListing["packageName"] }) => {
     if (!editingListing) return;
-    await updatePropertyStatus(editingListing.id, mapAdminStatusToPropertyStatus(data.status));
+    await updateAdminPropertyStatus(editingListing.id, mapAdminStatusToPropertyStatus(data.status));
     setListings((current) => current.map((listing) => (listing.id === editingListing.id ? { ...listing, status: data.status, packageName: data.packageName } : listing)));
     setEditingListing(null);
   };
@@ -120,7 +120,7 @@ export default function AdminListingsPage() {
     const currentListing = listings.find((listing) => listing.id === id);
     setListings((current) => current.map((listing) => (listing.id === id ? { ...listing, status: "Đã ẩn" } : listing)));
     try {
-      await updatePropertyStatus(id, "hidden");
+      await updateAdminPropertyStatus(id, "hidden");
     } catch {
       if (currentListing) setListings((current) => current.map((listing) => (listing.id === id ? currentListing : listing)));
     }
@@ -130,7 +130,7 @@ export default function AdminListingsPage() {
     const currentListings = listings;
     setListings((current) => current.filter((listing) => listing.id !== id));
     try {
-      await deleteProperty(id);
+      await deleteAdminProperty(id);
     } catch {
       setListings(currentListings);
     }
