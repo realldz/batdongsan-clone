@@ -108,9 +108,8 @@ export function SellerSidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setExpanded(null)}
-                className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${
-                  isActive ? "text-red-600" : "text-gray-600"
-                }`}
+                className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${isActive ? "text-red-600" : "text-gray-600"
+                  }`}
               >
                 {isActive && (
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-600 rounded-r-md"></div>
@@ -127,9 +126,8 @@ export function SellerSidebar() {
                   )}
                 </div>
                 <span
-                  className={`text-[11px] text-center px-1 leading-tight ${
-                    isActive ? "font-bold" : "font-medium"
-                  }`}
+                  className={`text-[11px] text-center px-1 leading-tight ${isActive ? "font-bold" : "font-medium"
+                    }`}
                 >
                   {item.name}
                 </span>
@@ -141,11 +139,10 @@ export function SellerSidebar() {
           <button
             type="button"
             onClick={() => toggle("account")}
-            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${
-              isAccountActive || expanded === "account"
-                ? "text-red-600"
-                : "text-gray-600"
-            }`}
+            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${isAccountActive || expanded === "account"
+              ? "text-red-600"
+              : "text-gray-600"
+              }`}
           >
             {(isAccountActive || expanded === "account") && (
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-600 rounded-r-md"></div>
@@ -155,28 +152,25 @@ export function SellerSidebar() {
               strokeWidth={isAccountActive || expanded === "account" ? 2.5 : 2}
             />
             <span
-              className={`text-[11px] text-center px-1 leading-tight ${
-                isAccountActive || expanded === "account"
-                  ? "font-bold"
-                  : "font-medium"
-              }`}
+              className={`text-[11px] text-center px-1 leading-tight ${isAccountActive || expanded === "account"
+                ? "font-bold"
+                : "font-medium"
+                }`}
             >
               Tài khoản
             </span>
             <ChevronRight
-              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${
-                expanded === "account" ? "rotate-90" : ""
-              }`}
+              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${expanded === "account" ? "rotate-90" : ""
+                }`}
             />
           </button>
 
           {/* Ưu đãi - Expandable */}
-          <button
+          {/* <button
             type="button"
             onClick={() => toggle("promo")}
-            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${
-              expanded === "promo" ? "text-red-600" : "text-gray-600"
-            }`}
+            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${expanded === "promo" ? "text-red-600" : "text-gray-600"
+              }`}
           >
             {expanded === "promo" && (
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-600 rounded-r-md"></div>
@@ -186,26 +180,23 @@ export function SellerSidebar() {
               strokeWidth={expanded === "promo" ? 2.5 : 2}
             />
             <span
-              className={`text-[11px] text-center px-1 leading-tight ${
-                expanded === "promo" ? "font-bold" : "font-medium"
-              }`}
+              className={`text-[11px] text-center px-1 leading-tight ${expanded === "promo" ? "font-bold" : "font-medium"
+                }`}
             >
               Ưu đãi
             </span>
             <ChevronRight
-              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${
-                expanded === "promo" ? "rotate-90" : ""
-              }`}
+              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${expanded === "promo" ? "rotate-90" : ""
+                }`}
             />
-          </button>
+          </button> */}
 
           {/* Báo giá & Hướng dẫn - Expandable */}
-          <button
+          {/* <button
             type="button"
             onClick={() => toggle("guide")}
-            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${
-              expanded === "guide" ? "text-red-600" : "text-gray-600"
-            }`}
+            className={`relative flex flex-col items-center justify-center w-full py-4 hover:bg-gray-50 transition-colors ${expanded === "guide" ? "text-red-600" : "text-gray-600"
+              }`}
           >
             {expanded === "guide" && (
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-600 rounded-r-md"></div>
@@ -215,18 +206,16 @@ export function SellerSidebar() {
               strokeWidth={expanded === "guide" ? 2.5 : 2}
             />
             <span
-              className={`text-[11px] text-center px-1 leading-tight ${
-                expanded === "guide" ? "font-bold" : "font-medium"
-              }`}
+              className={`text-[11px] text-center px-1 leading-tight ${expanded === "guide" ? "font-bold" : "font-medium"
+                }`}
             >
               Báo giá
             </span>
             <ChevronRight
-              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${
-                expanded === "guide" ? "rotate-90" : ""
-              }`}
+              className={`w-3 h-3 mt-0.5 transition-transform duration-200 ${expanded === "guide" ? "rotate-90" : ""
+                }`}
             />
-          </button>
+          </button> */}
         </nav>
 
         <div className="flex-1"></div>

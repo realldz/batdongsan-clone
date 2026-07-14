@@ -183,7 +183,7 @@ export default async function CategoryPage({
                 />
               )}
 
-              <div className="text-xs text-gray-500 leading-relaxed mb-4">
+              {/* <div className="text-xs text-gray-500 leading-relaxed mb-4">
                 <p className="mb-2">Khi quỹ đất ngày càng khan hiếm và đắt đỏ, căn hộ chung cư được xem là giải pháp nhà ở hợp lý cho cư dân, đặc biệt là ở các thành phố lớn. Loại hình căn hộ chung cư khá đa dạng về diện tích, tiện ích và mức giá, vì vậy khách hàng có nhiều sự lựa chọn phù hợp với nhu cầu và điều kiện tài chính.</p>
                 <p className="mb-2">Hiện nay, thị trường mua bán căn hộ với nguồn cung lớn đòi hỏi khách hàng khó phân biệt trong việc lựa chọn. Cùng Batdongsan.com.vn tìm hiểu kinh nghiệm mua bán căn hộ ưng ý.</p>
                 <p className="font-bold text-[#2c2c2c] mb-1">Những lý do căn hộ chung cư được ưa chuộng:</p>
@@ -191,7 +191,7 @@ export default async function CategoryPage({
                 <p className="mb-1">- Tiện ích nội khu đa dạng: Các dự án hiện nay thường đi kèm hồ bơi, phòng gym, siêu thị nội khu...</p>
                 <p className="mb-1">- Giao thông kết nối thuận tiện: Tọa lạc tại các vị trí đắc địa dễ di chuyển tới trung tâm.</p>
                 <div className="text-center mt-3"><span className="text-primary hover:underline cursor-pointer font-medium text-sm">Xem thêm v</span></div>
-              </div>
+              </div> */}
             </>
           }
           sidebar={

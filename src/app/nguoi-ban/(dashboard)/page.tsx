@@ -85,7 +85,7 @@ export default function OverviewPage() {
       <SellerHeader title="Tổng quan" />
       <main className="flex-1 overflow-y-auto p-6 lg:p-8 xl:p-10 space-y-8 pb-20 scroll-smooth bg-gray-50/30">
         <OverviewAccountSection wallet={wallet} />
-        <OverviewInfoSection />
+        {/* <OverviewInfoSection /> */}
         <OverviewLeadsSection
           recentLeads={recentLeads}
           totalLeads={totalLeads}
