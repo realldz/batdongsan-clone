@@ -1,6 +1,6 @@
 import type { AdminListing, AdminListingStatus, AdminListingType } from "@/app/admin/_data/types";
 import type { ListingData, PropertyData, PropertyDetailView } from "@/types";
-import type { Property, PropertyOwner, PropertyStatus, PropertyType } from "@/services/properties";
+import type { Property, PropertyOwner, PropertyStatus, PropertyType, VipBadge } from "@/services/properties";
 import { formatCurrency, formatPricePerSqm } from "@/lib/formatters/currency";
 import { formatArea } from "@/lib/formatters/area";
 import { formatLocation, formatFullAddress } from "@/lib/formatters/location";
@@ -49,6 +49,14 @@ export function getOwnerAvatar(property: Property): string {
   return owner?.avatar ?? fallbackAvatar;
 }
 
+function getVipBadge(property: Property): VipBadge {
+  return property.display?.vipBadge ?? "none";
+}
+
+function getIsPushed(property: Property): boolean {
+  return property.display?.isPushed ?? false;
+}
+
 export function propertyToListingData(property: Property): ListingData {
   return {
     id: property.id,
@@ -67,6 +75,8 @@ export function propertyToListingData(property: Property): ListingData {
     authorAvatar: getOwnerAvatar(property),
     postedTime: formatPostedTime(property.createdAt),
     phone: getOwnerPhone(property),
+    vipBadge: getVipBadge(property),
+    isPushed: getIsPushed(property),
   };
 }
 
@@ -79,6 +89,8 @@ export function propertyToPropertyData(property: Property): PropertyData {
     location: formatLocation(property),
     imageUrl: ensureImages(property.images, 1)[0],
     postedTime: formatPostedTime(property.createdAt),
+    vipBadge: getVipBadge(property),
+    isPushed: getIsPushed(property),
   };
 }
 
@@ -166,5 +178,7 @@ export function propertyToDetailView(property: Property): PropertyDetailView {
     contactEmail: property.contactEmail,
     amenities: property.amenities,
     rentDetails: property.rentDetails,
+    vipBadge: getVipBadge(property),
+    isPushed: getIsPushed(property),
   };
 }
