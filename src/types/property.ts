@@ -1,3 +1,5 @@
+import type { VipBadge } from "@/services/properties";
+
 export interface PropertyData {
   id: string;
   title: string;
@@ -6,6 +8,8 @@ export interface PropertyData {
   location: string;
   imageUrl: string;
   postedTime: string;
+  vipBadge: VipBadge;
+  isPushed: boolean;
 }
 
 export interface ListingData {
@@ -25,6 +29,8 @@ export interface ListingData {
   postedTime: string;
   phone: string;
   direction: string;
+  vipBadge: VipBadge;
+  isPushed: boolean;
 }
 
 export interface PropertyDetailView {
@@ -45,6 +51,8 @@ export interface PropertyDetailView {
   expiresAt: string;
   listingType: string;
   code: string;
+  vipBadge: VipBadge;
+  isPushed: boolean;
   hostId: string;
   owner: {
     name: string;
