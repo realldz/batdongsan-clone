@@ -18,6 +18,7 @@ import { ListingCard, type Listing, type ListingStatus, type ListingPackage } fr
 import { FilterDialog, BoostDialog, type PushType } from "../../_components/organisms";
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
+import { ApiError } from "@/lib/api";
 import { deleteProperty, getMyProperties, boostProperty, updatePropertyStatus, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 import { getPricing, type PricingInfo } from "@/services/pricing";
@@ -63,6 +64,21 @@ function formatDate(value: string | Date | undefined): string {
   if (Number.isNaN(date.getTime())) return typeof value === "string" ? value : "--";
 
   return new Intl.DateTimeFormat("vi-VN").format(date);
+}
+
+function resolveBoostErrorMessage(error: unknown): string {
+  if (error instanceof ApiError) {
+    const msg = error.message;
+    if (msg.includes("Insufficient balance")) return "Số dư ví không đủ để đẩy tin. Vui lòng nạp thêm tiền.";
+    if (msg.includes("already VIP pushed")) return "Tin này đang ở gói Đẩy tin VIP, không thể đẩy thêm.";
+    if (msg.includes("already pushed")) return "Tin này đang được đẩy. Bạn có thể nâng cấp lên VIP thay vì đẩy lại.";
+    if (msg.includes("Cannot downgrade")) return "Không thể hạ cấp một tin đang được đẩy.";
+    if (msg.includes("Only active listings")) return "Chỉ tin đang hiển thị mới có thể đẩy.";
+    if (msg.includes("not the owner")) return "Bạn không phải chủ sở hữu của tin này.";
+    if (msg.includes("not found")) return "Không tìm thấy tin đăng.";
+    return msg;
+  }
+  return "Chưa thể đẩy tin, vui lòng thử lại sau.";
 }
 
 function propertyToSellerListing(property: Property): Listing {
@@ -258,8 +274,8 @@ export default function RechargePage() {
       );
 
       setBoostListing(null); // Đóng modal ngay khi thành công
-    } catch {
-      setBoostErrorMessage("Chưa thể đẩy tin, vui lòng kiểm tra số dư hoặc thử lại sau.");
+    } catch (error) {
+      setBoostErrorMessage(resolveBoostErrorMessage(error));
     } finally {
       setIsBoostSubmitting(false);
     }
