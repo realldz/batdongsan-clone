@@ -4,11 +4,13 @@ import React from "react";
 import Image from "next/image";
 import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton";
 import { DraggableMap } from "@/components/Map";
+import { VipBadge } from "@/components/atoms/VipBadge";
 import type { PropertyDetailView } from "@/lib/api-adapters";
 
 export const PropertyInfo = ({ property }: { property: PropertyDetailView }) => {
   return (
     <div className="w-full text-[#2c2c2c] mt-6">
+      <VipBadge vipBadge={property.vipBadge} isPushed={property.isPushed} className="mb-3" />
       <h1 className="text-xl lg:text-3xl font-bold leading-tight mb-2 uppercase text-[#2c2c2c] tracking-tight">
         {property.title}
       </h1>
