@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-store";
 import { createLead } from "@/services/leads";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
-import { Avatar, Button, Icon } from "@/components/atoms";
+import { Avatar, Button, Icon, VipBadge } from "@/components/atoms";
 import { FavoriteButton } from "@/components/molecules";
 import { type ListingData } from "@/types";
 
@@ -102,6 +102,9 @@ export const ListingCard = ({ data }: { data: ListingData }) => {
 
           <div className="absolute top-2 left-2 bg-[#e03c31] text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-sm">
             {data.vipTag}
+          </div>
+          <div className="absolute top-10 left-2">
+            <VipBadge vipBadge={data.vipBadge} isPushed={data.isPushed} />
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/molecules/FavoriteButton";
 import { Icon } from "@/components/atoms/Icon";
+import { VipBadge } from "@/components/atoms/VipBadge";
 import { type PropertyData } from "@/types";
 
 export type { PropertyData };
@@ -19,6 +20,9 @@ export const PropertyCard = ({ property }: { property: PropertyData }) => {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
+        <div className="absolute top-3 left-3">
+          <VipBadge vipBadge={property.vipBadge} isPushed={property.isPushed} />
+        </div>
         {/* Heart Icon for saving */}
         <div className="absolute top-3 right-3">
           <FavoriteButton propertyId={property.id} className="p-1.5 bg-black/20 hover:bg-black/40 rounded-full text-white transition-colors" iconClassName="h-5 w-5" activeClassName="text-white bg-[#e03c31]" />
