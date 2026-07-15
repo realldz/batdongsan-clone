@@ -3,6 +3,16 @@ import { api } from "@/lib/api";
 export type PropertyType = "sale" | "rent";
 export type PropertyStatus = "pending" | "active" | "sold" | "rented" | "hidden" | "draft" | "rejected" | "expired";
 
+export type VipBadge = "none" | "silver" | "gold" | "diamond";
+
+export interface PropertyDisplayMeta {
+  vipBadge: VipBadge;
+  isVip: boolean;
+  isPushed: boolean;
+  cardSize: "sm" | "md" | "lg" | "xl";
+  rankScore: number;
+}
+
 export interface PropertyCoordinates {
   lat: number;
   lng: number;
@@ -59,6 +69,8 @@ export interface Property {
   pushLevel?: "normal" | "pushed" | "vip" | "vip_pushed";
   pushExpiredAt?: string | Date;
   viewCount?: number;
+  vipLevel?: number;
+  display?: PropertyDisplayMeta;
 }
 
 export interface PropertyOwner {
