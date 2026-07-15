@@ -19,7 +19,7 @@ import { FilterDialog, BoostDialog, type PushType } from "../../_components/orga
 
 import { formatArea, formatCurrency, formatLocation, unwrapPaginated } from "@/lib/api-adapters";
 import { ApiError } from "@/lib/api";
-import { deleteProperty, getMyProperties, boostProperty, updatePropertyStatus, type Property, type PropertyStatus, type PropertyType } from "@/services/properties";
+import { deleteProperty, getMyProperties, boostProperty, updatePropertyStatus, getBoostQuota, type Property, type PropertyStatus, type PropertyType, type BoostQuota } from "@/services/properties";
 import { useWalletBalance, useRefreshWallet } from "@/lib/use-wallet-balance";
 import { getPricing, type PricingInfo } from "@/services/pricing";
 
@@ -126,6 +126,7 @@ export default function RechargePage() {
   const [isBoostSubmitting, setIsBoostSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [pricing, setPricing] = useState<PricingInfo | null>(null);
+  const [boostQuota, setBoostQuota] = useState<BoostQuota | null>(null);
   const wallet = useWalletBalance();
   const refreshWallet = useRefreshWallet();
 
@@ -135,6 +136,12 @@ export default function RechargePage() {
     getPricing()
       .then(setPricing)
       .catch((err) => console.error("Failed to load pricing", err));
+  }, []);
+
+  useEffect(() => {
+    getBoostQuota()
+      .then(setBoostQuota)
+      .catch((err) => console.error("Failed to load boost quota", err));
   }, []);
 
   useEffect(() => {
@@ -265,6 +272,10 @@ export default function RechargePage() {
       const updatedProperty = await boostProperty(boostListing.id, selectedPushType);
       toast.success(`Đã đẩy tin ${boostListing.code} thành công.`);
       refreshWallet();
+
+      getBoostQuota()
+        .then(setBoostQuota)
+        .catch((err) => console.error("Failed to refresh boost quota", err));
 
       // Cập nhật lại tin trong danh sách
       setListings((prev) =>
@@ -513,6 +524,7 @@ export default function RechargePage() {
           isBoostSubmitting={isBoostSubmitting}
           onConfirm={confirmBoostListing}
           pricing={pricing}
+          boostQuota={boostQuota}
         />
       )}
 

@@ -1,8 +1,17 @@
 import React from "react";
 import type { Listing } from "../molecules/ListingCard";
 import type { PricingInfo } from "@/services/pricing";
+import type { BoostQuota } from "@/services/properties";
+import { computeBoostQuote } from "@/lib/boost-pricing";
 
 export type PushType = "pushed" | "vip_pushed";
+
+const TIER_LABELS: Record<number, string> = {
+  0: "Tài khoản thường",
+  1: "VIP Bạc",
+  2: "VIP Vàng",
+  3: "VIP Kim Cương",
+};
 
 interface BoostDialogProps {
   listing: Listing;
@@ -14,6 +23,7 @@ interface BoostDialogProps {
   isBoostSubmitting: boolean;
   onConfirm: () => void;
   pricing?: PricingInfo | null;
+  boostQuota?: BoostQuota | null;
 }
 
 export function BoostDialog({
@@ -26,6 +36,7 @@ export function BoostDialog({
   isBoostSubmitting,
   onConfirm,
   pricing,
+  boostQuota,
 }: BoostDialogProps) {
   const formatPrice = (value?: number) => {
     if (value === undefined || value === null) return "-- đ";
@@ -36,20 +47,40 @@ export function BoostDialog({
     ? pricing.boostVipPrice - pricing.boostBasePrice
     : undefined;
 
+  const buildOption = (id: PushType, label: string, fallbackPrice?: number) => {
+    if (boostQuota) {
+      const quote = computeBoostQuote(boostQuota, listing.pushLevel, id);
+      return { id, label, price: quote.isFree ? "Miễn phí" : formatPrice(quote.price) };
+    }
+    return { id, label, price: formatPrice(fallbackPrice) };
+  };
+
   const boostOptions = [
-    { 
-      id: "pushed" as PushType, 
-      label: listing.pushLevel === "pushed" ? "Gia hạn Đẩy tin thường" : "Đẩy tin thường", 
-      helper: "Tin được đẩy lên đầu trang, tự động ghim trong 30 ngày.", 
-      price: formatPrice(pricing?.boostBasePrice) 
+    {
+      ...buildOption(
+        "pushed",
+        listing.pushLevel === "pushed" ? "Gia hạn Đẩy tin thường" : "Đẩy tin thường",
+        pricing?.boostBasePrice,
+      ),
+      helper: "Tin được đẩy lên đầu trang, tự động ghim trong 30 ngày.",
     },
-    { 
-      id: "vip_pushed" as PushType, 
-      label: listing.pushLevel === "pushed" ? "Nâng cấp lên Đẩy tin VIP" : listing.pushLevel === "vip_pushed" ? "Gia hạn Đẩy tin VIP" : "Đẩy tin VIP", 
-      helper: "Nổi bật hơn tin thường, ưu tiên hiển thị đầu, ghim trong 30 ngày.", 
-      price: listing.pushLevel === "pushed" ? formatPrice(upgradePrice) : formatPrice(pricing?.boostVipPrice) 
+    {
+      ...buildOption(
+        "vip_pushed",
+        listing.pushLevel === "pushed"
+          ? "Nâng cấp lên Đẩy tin VIP"
+          : listing.pushLevel === "vip_pushed"
+            ? "Gia hạn Đẩy tin VIP"
+            : "Đẩy tin VIP",
+        listing.pushLevel === "pushed" ? upgradePrice : pricing?.boostVipPrice,
+      ),
+      helper: "Nổi bật hơn tin thường, ưu tiên hiển thị đầu, ghim trong 30 ngày.",
     },
   ];
+
+  const freeRemaining = boostQuota
+    ? Math.max(0, boostQuota.monthlyBoostQuota - boostQuota.boostQuotaUsed)
+    : 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 sm:items-center sm:p-6 animate-in fade-in duration-200">
@@ -93,6 +124,18 @@ export function BoostDialog({
                 </span>
               </span>
             </div>
+            {boostQuota && (
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                <span className="rounded-full bg-gray-200 px-3 py-1 font-bold text-gray-700">
+                  {TIER_LABELS[boostQuota.tier] ?? "Tài khoản thường"}
+                </span>
+                {boostQuota.tier > 0 && (
+                  <span className="font-medium text-gray-600">
+                    Còn {freeRemaining}/{boostQuota.monthlyBoostQuota} lượt đẩy miễn phí tháng này
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           <div>
