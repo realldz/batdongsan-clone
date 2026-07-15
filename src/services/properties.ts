@@ -191,3 +191,17 @@ export async function updatePropertyStatus(id: string, status: PropertyStatus) {
 export async function boostProperty(id: string, pushType: "pushed" | "vip_pushed") {
   return api.post<Property>(`/properties/${id}/boost`, { pushType });
 }
+
+export interface BoostQuota {
+  tier: number;
+  boostMultiplier: number;
+  monthlyBoostQuota: number;
+  boostQuotaUsed: number;
+  boostQuotaResetAt: string | null;
+  boostBasePrice: number;
+  boostVipPrice: number;
+}
+
+export async function getBoostQuota(): Promise<BoostQuota> {
+  return api.get<BoostQuota>("/properties/boost-quota");
+}
