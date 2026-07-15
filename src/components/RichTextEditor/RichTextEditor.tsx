@@ -4,8 +4,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import LinkExtension from "@tiptap/extension-link";
 import ImageExtension from "@tiptap/extension-image";
-import { Bold, Code, Heading2, Heading3, Image as ImageIcon, Italic, Link, List, ListOrdered, Quote, Strikethrough } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
+
+import { uploadArticleImage } from "@/services/upload";
+import { RichTextToolbar } from "./RichTextToolbar";
 
 interface RichTextEditorProps {
   value: string;
@@ -13,26 +15,17 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
-function ToolbarButton({ active, onClick, children }: { active?: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`w-8 h-8 flex items-center justify-center rounded text-xs font-bold transition-colors ${
-        active ? "bg-[#e03c31] text-white" : "text-gray-600 hover:bg-gray-100"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
+        link: false,
       }),
       LinkExtension.configure({
         openOnClick: false,
@@ -67,13 +60,38 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     }
   }, [editor]);
 
-  const setImage = useCallback(() => {
-    if (!editor) return;
-    const url = window.prompt("URL hình ảnh");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  }, [editor]);
+  const handleImageButton = useCallback(() => {
+    setUploadError("");
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleFileSelected = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = "";
+      if (!file || !editor) return;
+
+      if (!file.type.startsWith("image/")) {
+        setUploadError("Vui lòng chọn tệp hình ảnh.");
+        return;
+      }
+
+      setIsUploading(true);
+      setUploadError("");
+      try {
+        const result = await uploadArticleImage(file);
+        const url = result.url ?? "";
+        if (!url) throw new Error("Không nhận được URL ảnh từ máy chủ.");
+        editor.chain().focus().setImage({ src: url }).run();
+      } catch (err) {
+        const error = err as { message?: string };
+        setUploadError(error.message || "Tải ảnh lên thất bại, vui lòng thử lại.");
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [editor]
+  );
 
   if (!editor) {
     return (
@@ -85,53 +103,24 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
 
   return (
     <div className="rounded-lg border border-gray-200 overflow-hidden focus-within:border-[#e03c31] transition-colors">
-      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200 flex-wrap">
-        <ToolbarButton active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
-          <Bold className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
-          <Italic className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}>
-          <Strikethrough className="w-3.5 h-3.5" />
-        </ToolbarButton>
-
-        <div className="w-px h-5 bg-gray-200 mx-1" />
-
-        <ToolbarButton active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
-          <Heading2 className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton active={editor.isActive("heading", { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
-          <Heading3 className="w-3.5 h-3.5" />
-        </ToolbarButton>
-
-        <div className="w-px h-5 bg-gray-200 mx-1" />
-
-        <ToolbarButton active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>
-          <List className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
-          <ListOrdered className="w-3.5 h-3.5" />
-        </ToolbarButton>
-
-        <div className="w-px h-5 bg-gray-200 mx-1" />
-
-        <ToolbarButton active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
-          <Quote className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
-          <Code className="w-3.5 h-3.5" />
-        </ToolbarButton>
-
-        <div className="w-px h-5 bg-gray-200 mx-1" />
-
-        <ToolbarButton active={editor.isActive("link")} onClick={setLink}>
-          <Link className="w-3.5 h-3.5" />
-        </ToolbarButton>
-        <ToolbarButton onClick={setImage}>
-          <ImageIcon className="w-3.5 h-3.5" />
-        </ToolbarButton>
-      </div>
+      <RichTextToolbar
+        editor={editor}
+        isUploading={isUploading}
+        onSetLink={setLink}
+        onInsertImage={handleImageButton}
+      />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileSelected}
+      />
+      {uploadError && (
+        <div className="px-3 py-1.5 bg-red-50 border-b border-red-100 text-xs font-bold text-[#e03c31]">
+          {uploadError}
+        </div>
+      )}
       <div className="relative">
         {editor.isEmpty && placeholder && (
           <div className="absolute inset-0 px-4 py-3 pointer-events-none text-sm text-gray-400 select-none">

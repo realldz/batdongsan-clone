@@ -17,3 +17,10 @@ export async function uploadPropertyImage(propertyId: string, file: File) {
 export async function deletePropertyImage(objectKey: string) {
   return api.delete<{ message?: string }>(`/upload/property/image?objectKey=${encodeURIComponent(objectKey)}`);
 }
+
+export async function uploadArticleImage(file: File) {
+  const formData = new FormData();
+  formData.set("file", file);
+
+  return api.post<UploadResponse>(`/upload/article/image`, formData);
+}
