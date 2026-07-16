@@ -1,22 +1,20 @@
 import type { BoostQuota } from "@/services/properties";
 
-// Mirror backend property.service.ts VIP_PUSH_MULTIPLIER.
-export const VIP_PUSH_MULTIPLIER = 3;
-
 export interface BoostQuote {
   isFree: boolean;
   price: number;
   freeRemaining: number;
 }
 
-// Mirror chính xác công thức boost() backend (property.service.ts:436-453).
+// Mirror chính xác công thức boost() backend (property.service.ts:436-454).
+// Giá VIP lấy từ boostVipPrice (admin cấu hình trong DB), KHÔNG tự nhân boostBasePrice * 3.
 // KHÔNG "sửa cho đẹp": nhánh trả phí nhân boostMultiplier lên cả effectiveBasePrice.
 export function computeBoostQuote(
   quota: BoostQuota,
   currentPushLevel: string | undefined,
   pushType: "pushed" | "vip_pushed",
 ): BoostQuote {
-  const { tier, boostMultiplier, monthlyBoostQuota, boostQuotaUsed, boostBasePrice } = quota;
+  const { tier, boostMultiplier, monthlyBoostQuota, boostQuotaUsed, boostBasePrice, boostVipPrice } = quota;
   const freeRemaining = Math.max(0, monthlyBoostQuota - boostQuotaUsed);
 
   const isVipPush = pushType === "vip_pushed";
@@ -28,9 +26,9 @@ export function computeBoostQuote(
   }
 
   const effectiveBasePrice = isUpgrade
-    ? Math.ceil(boostBasePrice * (VIP_PUSH_MULTIPLIER - 1))
+    ? Math.ceil(boostVipPrice - boostBasePrice)
     : isVipPush
-      ? Math.ceil(boostBasePrice * VIP_PUSH_MULTIPLIER)
+      ? Math.ceil(boostVipPrice)
       : boostBasePrice;
 
   const multiplier = tier === 0 ? 1 : boostMultiplier;
