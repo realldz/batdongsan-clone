@@ -14,6 +14,8 @@ const fallbackImages = [
 
 const fallbackAvatar = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200";
 
+export const CERT_LABELS: Record<string, string> = { "so-hong": "Sổ hồng", "so-do": "Sổ đỏ", "hd-mua-ban": "HĐ mua bán" };
+
 export function ensureImages(images: string[] | undefined, min = 3): string[] {
   const validImages = images?.filter(Boolean) ?? [];
   const result = [...validImages];
@@ -153,6 +155,13 @@ export function propertyToDetailView(property: Property): PropertyDetailView {
     location: formatLocation(property),
     direction: property.direction,
     legalInfo: property.legalInfo,
+    certificateType: property.certificateType ?? null,
+    negotiable: property.negotiable,
+    frontageMeters: property.frontageMeters ?? null,
+    alleyMeters: property.alleyMeters ?? null,
+    totalFloors: property.totalFloors ?? null,
+    floor: property.floor ?? null,
+    pricePerM2: property.pricePerM2 ?? null,
     coordinates: property.coordinates,
     images: property.images ?? [],
     postedAt: formatDate(property.createdAt),

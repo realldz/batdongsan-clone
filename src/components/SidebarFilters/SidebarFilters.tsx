@@ -38,6 +38,18 @@ export const SidebarFilters = () => {
   if (direction) otherParams.direction = direction;
   const status = searchParams.get("status");
   if (status) otherParams.status = status;
+  const certificateTypeParam = searchParams.get("certificateType");
+  if (certificateTypeParam) otherParams.certificateType = certificateTypeParam;
+  const negotiableParam = searchParams.get("negotiable");
+  if (negotiableParam) otherParams.negotiable = negotiableParam;
+
+  const currentCertificate = searchParams.get("certificateType") || "";
+  const currentNegotiable = searchParams.get("negotiable") === "true";
+
+  const certificateOptions = [
+    { slug: "so-hong", label: "Sổ hồng" },
+    { slug: "so-do", label: "Sổ đỏ" },
+  ];
 
   const buildUrl = (extra: Record<string, string>) => {
     const all = { ...otherParams, ...extra };
@@ -166,6 +178,41 @@ export const SidebarFilters = () => {
           <li className="hover:text-primary cursor-pointer transition-colors">3 phòng ngủ</li>
           <li className="hover:text-primary cursor-pointer transition-colors">4 phòng ngủ</li>
           <li className="hover:text-primary cursor-pointer transition-colors">5+ phòng ngủ</li>
+        </ul>
+      </div>
+
+      {/* Box: Giấy tờ pháp lý */}
+      <div className="bg-white rounded p-4 border border-gray-100 shadow-sm">
+        <h3 className="font-bold text-[#2c2c2c] mb-3 text-[13px] uppercase tracking-wide">Giấy tờ pháp lý</h3>
+        <ul className="space-y-3 text-[#2c2c2c]">
+          {certificateOptions.map((option) => {
+            const isActive = currentCertificate === option.slug;
+            return (
+              <li key={option.slug}>
+                <Link
+                  href={buildUrl(isActive ? { certificateType: "", page: "1" } : { certificateType: option.slug, page: "1" })}
+                  className={`hover:text-primary transition-colors block ${isActive ? "text-primary font-bold" : ""}`}
+                >
+                  {option.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {/* Box: Thương lượng */}
+      <div className="bg-white rounded p-4 border border-gray-100 shadow-sm">
+        <h3 className="font-bold text-[#2c2c2c] mb-3 text-[13px] uppercase tracking-wide">Thương lượng</h3>
+        <ul className="space-y-3 text-[#2c2c2c]">
+          <li>
+            <Link
+              href={buildUrl(currentNegotiable ? { negotiable: "", page: "1" } : { negotiable: "true", page: "1" })}
+              className={`hover:text-primary transition-colors block ${currentNegotiable ? "text-primary font-bold" : ""}`}
+            >
+              Giá thương lượng
+            </Link>
+          </li>
         </ul>
       </div>
 

@@ -6,6 +6,7 @@ import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton";
 import { DraggableMap } from "@/components/Map";
 import { VipBadge } from "@/components/atoms/VipBadge";
 import type { PropertyDetailView } from "@/lib/api-adapters";
+import { CERT_LABELS } from "@/lib/api-adapters";
 
 export const PropertyInfo = ({ property }: { property: PropertyDetailView }) => {
   return (
@@ -28,7 +29,12 @@ export const PropertyInfo = ({ property }: { property: PropertyDetailView }) => 
         <div className="flex gap-10">
           <div>
             <div className="text-gray-500 text-xs mb-1">Mức giá</div>
-            <div className="font-bold text-lg lg:text-xl">{property.price}</div>
+            <div className="flex items-center gap-2">
+              <div className="font-bold text-lg lg:text-xl">{property.price}</div>
+              {property.negotiable && (
+                <span className="bg-orange-50 text-orange-600 text-[11px] px-2 py-0.5 rounded-full font-medium border border-orange-100 whitespace-nowrap">Giá thương lượng</span>
+              )}
+            </div>
             <div className="text-gray-400 text-xs text-center border-t border-dashed border-gray-300 mt-1 pt-1">~ {property.pricePerSqm}</div>
           </div>
           <div>
@@ -126,6 +132,51 @@ export const PropertyInfo = ({ property }: { property: PropertyDetailView }) => 
                 Hướng ban công
               </span>
               <span className="font-medium">{property.balconyDirection}</span>
+            </div>
+          )}
+          {property.certificateType && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                Giấy tờ pháp lý
+              </span>
+              <span className="font-medium">{CERT_LABELS[property.certificateType] ?? property.certificateType}</span>
+            </div>
+          )}
+          {property.frontageMeters && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                Mặt tiền
+              </span>
+              <span className="font-medium">{property.frontageMeters} m</span>
+            </div>
+          )}
+          {property.alleyMeters && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                Đường vào
+              </span>
+              <span className="font-medium">{property.alleyMeters} m</span>
+            </div>
+          )}
+          {property.totalFloors && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                Tổng số tầng
+              </span>
+              <span className="font-medium">{property.totalFloors}</span>
+            </div>
+          )}
+          {property.floor && (
+            <div className="flex justify-between items-center py-2 border-b border-gray-100/50">
+              <span className="text-gray-500 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                Tầng
+              </span>
+              <span className="font-medium">{property.floor}</span>
             </div>
           )}
           {property.rentDetails && (

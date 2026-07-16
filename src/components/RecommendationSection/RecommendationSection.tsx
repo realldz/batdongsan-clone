@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-store";
-import { getRecommendations } from "@/services/recommendations";
+import { getRecommendations, pickByType } from "@/services/recommendations";
 import { propertyToPropertyData } from "@/adapters/property-adapters";
 import { PropertyGrid } from "@/components/PropertyGrid/PropertyGrid";
 import type { PropertyData } from "@/types";
@@ -15,19 +15,20 @@ interface RecommendationSectionProps {
 }
 
 export function RecommendationSection({ title, type, fallback }: RecommendationSectionProps) {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isLoading: authLoading } = useAuth();
   const [properties, setProperties] = useState<PropertyData[]>(fallback);
 
   useEffect(() => {
-    if (authLoading || !isAuthenticated) return;
+    if (authLoading) return; // chờ auth resolve, KHÔNG chặn guest
 
     let cancelled = false;
 
     async function fetchRecommendations() {
       try {
-        const data = await getRecommendations(type);
-        if (!cancelled && data.length > 0) {
-          setProperties(data.map(propertyToPropertyData));
+        const data = await getRecommendations();
+        const chosen = pickByType(data, type);
+        if (!cancelled && chosen.length > 0) {
+          setProperties(chosen.map(propertyToPropertyData));
         }
       } catch {
         // giữ fallback, không hiện lỗi cho section phụ
@@ -39,7 +40,7 @@ export function RecommendationSection({ title, type, fallback }: RecommendationS
     return () => {
       cancelled = true;
     };
-  }, [isAuthenticated, authLoading, type]);
+  }, [authLoading, type]);
 
   if (properties.length === 0) return null;
 

@@ -49,6 +49,18 @@ export interface CreateListingContextType {
   setPriceUnit: React.Dispatch<React.SetStateAction<string>>;
   interior: string;
   setInterior: React.Dispatch<React.SetStateAction<string>>;
+  certificateType: string;
+  setCertificateType: React.Dispatch<React.SetStateAction<string>>;
+  negotiable: boolean;
+  setNegotiable: React.Dispatch<React.SetStateAction<boolean>>;
+  frontageMeters: string;
+  setFrontageMeters: React.Dispatch<React.SetStateAction<string>>;
+  alleyMeters: string;
+  setAlleyMeters: React.Dispatch<React.SetStateAction<string>>;
+  totalFloors: string;
+  setTotalFloors: React.Dispatch<React.SetStateAction<string>>;
+  floor: string;
+  setFloor: React.Dispatch<React.SetStateAction<string>>;
   houseDirection: string;
   setHouseDirection: React.Dispatch<React.SetStateAction<string>>;
   balconyDirection: string;

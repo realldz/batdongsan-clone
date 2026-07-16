@@ -47,6 +47,9 @@ function parseSearchParams(raw: Record<string, string | string[] | undefined>): 
   if (direction) params.direction = direction;
   const status = getStr("status");
   if (status === "pending" || status === "active" || status === "sold" || status === "rented" || status === "hidden" || status === "draft") params.status = status;
+  const certificateType = getStr("certificateType");
+  if (certificateType) params.certificateType = certificateType;
+  if (getStr("negotiable") === "true") params.negotiable = true;
 
   return params;
 }

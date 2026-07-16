@@ -17,11 +17,29 @@ const directionOptions = [
 const moveInOptions = ["Thoả thuận", "Ở ngay", "Sau 1 tuần", "Sau 15 ngày", "Sau 1 tháng"];
 const utilityPriceOptions = ["Theo nhà cung cấp", "Theo giá dân", "Theo giá kinh doanh", "Miễn phí", "Thoả thuận"];
 const internetPriceOptions = ["Thoả thuận", "Miễn phí", "200.000 đ/tháng", "300.000 đ/tháng", "Theo nhà cung cấp"];
+const certificateOptions = [
+  { label: "Đang cập nhật", value: "" },
+  { label: "Sổ hồng", value: "so-hong" },
+  { label: "Sổ đỏ", value: "so-do" },
+  { label: "Hợp đồng mua bán", value: "hd-mua-ban" },
+];
 
 export function OtherInfoSection() {
   const {
     interior,
     setInterior,
+    certificateType,
+    setCertificateType,
+    negotiable,
+    setNegotiable,
+    frontageMeters,
+    setFrontageMeters,
+    alleyMeters,
+    setAlleyMeters,
+    totalFloors,
+    setTotalFloors,
+    floor,
+    setFloor,
     bedrooms,
     setBedrooms,
     bathrooms,
@@ -79,6 +97,65 @@ export function OtherInfoSection() {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-[13px] font-bold mb-2">Giấy tờ pháp lý</label>
+            <div className="relative">
+              <select
+                value={certificateType}
+                onChange={(event) => setCertificateType(event.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2.5 appearance-none outline-none focus:border-[#2c2c2c] text-[14px] bg-white font-medium text-gray-800"
+              >
+                {certificateOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: "Mặt tiền (m)", value: frontageMeters, setValue: setFrontageMeters },
+              { label: "Đường vào (m)", value: alleyMeters, setValue: setAlleyMeters },
+              { label: "Tổng số tầng", value: totalFloors, setValue: setTotalFloors },
+              { label: "Tầng số", value: floor, setValue: setFloor },
+            ].map((field) => (
+              <div key={field.label}>
+                <label className="block text-[13px] font-bold mb-2">{field.label}</label>
+                <input
+                  type="number"
+                  min={0}
+                  inputMode="decimal"
+                  value={field.value}
+                  onChange={(event) => field.setValue(event.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 outline-none focus:border-[#2c2c2c] text-[14px] bg-white font-medium text-gray-800"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={() => setNegotiable(!negotiable)}
+              className={`px-4 py-2 rounded-full border text-[13px] font-bold flex items-center gap-2 transition-colors ${
+                negotiable
+                  ? "bg-[#2c2c2c] text-white border-[#2c2c2c]"
+                  : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+              }`}
+            >
+              <div className="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[9px]">
+                đ
+              </div>
+              Giá thương lượng
+            </button>
           </div>
 
           <div className="flex items-center justify-between py-2 border-b border-gray-100">
@@ -279,6 +356,12 @@ export function OtherInfoSection() {
             <span className="text-gray-500">Hướng ban công</span>
             <span>{balconyDirection}</span>
           </div>
+          <div className="flex justify-between py-1.5 border-b border-gray-100 last:border-0">
+            <span className="text-gray-500">Giấy tờ pháp lý</span>
+            <span>
+              {certificateOptions.find((o) => o.value === certificateType)?.label ?? "Đang cập nhật"}
+            </span>
+          </div>
           <div
             className="mt-3 text-blue-600 font-bold hover:underline cursor-pointer"
             onClick={(e) => {
@@ -286,7 +369,7 @@ export function OtherInfoSection() {
               toggleSection("other");
             }}
           >
-            +6 thông tin khác
+            +12 thông tin khác
           </div>
         </div>
       )}

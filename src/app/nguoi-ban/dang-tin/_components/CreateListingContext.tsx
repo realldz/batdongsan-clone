@@ -34,6 +34,12 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
   const [price, setPrice] = useState("");
   const [priceUnit, setPriceUnit] = useState("VND");
   const [interior, setInterior] = useState("Đầy đủ");
+  const [certificateType, setCertificateType] = useState("");
+  const [negotiable, setNegotiable] = useState(false);
+  const [frontageMeters, setFrontageMeters] = useState("");
+  const [alleyMeters, setAlleyMeters] = useState("");
+  const [totalFloors, setTotalFloors] = useState("");
+  const [floor, setFloor] = useState("");
   const [houseDirection, setHouseDirection] = useState("Đông");
   const [balconyDirection, setBalconyDirection] = useState("Đông");
   const [moveInTime, setMoveInTime] = useState("Thoả thuận");
@@ -153,6 +159,12 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
           if (property.bedrooms) setBedrooms(property.bedrooms);
           if (property.bathrooms) setBathrooms(property.bathrooms);
           if (property.interior) setInterior(property.interior);
+          if (property.certificateType) setCertificateType(property.certificateType);
+          if (property.negotiable) setNegotiable(property.negotiable);
+          if (property.frontageMeters) setFrontageMeters(String(property.frontageMeters));
+          if (property.alleyMeters) setAlleyMeters(String(property.alleyMeters));
+          if (property.totalFloors) setTotalFloors(String(property.totalFloors));
+          if (property.floor) setFloor(String(property.floor));
           if (property.balconyDirection) setBalconyDirection(property.balconyDirection);
           if (property.amenities) setAmenities(property.amenities);
           if (property.tier !== undefined) setPostTier(property.tier);
@@ -240,10 +252,18 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
       street: selectedAddress.street || undefined,
       coordinates: { lat: selectedAddress.lat, lng: selectedAddress.lng },
       direction: houseDirection,
-      legalInfo: "Đang cập nhật",
+      legalInfo: certificateType || "Đang cập nhật",
       bedrooms: bedrooms || undefined,
       bathrooms: bathrooms || undefined,
       interior: interior || undefined,
+      certificateType: certificateType || undefined,
+      furnitureStatus: interior || undefined,
+      negotiable,
+      frontageMeters: frontageMeters ? Number(frontageMeters) : undefined,
+      alleyMeters: alleyMeters ? Number(alleyMeters) : undefined,
+      totalFloors: totalFloors ? Number(totalFloors) : undefined,
+      floor: floor ? Number(floor) : undefined,
+      pricePerM2: parsedArea > 0 ? Math.round(parsedPrice / parsedArea) : undefined,
       balconyDirection: balconyDirection || undefined,
       contactName: contactName || undefined,
       contactPhone: contactPhone || undefined,
@@ -262,7 +282,8 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
     }),
     [title, description, demand, parsedPrice, parsedArea, displayAddress, selectedAddress,
      houseDirection, bedrooms, bathrooms, interior, balconyDirection, contactName,
-     contactPhone, contactEmail, amenities, moveInTime, electricityPrice, waterPrice, internetPrice]
+     contactPhone, contactEmail, amenities, moveInTime, electricityPrice, waterPrice, internetPrice,
+     certificateType, negotiable, frontageMeters, alleyMeters, totalFloors, floor]
   );
 
   // Autosave draft: debounce khi form thay đổi (chỉ khi có nội dung ý nghĩa).
@@ -427,6 +448,18 @@ export function CreateListingProvider({ children }: { children: React.ReactNode 
         setPriceUnit,
         interior,
         setInterior,
+        certificateType,
+        setCertificateType,
+        negotiable,
+        setNegotiable,
+        frontageMeters,
+        setFrontageMeters,
+        alleyMeters,
+        setAlleyMeters,
+        totalFloors,
+        setTotalFloors,
+        floor,
+        setFloor,
         houseDirection,
         setHouseDirection,
         balconyDirection,

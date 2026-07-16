@@ -15,8 +15,9 @@ import {
 import { RevenueTrendChart } from "./_components/organisms/RevenueTrendChart";
 import { CategoryPieCharts } from "./_components/organisms/CategoryPieCharts";
 import { TopCitiesTable } from "./_components/organisms/TopCitiesTable";
+import { TrendAnalysisPanel } from "./_components/organisms/TrendAnalysisPanel";
 
-const EMPTY_PIE_CHARTS: PieCharts = { rentChart: [], saleChart: [] };
+const EMPTY_PIE_CHARTS: PieCharts = { rentChart: [], saleChart: [], trendAnalysis: [] };
 
 export default function AdminAnalyticsPage() {
   const [pieCityRange, setPieCityRange] = useState(30);
@@ -91,6 +92,8 @@ export default function AdminAnalyticsPage() {
         onRangeChange={setPieCityRange}
         loading={loadingPie}
       />
+
+      <TrendAnalysisPanel items={pieCharts.trendAnalysis} loading={loadingPie} />
 
       <TopCitiesTable cities={featuredCities} loading={loadingPie} />
     </AdminPageTemplate>

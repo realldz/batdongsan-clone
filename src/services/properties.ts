@@ -56,6 +56,14 @@ export interface Property {
   user?: PropertyOwner;
   bedrooms?: number;
   bathrooms?: number;
+  certificateType?: string;
+  furnitureStatus?: string;
+  negotiable?: boolean;
+  frontageMeters?: number;
+  alleyMeters?: number;
+  totalFloors?: number;
+  floor?: number;
+  pricePerM2?: number | string;
   interior?: string;
   balconyDirection?: string;
   contactName?: string;
@@ -98,6 +106,8 @@ export interface PropertySearchParams {
   ward?: string;
   bedrooms?: number;
   direction?: string;
+  certificateType?: string;
+  negotiable?: boolean;
   status?: Exclude<PropertyStatus, "rejected">;
 }
 
@@ -118,6 +128,14 @@ export interface CreatePropertyRequest {
   legalInfo?: string;
   bedrooms?: number;
   bathrooms?: number;
+  certificateType?: string;
+  furnitureStatus?: string;
+  negotiable?: boolean;
+  frontageMeters?: number;
+  alleyMeters?: number;
+  totalFloors?: number;
+  floor?: number;
+  pricePerM2?: number;
   interior?: string;
   balconyDirection?: string;
   contactName?: string;
@@ -133,7 +151,7 @@ function buildQuery(params: object) {
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if ((typeof value === "string" || typeof value === "number") && value !== "") {
+    if ((typeof value === "string" || typeof value === "number" || typeof value === "boolean") && value !== "") {
       query.set(key, String(value));
     }
   });

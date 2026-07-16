@@ -8,6 +8,7 @@ export interface PieChartSlice {
 export interface PieCharts {
   rentChart: PieChartSlice[];
   saleChart: PieChartSlice[];
+  trendAnalysis: string[];
 }
 
 export interface FeaturedCity {

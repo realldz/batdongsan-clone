@@ -45,6 +45,13 @@ export interface PropertyDetailView {
   location: string;
   direction?: string | null;
   legalInfo?: string | null;
+  certificateType?: string | null;
+  negotiable?: boolean;
+  frontageMeters?: number | null;
+  alleyMeters?: number | null;
+  totalFloors?: number | null;
+  floor?: number | null;
+  pricePerM2?: number | string | null;
   coordinates?: { lat: number; lng: number } | null;
   images: string[];
   postedAt: string;
