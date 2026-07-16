@@ -28,15 +28,15 @@ export function MembershipBanner() {
         <ul className="mt-6 space-y-2.5 text-[13px] text-red-50 font-medium">
           <li className="flex items-center gap-2.5">
             <span className="w-1 h-1 rounded-full bg-white opacity-50 shrink-0"></span>
-            Có nhiều lựa chọn phù hợp với ngân sách đăng tin, giúp tối ưu hiệu quả bán hàng
+            Bậc càng cao, tin đăng được đẩy càng thường xuyên
           </li>
           <li className="flex items-center gap-2.5">
             <span className="w-1 h-1 rounded-full bg-white opacity-50 shrink-0"></span>
-            Voucher giảm giá linh hoạt, phù hợp với nhiều lựa chọn đăng tin
+            Ưu tiên hiển thị cao hơn, tiếp cận nhiều khách hàng hơn
           </li>
           <li className="flex items-center gap-2.5">
             <span className="w-1 h-1 rounded-full bg-white opacity-50 shrink-0"></span>
-            Sử dụng các tính năng tiện ích nâng cao dành riêng cho Hội viên
+            Ba hạng Bạc, Vàng, Kim cương phù hợp mọi nhu cầu
           </li>
         </ul>
         <p className="mt-6 text-[11px] text-red-200/80 italic font-medium">Giá của các gói bên dưới chưa bao gồm 8% VAT.</p>

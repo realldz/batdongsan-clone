@@ -29,9 +29,9 @@ export const VIP_TIER_TO_KEY: Record<number, SubscriptionTier> = {
 
 // Human-readable Vietnamese labels shown in the UI
 export const TIER_LABELS: Record<SubscriptionTier, string> = {
-  silver: "Hội viên Cơ bản",
-  gold: "Hội viên Tiêu chuẩn",
-  diamond: "Hội viên Cao cấp",
+  silver: "Bạc",
+  gold: "Vàng",
+  diamond: "Kim cương",
 };
 
 // Pricing key on the pricing payload for each tier

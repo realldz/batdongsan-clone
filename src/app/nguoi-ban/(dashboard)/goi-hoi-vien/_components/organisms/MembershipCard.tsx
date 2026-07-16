@@ -1,13 +1,10 @@
-import { FeatureItem } from "../atoms/FeatureItem";
-
 interface MembershipCardProps {
   name: string;
   description: string;
   pricePerMonth: number;
   originalPricePerMonth?: number;
   savingsPerMonth?: number;
-  features: string[];
-  vouchers: string[];
+  benefits: string[];
   isPopular?: boolean;
   isCurrent?: boolean;
   buyLabel?: string;
@@ -21,8 +18,7 @@ export function MembershipCard({
   pricePerMonth,
   originalPricePerMonth,
   savingsPerMonth,
-  features,
-  vouchers,
+  benefits,
   isPopular,
   isCurrent,
   buyLabel = "Mua gói 1 tháng",
@@ -88,28 +84,16 @@ export function MembershipCard({
           </button>
         </div>
         
-        <div className="space-y-5 text-[13px]">
-          <div>
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">Gói voucher 30 ngày <span className="text-gray-400 font-normal lowercase">(i)</span></p>
-            <ul className="space-y-2.5">
-              {vouchers.map((v, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-gray-700 font-medium text-[13px]">
-                  <span className="w-4 h-4 rounded text-[#e03c31] border border-[#e03c31] flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">-</span>
-                  <span dangerouslySetInnerHTML={{ __html: v }}></span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div className="pt-4 border-t border-gray-100">
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">Tiện ích</p>
-            <ul className="space-y-2.5">
-              <FeatureItem label="Bản quyền ảnh" included={features.includes("Bản quyền ảnh")} />
-              <FeatureItem label="Hẹn giờ đăng tin" included={features.includes("Hẹn giờ đăng tin")} />
-              <FeatureItem label="Báo cáo hiệu suất" included={features.includes("Báo cáo hiệu suất")} />
-              <FeatureItem label="Báo cáo thị trường" included={features.includes("Báo cáo thị trường")} />
-            </ul>
-          </div>
+        <div className="text-[13px]">
+          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">Quyền lợi</p>
+          <ul className="space-y-2.5">
+            {benefits.map((b, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-gray-700 font-medium text-[13px]">
+                <span className="w-4 h-4 rounded text-[#00b2a9] border border-[#00b2a9] flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">✓</span>
+                <span dangerouslySetInnerHTML={{ __html: b }}></span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

@@ -19,49 +19,43 @@ interface PackageDef {
   icon: string;
   divisor: number; // original price factor for "discount" display
   isPopular?: boolean;
-  vouchers: string[];
-  features: string[];
+  benefits: string[];
 }
 
 const PACKAGES: PackageDef[] = [
   {
     tier: "silver",
-    name: "Hội viên Cơ bản",
+    name: "Bạc",
     description: "Phù hợp với môi giới mới hoặc giỏ hàng nhỏ",
-    icon: "⛺",
+    icon: "🥈",
     divisor: 0.69,
-    vouchers: [
-      "<b>15</b> voucher giảm <b>35.000 đ</b> mỗi lần đăng Tin Thường",
-      "<b>15</b> voucher giảm <b>10.000 đ</b> mỗi lần đẩy Tin Thường",
+    benefits: [
+      "Đẩy tin <b>1 lần/ngày</b>",
+      "Ưu tiên hiển thị <b>mức cơ bản</b>",
     ],
-    features: ["Bản quyền ảnh"],
   },
   {
     tier: "gold",
-    name: "Hội viên Tiêu chuẩn",
+    name: "Vàng",
     description: "Phù hợp với môi giới chuyên nghiệp có giỏ hàng từ 10 BĐS",
-    icon: "🏠",
+    icon: "🥇",
     divisor: 0.67,
     isPopular: true,
-    vouchers: [
-      "<b>30</b> voucher giảm <b>35.000 đ</b> mỗi lần đăng Tin Thường",
-      "<b>30</b> voucher giảm <b>10.000 đ</b> mỗi lần đẩy Tin Thường",
-      "<b>1</b> voucher giảm <b>400.000 đ</b> mỗi lần đăng Tin VIP",
+    benefits: [
+      "Đẩy tin <b>3 lần/ngày</b>",
+      "Ưu tiên hiển thị <b>mức cao</b>",
     ],
-    features: ["Bản quyền ảnh", "Hẹn giờ đăng tin", "Báo cáo hiệu suất"],
   },
   {
     tier: "diamond",
-    name: "Hội viên Cao cấp",
+    name: "Kim cương",
     description: "Phù hợp với môi giới có giỏ hàng và ngân sách quảng cáo lớn",
-    icon: "🏢",
+    icon: "💎",
     divisor: 0.61,
-    vouchers: [
-      "<b>50</b> voucher giảm <b>35.000 đ</b> mỗi lần đăng Tin Thường",
-      "<b>50</b> voucher giảm <b>10.000 đ</b> mỗi lần đẩy Tin Thường",
-      "<b>3</b> voucher giảm <b>400.000 đ</b> mỗi lần đăng Tin VIP",
+    benefits: [
+      "Đẩy tin <b>không giới hạn</b>",
+      "Ưu tiên hiển thị <b>cao nhất</b>",
     ],
-    features: ["Bản quyền ảnh", "Hẹn giờ đăng tin", "Báo cáo hiệu suất", "Báo cáo thị trường"],
   },
 ];
 
@@ -151,8 +145,7 @@ export default function MembershipPage() {
                   isCurrent={isCurrent}
                   buyLabel={isUpgradeFlow ? "Đổi sang gói này" : "Mua gói 1 tháng"}
                   icon={pkg.icon}
-                  vouchers={pkg.vouchers}
-                  features={pkg.features}
+                  benefits={pkg.benefits}
                   onBuy={() => setSelected(pkg)}
                 />
               );
