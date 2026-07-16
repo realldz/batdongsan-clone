@@ -103,6 +103,7 @@ function propertyToSellerListing(property: Property): Listing {
     status: mapPropertyStatusToListingStatus(property.status),
     packageName,
     pushLevel: property.pushLevel,
+    pushExpiredAt: property.pushExpiredAt,
     inquiries: 0,
     views: property.viewCount || 0,
     image: property.images?.[0] ?? "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",

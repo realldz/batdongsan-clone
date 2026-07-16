@@ -43,13 +43,21 @@ export function BoostDialog({
     return `${value.toLocaleString("vi-VN")} đ`;
   };
 
+  // Mirror backend isCurrentlyPushed gate: an expired push is treated as no push
+  // (backend property.service.ts:413-416 — pushExpiredAt must be > now).
+  const isPushActive = listing.pushExpiredAt
+    // eslint-disable-next-line react-hooks/purity -- intentional render-time expiry gate; mirrors backend pushExpiredAt > now
+    ? new Date(listing.pushExpiredAt).getTime() > Date.now()
+    : false;
+  const effectivePushLevel = isPushActive ? listing.pushLevel : undefined;
+
   const upgradePrice = pricing?.boostVipPrice && pricing?.boostBasePrice
     ? pricing.boostVipPrice - pricing.boostBasePrice
     : undefined;
 
   const buildOption = (id: PushType, label: string, fallbackPrice?: number) => {
     if (boostQuota) {
-      const quote = computeBoostQuote(boostQuota, listing.pushLevel, id);
+      const quote = computeBoostQuote(boostQuota, effectivePushLevel, id);
       return { id, label, price: quote.isFree ? "Miễn phí" : formatPrice(quote.price) };
     }
     return { id, label, price: formatPrice(fallbackPrice) };
@@ -59,7 +67,7 @@ export function BoostDialog({
     {
       ...buildOption(
         "pushed",
-        listing.pushLevel === "pushed" ? "Gia hạn Đẩy tin thường" : "Đẩy tin thường",
+        effectivePushLevel === "pushed" ? "Gia hạn Đẩy tin thường" : "Đẩy tin thường",
         pricing?.boostBasePrice,
       ),
       helper: "Tin được đẩy lên đầu trang, tự động ghim trong 30 ngày.",
@@ -67,12 +75,12 @@ export function BoostDialog({
     {
       ...buildOption(
         "vip_pushed",
-        listing.pushLevel === "pushed"
+        effectivePushLevel === "pushed"
           ? "Nâng cấp lên Đẩy tin VIP"
-          : listing.pushLevel === "vip_pushed"
+          : effectivePushLevel === "vip_pushed"
             ? "Gia hạn Đẩy tin VIP"
             : "Đẩy tin VIP",
-        listing.pushLevel === "pushed" ? upgradePrice : pricing?.boostVipPrice,
+        effectivePushLevel === "pushed" ? upgradePrice : pricing?.boostVipPrice,
       ),
       helper: "Nổi bật hơn tin thường, ưu tiên hiển thị đầu, ghim trong 30 ngày.",
     },
@@ -178,7 +186,7 @@ export function BoostDialog({
           </div>
 
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-            {listing.pushLevel === "pushed" && selectedPushType === "vip_pushed" 
+            {effectivePushLevel === "pushed" && selectedPushType === "vip_pushed"
               ? "Khi xác nhận, hệ thống sẽ tính phí chênh lệch và nâng cấp tin của bạn lên VIP, ghim trên đầu trong 30 ngày mới."
               : "Khi xác nhận, hệ thống gọi API để trừ lượt đẩy tin (nếu là VIP) hoặc trừ tiền ví và đẩy tin của bạn lên đầu trang trong 30 ngày."}
           </div>
@@ -204,7 +212,7 @@ export function BoostDialog({
             disabled={isBoostSubmitting}
             className="rounded-full bg-primary px-5 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isBoostSubmitting ? "Đang xử lý..." : listing.pushLevel === "pushed" && selectedPushType === "vip_pushed" ? "Xác nhận nâng cấp" : "Xác nhận đẩy tin"}
+            {isBoostSubmitting ? "Đang xử lý..." : effectivePushLevel === "pushed" && selectedPushType === "vip_pushed" ? "Xác nhận nâng cấp" : "Xác nhận đẩy tin"}
           </button>
         </div>
       </div>

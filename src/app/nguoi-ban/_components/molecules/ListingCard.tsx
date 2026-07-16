@@ -32,6 +32,7 @@ export type Listing = {
   image: string;
   badge?: string;
   pushLevel?: string;
+  pushExpiredAt?: string | Date;
 };
 
 export const statusTone: Record<ListingStatus, string> = {
