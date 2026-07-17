@@ -14,6 +14,7 @@ type AuthView = "login" | "register";
 interface FormFields {
   fullName: string;
   email: string;
+  phone: string;
   password: string;
   confirmPassword: string;
 }
@@ -21,6 +22,7 @@ interface FormFields {
 const initialFields: FormFields = {
   fullName: "",
   email: "",
+  phone: "",
   password: "",
   confirmPassword: "",
 };
@@ -68,6 +70,7 @@ export function HeaderAuthActions() {
         await register({
           fullName: fields.fullName,
           email: fields.email,
+          phone: fields.phone,
           password: fields.password,
         });
       }
@@ -338,6 +341,17 @@ export function HeaderAuthActions() {
               onChange={(e) => updateField("email", e.target.value)}
             />
           </FormField>
+
+          {activeView === "register" && (
+            <FormField label="Số điện thoại" required>
+              <Input
+                type="tel"
+                placeholder="Nhập số điện thoại"
+                value={fields.phone}
+                onChange={(e) => updateField("phone", e.target.value)}
+              />
+            </FormField>
+          )}
 
           <FormField label="Mật khẩu" required>
             <Input
