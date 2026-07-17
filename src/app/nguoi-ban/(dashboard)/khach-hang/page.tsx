@@ -5,7 +5,7 @@ import { Search, Filter, Info, Eye } from "lucide-react";
 import { SellerHeader } from "@/app/nguoi-ban/_components/SellerHeader";
 import { useAuth } from "@/lib/auth-store";
 import { apiLeadToView, unwrapArray, type LeadView } from "@/lib/api-adapters";
-import { searchProperties, type Property } from "@/services/properties";
+import { getMyProperties, type Property } from "@/services/properties";
 import { searchLeads, updateLeadStatus, updateLeadNotes, type LeadStatus } from "@/services/leads";
 import { StatusBadge } from "@/app/nguoi-ban/_components/atoms/StatusBadge";
 import Link from "next/link";
@@ -43,11 +43,8 @@ export default function KhachHangPage() {
     if (!user?.id) return;
     setLoading(true);
     try {
-      const propsResp = await searchProperties({ page: 1, perPage: 100 });
-      const allProps = unwrapArray<Property>(propsResp);
-      const myProps = allProps.filter(
-        (p) => p.host === user.id || p.user?.id === user.id
-      );
+      const propsResp = await getMyProperties({ page: 1, perPage: 100 });
+      const myProps = unwrapArray<Property>(propsResp);
 
       setMyProperties(myProps);
 

@@ -10,7 +10,7 @@ import {
 } from "../_components/organisms";
 import { useWalletBalance } from "@/lib/use-wallet-balance";
 import { useAuth } from "@/lib/auth-store";
-import { searchProperties, type Property } from "@/services/properties";
+import { getMyProperties, type Property } from "@/services/properties";
 import { searchLeads } from "@/services/leads";
 import { apiLeadToView, unwrapArray, type LeadView } from "@/lib/api-adapters";
 
@@ -27,11 +27,8 @@ export default function OverviewPage() {
     async function loadLeads() {
       setLeadsLoading(true);
       try {
-        const propsResp = await searchProperties({ page: 1, perPage: 100 });
-        const allProps = unwrapArray<Property>(propsResp);
-        const myProps = user?.id
-          ? allProps.filter((p) => p.host === user.id || p.user?.id === user.id)
-          : [];
+        const propsResp = await getMyProperties({ page: 1, perPage: 100 });
+        const myProps = unwrapArray<Property>(propsResp);
 
         if (myProps.length === 0) {
           if (!ignore) {
