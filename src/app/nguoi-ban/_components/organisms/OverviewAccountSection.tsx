@@ -7,7 +7,6 @@ interface OverviewAccountSectionProps {
     total: string;
     main: string;
     promotion: string;
-    code?: string;
   };
   activeListingCount?: number;
 }
@@ -44,13 +43,7 @@ export function OverviewAccountSection({
               </div>
             </div>
           </div>
-          <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-            <Link
-              href="#"
-              className="text-gray-600 font-medium hover:text-gray-900 transition-colors text-sm"
-            >
-              Mã nạp tiền: <span className="font-bold">{wallet.code}</span>
-            </Link>
+          <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-end">
             <Link
               href="/nguoi-ban/nap-tien"
               className="bg-red-50 text-primary px-4 py-1.5 rounded-full font-bold hover:bg-red-100 transition-colors text-sm"

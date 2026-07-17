@@ -42,9 +42,9 @@ export default function WalletBalancePage() {
             )}
           </section>
 
-          <section className="grid gap-4 md:grid-cols-3">
+          <section className="grid gap-4 md:grid-cols-2">
             {loading ? (
-              Array.from({ length: 3 }).map((_, i) => (
+              Array.from({ length: 2 }).map((_, i) => (
                 <SkeletonBalanceCard key={i} />
               ))
             ) : (
@@ -58,11 +58,6 @@ export default function WalletBalancePage() {
                   icon={<Gift className="h-5 w-5" />}
                   label="Tài khoản khuyến mãi"
                   value={wallet.promotion}
-                />
-                <BalanceCard
-                  icon={<CreditCard className="h-5 w-5" />}
-                  label="Mã nạp tiền"
-                  value={wallet.code}
                 />
               </>
             )}

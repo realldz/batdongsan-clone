@@ -7,14 +7,12 @@ export interface WalletBalanceView {
   total: string;
   main: string;
   promotion: string;
-  code: string;
 }
 
 const fallbackWallet: WalletBalanceView = {
   total: "0 đ",
   main: "0 đ",
   promotion: "0 đ",
-  code: "BDSVN050",
 };
 
 function toNumber(value: unknown): number | null {
@@ -42,7 +40,6 @@ function mapWalletBalance(balance: WalletBalance): WalletBalanceView {
     total: formatAmount(total),
     main: formatAmount(main),
     promotion: formatAmount(promotion),
-    code: typeof balance.code === "string" && balance.code ? balance.code : fallbackWallet.code,
   };
 }
 

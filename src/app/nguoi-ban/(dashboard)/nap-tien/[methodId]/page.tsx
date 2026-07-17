@@ -11,8 +11,6 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
   const { methodId } = resolvedParams;
 
   const [amount, setAmount] = useState("");
-  const [agreed, setAgreed] = useState(false);
-  const [needInvoice, setNeedInvoice] = useState(false);
   const [selectedBank, setSelectedBank] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -45,7 +43,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
   const parsedAmount = Number(amount.replace(/[^\d]/g, ""));
 
   const handleSubmit = async () => {
-    if (!agreed || !parsedAmount || (methodId === "atm" && !selectedBank)) {
+    if (!parsedAmount || (methodId === "atm" && !selectedBank)) {
       return;
     }
 
@@ -90,10 +88,6 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <div className="flex items-start gap-2 mt-3 p-3 bg-red-50 rounded text-sm text-primary">
-                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-                <span className="font-medium">Nạp từ 2.000.000 đ để được nhận khuyến mãi</span>
-              </div>
             </div>
 
             {/* Quick Amounts */}
@@ -110,9 +104,6 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
                     className="flex flex-col items-center justify-center py-3 px-2 rounded-lg border border-gray-200 hover:border-primary hover:bg-red-50 transition-colors"
                   >
                     <span className="font-bold text-gray-900 mb-0.5">{q.label}</span>
-                    {q.bonus > 0 && (
-                      <span className="text-[11px] font-bold text-primary">Tặng: {q.bonus.toLocaleString('vi-VN')} đ</span>
-                    )}
                   </button>
                 ))}
               </div>
@@ -137,55 +128,7 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
               </div>
             )}
 
-            {/* Invoice Toggle */}
-            <div className="mb-8 border-t border-gray-100 pt-8">
-              <label className="flex items-center justify-between cursor-pointer group">
-                <span className="font-bold text-gray-900">Xuất hóa đơn cho giao dịch</span>
-                <div className={`relative w-11 h-6 rounded-full transition-colors ${needInvoice ? 'bg-primary' : 'bg-gray-300'}`} onClick={() => setNeedInvoice(!needInvoice)}>
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${needInvoice ? 'left-6' : 'left-1'}`}></div>
-                </div>
-              </label>
 
-              {needInvoice && (
-                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">Họ tên người mua hàng</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" defaultValue="Long Ngô Tiến" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">Email nhận hóa đơn</label>
-                    <input type="email" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">Tên đơn vị (Tên công ty)</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">Mã số thuế</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" />
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-sm font-medium text-gray-700">Địa chỉ</label>
-                    <input type="text" className="w-full h-10 px-3 rounded border border-gray-300 focus:border-primary focus:outline-none text-sm" defaultValue="Việt Nam" />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Terms and Info */}
-            <div className="mb-8 p-4 bg-gray-50 rounded-lg text-xs text-gray-600 leading-relaxed space-y-2 border border-gray-100">
-              <p>• Batdongsan.com.vn sẽ xuất Hóa đơn điện tử tự động theo thông tin khách hàng cung cấp và gửi về Email nhận hóa đơn. Quý khách vui lòng nhập đầy đủ, chính xác và chịu trách nhiệm về những thông tin đã cung cấp.</p>
-              <p>• Hoá đơn GTGT sẽ được xuất trong ngày và cho tất cả các giao dịch nộp tiền.</p>
-              <p>• Nội dung dịch vụ được thể hiện trên hoá đơn là Phí dịch vụ quảng cáo trên website batdongsan.com.vn.</p>
-              <p>• Mọi vấn đề cần hỗ trợ về hoá đơn của giao dịch nộp tiền trong ngày, vui lòng liên hệ hotline <span className="font-bold text-primary">1900 1881</span> trước 18h.</p>
-
-              <div className="pt-2 mt-2 border-t border-gray-200">
-                <p className="font-bold text-gray-900 mb-1">Thời hạn sử dụng tiền trong tài khoản:</p>
-                <p>• Tài khoản chính: 12 tháng</p>
-                <p>• Tài khoản khuyến mãi: Tối đa 6 tháng</p>
-                <Link href="#" className="text-[#009ba1] hover:underline inline-block mt-1 font-medium">Thông tin chi tiết xem tại Quy định về tiền trong tài khoản</Link>
-              </div>
-            </div>
 
             {submitMessage && (
               <div className="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-primary">
@@ -194,19 +137,9 @@ export default function RechargeDetailPage({ params }: { params: Promise<{ metho
             )}
 
             {/* Submit Action */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
-              <label className="flex items-center gap-2 cursor-pointer group w-full sm:w-auto">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-[#e03c31]"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                />
-                <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Tôi đã đọc và đồng ý</span>
-              </label>
-
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-gray-200">
               <button
-                disabled={isSubmitting || !agreed || !parsedAmount || (methodId === 'atm' && !selectedBank)}
+                disabled={isSubmitting || !parsedAmount || (methodId === 'atm' && !selectedBank)}
                 onClick={handleSubmit}
                 className="w-full sm:w-auto min-w-[160px] h-[44px] rounded font-bold text-white transition-colors flex items-center justify-center px-8 disabled:bg-gray-300 disabled:cursor-not-allowed bg-primary hover:bg-primary-hover"
               >
