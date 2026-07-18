@@ -15,7 +15,7 @@ export function AdminHeader({ title, description, actions }: AdminHeaderProps) {
       </div>
 
       <div className="hidden md:flex items-center gap-3">
-        <div className="relative w-[280px]">
+        {/* <div className="relative w-[280px]">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             aria-label="Tìm nhanh"
@@ -28,7 +28,7 @@ export function AdminHeader({ title, description, actions }: AdminHeaderProps) {
             <Download className="w-4 h-4" />
             Xuất báo cáo
           </button>
-        )}
+        )} */}
         <button className="w-10 h-10 rounded-full border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors relative flex items-center justify-center cursor-pointer">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#e03c31] border border-white" />

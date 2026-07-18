@@ -100,9 +100,12 @@ export function OverviewAccountSection({
             </div>
           </div>
           <div className="mt-auto">
-            <button className="bg-white border border-gray-300 px-5 py-2 rounded-full font-bold hover:bg-gray-50 transition-colors text-gray-800 shadow-sm">
+            <Link
+              href="/nguoi-ban/goi-hoi-vien"
+              className="bg-white border border-gray-300 px-5 py-2 rounded-full font-bold hover:bg-gray-50 transition-colors text-gray-800 shadow-sm"
+            >
               Tìm hiểu ngay
-            </button>
+            </Link>
           </div>
         </div>
       </div>

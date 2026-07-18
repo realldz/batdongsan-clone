@@ -106,8 +106,8 @@ export default function MembershipPage() {
           <MembershipTabs
             tabs={[
               { id: "hoi-vien", label: "Gói Hội viên" },
-              { id: "voucher-vip", label: "Gói voucher Tin VIP", badge: "Mới" },
-              { id: "voucher-day-tin", label: "Gói voucher Đẩy tin" },
+              // { id: "voucher-vip", label: "Gói voucher Tin VIP", badge: "Mới" },
+              // { id: "voucher-day-tin", label: "Gói voucher Đẩy tin" },
             ]}
             activeTab={activeTab}
             onChange={setActiveTab}

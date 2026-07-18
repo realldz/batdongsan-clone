@@ -3,6 +3,7 @@ import { Bell, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useWalletBalance } from "@/lib/use-wallet-balance";
 import { SellerProfileMenu } from "./SellerProfileMenu";
+import { NotificationBell } from "@/components/Header/NotificationBell";
 
 export function SellerHeader({ title, subtitle }: { title: string, subtitle?: React.ReactNode }) {
   const wallet = useWalletBalance();
@@ -24,10 +25,7 @@ export function SellerHeader({ title, subtitle }: { title: string, subtitle?: Re
         <Link href="/nguoi-ban/nap-tien" className="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-sm">
           <span className="text-base leading-none">💳</span> Nạp tiền
         </Link>
-        <button className="text-gray-600 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors relative">
-          <Bell className="w-6 h-6 stroke-[1.5]" />
-          <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-        </button>
+        <NotificationBell />
 
         {/* User Profile Menu */}
         <SellerProfileMenu />

@@ -98,7 +98,7 @@ export function AccountPanel({
           Hoạt động hiệu quả hơn
         </div>
         <Link
-          href="#"
+          href="/nguoi-ban/goi-hoi-vien"
           className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-50 transition-colors group"
         >
           <div className="flex items-center gap-3">
@@ -117,23 +117,6 @@ export function AccountPanel({
           </div>
           <span className="text-[11px] font-bold text-gray-400 group-hover:text-primary transition-colors">
             Đăng ký mua
-          </span>
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-50 transition-colors group"
-        >
-          <div className="flex items-center gap-3">
-            <Briefcase
-              className="w-[18px] h-[18px] text-blue-600"
-              strokeWidth={2}
-            />
-            <span className="text-[13px] font-medium text-gray-800">
-              Tài khoản doanh nghiệp
-            </span>
-          </div>
-          <span className="text-[11px] font-bold text-gray-400 group-hover:text-blue-600 transition-colors">
-            Đăng ký
           </span>
         </Link>
       </div>

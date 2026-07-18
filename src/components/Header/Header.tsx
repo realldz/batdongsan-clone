@@ -1,12 +1,45 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { HeaderAuthActions } from "./HeaderAuthActions";
 import { NotificationBell } from "./NotificationBell";
-import { getNavigation } from "@/services/navigation";
+import { getNavLinks, type NavLink } from "@/config/navigation";
+import { api } from "@/lib/api";
+import type { ApiNavLink } from "@/services/navigation";
 
-export const Header = async () => {
-  const navLinks = await getNavigation();
+function mapApiToNavLink(item: ApiNavLink): NavLink {
+  const link: NavLink = { text: item.text, href: item.href || "#" };
+  if (item.subItems && item.subItems.length > 0) {
+    link.subItems = item.subItems.map((sub) => ({
+      text: sub.text,
+      href: sub.href || "#",
+    }));
+  }
+  return link;
+}
+
+export const Header = () => {
+  const [navLinks, setNavLinks] = useState<NavLink[]>(getNavLinks);
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<ApiNavLink[]>("/navigation")
+      .then((data) => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
+          setNavLinks(data.map(mapApiToNavLink));
+        }
+      })
+      .catch(() => {
+        // keep fallback
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-[1240px] mx-auto px-4 lg:px-0 h-16 flex items-center justify-between">

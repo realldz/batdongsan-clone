@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-store";
 import { useWalletBalance } from "@/lib/use-wallet-balance";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { 
-  LogOut, Wallet, Receipt, Gift, Crown, Briefcase, Settings, HelpCircle, User as UserIcon 
+import {
+  LogOut, Wallet, Receipt, Gift, Crown, Briefcase, Settings, HelpCircle, User as UserIcon
 } from "lucide-react";
 
 export function SellerProfileMenu() {
@@ -15,7 +15,7 @@ export function SellerProfileMenu() {
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  
+
   const initial = user?.fullName?.charAt(0)?.toUpperCase() ?? "U";
   const displayName = user?.fullName ?? "Người dùng";
   const wallet = useWalletBalance();
@@ -90,7 +90,7 @@ export function SellerProfileMenu() {
             {/* Hoạt động hiệu quả block */}
             <div className="py-2 border-b border-gray-100">
               <div className="px-4 py-2 font-bold text-gray-400 text-[11px] uppercase tracking-wider">Hoạt động hiệu quả hơn</div>
-              <Link href="#" className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors group">
+              <Link href="/nguoi-ban/goi-hoi-vien" className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors group">
                 <div className="flex items-center gap-3">
                   <Crown className="w-5 h-5 text-[#f59e0b]" />
                   <div className="flex flex-col">
@@ -99,13 +99,6 @@ export function SellerProfileMenu() {
                   </div>
                 </div>
                 <span className="text-xs font-bold text-gray-400 group-hover:text-primary transition-colors">Đăng ký mua</span>
-              </Link>
-              <Link href="#" className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 transition-colors group">
-                <div className="flex items-center gap-3">
-                  <Briefcase className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-gray-800">Tài khoản doanh nghiệp</span>
-                </div>
-                <span className="text-xs font-bold text-gray-400 group-hover:text-blue-600 transition-colors">Đăng ký</span>
               </Link>
             </div>
 
@@ -119,10 +112,6 @@ export function SellerProfileMenu() {
               <Link href="/nguoi-ban/tai-khoan?tab=mat-khau" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                 <Settings className="w-5 h-5 text-gray-400" />
                 <span className="font-medium text-gray-800">Đổi mật khẩu</span>
-              </Link>
-              <Link href="#" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                <HelpCircle className="w-5 h-5 text-gray-400" />
-                <span className="font-medium text-gray-800">Hướng dẫn sử dụng</span>
               </Link>
               <button onClick={() => { logout(); router.push('/'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left mt-2 border-t border-gray-100">
                 <LogOut className="w-5 h-5 text-gray-400" />
